@@ -1,0 +1,14 @@
+{
+  "consideredPassive": 10,
+  "symbol": "[green]<Survival>[]",
+  "playerCollection": "PlayerData",
+  "dbAddress": "mongodb://127.0.0.1:27017",
+  "alertPrefix": "!!",
+  "dbName": "mindustryServer",
+  "rules": null,
+  "guide": null,
+  "welcomeMessage": null,
+  "vpnApi": null,
+  "vpnTimeout": 0,
+  "salt": "TWS"
+}
