@@ -4,6 +4,7 @@ package twp;
 import arc.Events;
 import arc.util.CommandHandler;
 import arc.util.Log;
+import mindustry.gen.Call;
 import twp.bundle.Bundle;
 import twp.commands.AccountManager;
 import twp.commands.RankSetter;
@@ -48,6 +49,10 @@ public class Main extends Plugin {
             } else {
                 pd.sendServerMessage(message);
             }
+        });
+
+        handler.register("a", "test", (args, player)-> {
+            Call.infoToast("hello", 10);
         });
     }
 }

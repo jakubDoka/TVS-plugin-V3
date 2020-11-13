@@ -39,27 +39,27 @@ public class Ranks {
     }
 
     public void loadBuildIn() {
-        griefer = new Rank(true, false, "griefer", "#ABCDEF",
+        griefer = new Rank(true, false, "griefer", "#ff6bf8",
                 new HashMap<String, String>() {{
                     put("default", "Best fit for any impostor.");
                 }}, 0, null, null, null, null);
-        paralyzed = new Rank(true, false, "paralyzed", "#ABACAF",
+        paralyzed = new Rank(true, false, "paralyzed", "#ff9e1f",
                 new HashMap<String, String>() {{
                     put("default", "This is placeholder in case you have to reload your account.");
                 }}, 0, null, null, null, null);
-        newcomer = new Rank(false, false, "newcomer", "#A0B0C0",
+        newcomer = new Rank(false, false, "newcomer", "#b3782d",
                 new HashMap<String, String>() {{
                     put("default", "This is first rank you will get.");
                 }}, 0, new HashSet<>(Collections.singletonList(Perm.normal.name())), null, null, null);
-        verified = new Rank(false, false, "verified", "#FO4050",
+        verified = new Rank(false, false, "verified", "#2db3aa",
                 new HashMap<String, String>() {{
                     put("default", "Pass the test and you ll get this. Protects your blocks against newcomers.");
                 }}, 1, new HashSet<>(Collections.singletonList(Perm.high.name())), null, null, null);
-        candidate = new Rank(true, false, "candidate", "#AAAAAA" ,
+        candidate = new Rank(true, false, "candidate", "#1d991d" ,
                 new HashMap<String, String>() {{
                     put("default", "This is middle step between normal player and admin.");
                 }}, 2, new HashSet<>(Collections.singletonList(Perm.higher.name())), null, null, null);
-        admin =  new Rank(true, true, "admin", "#EEEEEE" ,
+        admin =  new Rank(true, true, "admin", "#2930c2" ,
                 new HashMap<String, String>() {{
                     put("default", "You have power to protect others.");
                 }}, 3, new HashSet<>(Collections.singletonList(Perm.highest.name())), null, null, null);

@@ -70,6 +70,7 @@ public class Limiter {
             if (map.getLock(act.tile) > top) {
                 player.sendMessage("your permission level is "+ top +", but to interact with " +
                         "a tile you need at least " + map.getLock(act.tile) + ". Ask admins how to increase it.");
+                return false;
             } else if (pd.hasPermLevel(Perm.high.value)) {
                 map.setLock(act.tile, db.hasEnabled(pd.id, Setting.lock) ? top : Perm.high.value);
             }
