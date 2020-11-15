@@ -9,7 +9,6 @@ import mindustry.game.EventType;
 
 import static twp.Main.db;
 import static twp.Main.ranks;
-import static org.junit.jupiter.api.Assertions.*;
 
 class AccountManagerTest {
     public static void main(String[] args) {
@@ -17,93 +16,61 @@ class AccountManagerTest {
         Events.fire(new EventType.ServerLoadEvent());
         db.handler.drop();
         db.online.put("", db.handler.loadData(new DBPlayer(){}));
-        assertEquals(
-                AccountManager.game.notExplicit,
-                AccountManager.game.run(new String[]{"new"}, "")
-        );
 
-        assertEquals(
-                AccountManager.game.notEnoughArgs,
-                AccountManager.game.run(new String[]{"protect"}, "")
-        );
+        AccountManager.game.run(new String[]{"new"}, "");
+        AccountManager.game.assertResult(Command.Result.notExplicit);
 
-        assertEquals(
-                AccountManager.game.confirm,
-                AccountManager.game.run(new String[]{"protect", "a"}, "")
-        );
+        AccountManager.game.run(new String[]{"protect"}, "");
+        AccountManager.game.assertResult(Command.Result.notEnoughArgs);
 
-        assertEquals(
-                AccountManager.game.confirmFail,
-                AccountManager.game.run(new String[]{"protect", "b"}, "")
-        );
 
-        assertEquals(
-                AccountManager.game.confirm,
-                AccountManager.game.run(new String[]{"protect", "a"}, "")
-        );
+        AccountManager.game.run(new String[]{"protect", "a"}, "");
+        AccountManager.game.assertResult(Command.Result.confirm);
 
-        assertEquals(
-                AccountManager.game.confirmSuccess,
-                AccountManager.game.run(new String[]{"protect", "a"}, "")
-        );
+        AccountManager.game.run(new String[]{"protect", "b"}, "");
+        AccountManager.game.assertResult(Command.Result.confirmFail);
 
-        assertEquals(
-                AccountManager.game.alreadyProtected,
-                AccountManager.game.run(new String[]{"protect", "a"}, "")
-        );
+        AccountManager.game.run(new String[]{"protect", "a"}, "");
+        AccountManager.game.assertResult(Command.Result.confirm);
 
-        assertEquals(
-                AccountManager.game.incorrectPassword,
-                AccountManager.game.run(new String[]{"unprotect", "b"}, "")
-        );
+        AccountManager.game.run(new String[]{"protect", "a"}, "");
+        AccountManager.game.assertResult(Command.Result.confirmSuccess);
 
-        assertEquals(
-                AccountManager.game.unprotectSuccess,
-                AccountManager.game.run(new String[]{"unprotect", "a"}, "")
-        );
+        AccountManager.game.run(new String[]{"protect", "a"}, "");
+        AccountManager.game.assertResult(Command.Result.alreadyProtected);
 
-        assertEquals(
-                AccountManager.game.confirmSuccess,
-                AccountManager.game.run(new String[]{"protect", "a"}, "")
-        );
+        AccountManager.game.run(new String[]{"unprotect", "b"}, "");
+        AccountManager.game.assertResult(Command.Result.incorrectPassword);
 
-        assertEquals(
-                AccountManager.game.alreadyProtected,
-                AccountManager.game.run(new String[]{"protect", "a"}, "")
-        );
+        AccountManager.game.run(new String[]{"unprotect", "a"}, "");
+        AccountManager.game.assertResult(Command.Result.unprotectSuccess);
 
-        assertEquals(
-                AccountManager.game.success,
-                AccountManager.game.run(new String[]{"abandon"}, "")
-        );
+        AccountManager.game.run(new String[]{"protect", "a"}, "");
+        AccountManager.game.assertResult(Command.Result.confirm);
 
-        assertEquals(
-                AccountManager.game.notInteger,
-                AccountManager.game.run(new String[]{"e", "a"}, "")
-        );
+        AccountManager.game.run(new String[]{"protect", "a"}, "");
+        AccountManager.game.assertResult(Command.Result.confirmSuccess);
 
-        assertEquals(
-                AccountManager.game.notFound,
-                AccountManager.game.run(new String[]{"100", "a"}, "")
-        );
+        AccountManager.game.run(new String[]{"abandon"}, "");
+        AccountManager.game.assertResult(Command.Result.success);
 
-        assertEquals(
-                AccountManager.game.incorrectPassword,
-                AccountManager.game.run(new String[]{"0", "b"}, "")
-        );
+        AccountManager.game.run(new String[]{"e", "a"}, "");
+        AccountManager.game.assertResult(Command.Result.notInteger);
 
-        assertEquals(
-                AccountManager.game.successLogin,
-                AccountManager.game.run(new String[]{"0", "a"}, "")
-        );
+        AccountManager.game.run(new String[]{"100", "a"}, "");
+        AccountManager.game.assertResult(Command.Result.notFound);
+
+        AccountManager.game.run(new String[]{"0", "b"}, "");
+        AccountManager.game.assertResult(Command.Result.incorrectPassword);
+
+        AccountManager.game.run(new String[]{"0", "a"}, "");
+        AccountManager.game.assertResult(Command.Result.loginSuccess);
 
         db.handler.setRank(0, ranks.griefer, RankType.rank);
         PD data = db.handler.loadData(new DBPlayer(){});
         db.online.put("", data);
 
-        assertEquals(
-                AccountManager.game.noPerm,
-                AccountManager.game.run(new String[]{"", ""}, "")
-        );
+        AccountManager.game.run(new String[]{"", ""}, "");
+        AccountManager.game.assertResult(Command.Result.noPerm);
     }
 }

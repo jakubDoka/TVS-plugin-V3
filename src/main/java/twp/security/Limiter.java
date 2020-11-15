@@ -1,12 +1,14 @@
 package twp.security;
 
 import arc.Events;
+import mindustry.net.Administration;
 import twp.database.PD;
 import twp.database.Perm;
 import twp.database.Setting;
 import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.gen.Player;
+import twp.tools.Testing;
 
 import static twp.Main.db;
 import static twp.Main.ranks;
@@ -15,66 +17,65 @@ import static mindustry.Vars.netServer;
 public class Limiter {
     LockMap map;
 
-    public String
-            grieferActionsForbidden = "you have no permission to do anything, appeal to admins to get rid of your griefer mark",
-            paralyzedActionsForbidden = "you are paralyzed, easiest way out is using command [orange]/account new[]" +
-            ". In case you have account and you protected it with password use " +
-            "[orange]/account <id> <password>[]";
-
 
     public Limiter() {
-        Events.on(EventType.PlayEvent.class, e -> {
-            map = new LockMap(Vars.world.width(), Vars.world.height());
-        });
+        // Initializing LockMap on start of a game
+        Events.on(EventType.PlayEvent.class, e -> map = new LockMap(Vars.world.width(), Vars.world.height()));
+
+        // Cases when lock should reset
 
         Events.on(EventType.BlockDestroyEvent.class, e -> map.setLock(e.tile,0));
 
+        Events.on(EventType.BlockBuildEndEvent.class, e -> {
+            if(e.breaking) {
+                map.setLock(e.tile, 0);
+            }
+        });
+
+        // This mostly prevents griefers from shooting
         Events.run(EventType.Trigger.update, () -> {
             for(PD pd : db.online.values()) {
-                if(pd == null) continue;
-                if(!pd.isGriefer() && pd.player.p.shooting) {
-                    pd.player.p.shooting(false);
-                    //p.unit().kill();
+                if(pd.isGriefer() && pd.player.p.shooting) {
+                    pd.player.p.unit().kill();
                 }
             }
         });
 
 
-        registerActionFilter();
+        //registerActionFilter();
     }
 
     void registerActionFilter() {
         netServer.admins.addActionFilter( act -> {
             Player player = act.player;
             if(player == null) {
-                return true;
+                return true; // Dont forget this true is important
             }
 
             PD pd = db.online.get(player.uuid());
             if (pd == null) {
-                new RuntimeException("player data is missing ewenthough player is attempting actions").printStackTrace();
+                Testing.Log("player data is missing ewen though player is attempting actions");
                 return true;
             }
 
             if (pd.rank == ranks.griefer) {
-                player.sendMessage(grieferActionsForbidden);
+                pd.sendServerMessage("admins-grieferCannotBuild");
                 return false;
             }
 
             if (pd.paralyzed) {
-                player.sendMessage(paralyzedActionsForbidden);
+                pd.sendServerMessage("admins-paralyzedCannotBuild");
                 return false;
             }
 
             int top = pd.getHighestPermissionLevel();
-            if (map.getLock(act.tile) > top) {
-                player.sendMessage("your permission level is "+ top +", but to interact with " +
-                        "a tile you need at least " + map.getLock(act.tile) + ". Ask admins how to increase it.");
+            int lock = map.getLock(act.tile);
+            if (lock > top) {
+                pd.sendServerMessage("admins-permissionTooLow", top, lock);
                 return false;
-            } else if (pd.hasPermLevel(Perm.high.value)) {
+            } else if (pd.hasPermLevel(Perm.high.value) && act.type == Administration.ActionType.placeBlock) {
                 map.setLock(act.tile, db.hasEnabled(pd.id, Setting.lock) ? top : Perm.high.value);
             }
-
 
             return true;
         });

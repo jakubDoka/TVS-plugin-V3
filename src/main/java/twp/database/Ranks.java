@@ -195,10 +195,10 @@ public class Ranks {
     // ranksList prints all ranks of same type
     public String rankList(RankType type) {
         StringBuilder b = new StringBuilder();
-        for(String s : getRanks(type).keySet()) {
-            b.append(s).append(", ");
+        for(Rank s : getRanks(type).values()) {
+            b.append(s.getSuffix()).append(" ");
         }
-        return b.substring(0, b.length() - 2);
+        return b.substring(0, b.length() - 1);
     }
 
     // rankType finds out a type of rank, assuming there are no duplicates

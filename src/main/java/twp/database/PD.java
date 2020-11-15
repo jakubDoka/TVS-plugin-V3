@@ -3,6 +3,7 @@ package twp.database;
 import arc.util.Time;
 import mindustry.gen.Player;
 import twp.Main;
+import twp.tools.Testing;
 
 
 import javax.swing.text.PlainDocument;
@@ -83,7 +84,7 @@ public class PD{
 
     public synchronized void sendServerMessage(String message, Object ... args) {
         if(player.p == null) {
-            new RuntimeException("sending message to PD with a null player").printStackTrace();
+            Testing.Log("sending message to PD with a null player");
             return;
         }
         if(bundle != null && bundle.containsKey(message)) {
@@ -95,7 +96,7 @@ public class PD{
 
     public void sendMessage(String message) {
         if(player.p == null) {
-            new RuntimeException("sending message to PD with a null player").printStackTrace();
+            Testing.Log("sending message to PD with a null player");
             return;
         }
         player.p.sendMessage(message);
@@ -103,7 +104,7 @@ public class PD{
 
     public void kick(String message, int duration, Object ... args) {
         if(player.p == null) {
-            new RuntimeException("attempting to disconnect PD with a null player").printStackTrace();
+            Testing.Log("attempting to disconnect PD with a null player");
             return;
         }
         if(bundle != null && bundle.containsKey(message)) {
@@ -138,6 +139,10 @@ public class PD{
         if(!afk) return;
         afk = false;
         updateName();
+    }
+
+    public String summarize() {
+        return "[yellow]" + id + "[] " + player.name + " " + rank.getSuffix();
     }
 
     public synchronized int getHighestPermissionLevel() {

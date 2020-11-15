@@ -7,6 +7,7 @@ import arc.util.Log;
 import mindustry.gen.Call;
 import twp.bundle.Bundle;
 import twp.commands.AccountManager;
+import twp.commands.Command;
 import twp.commands.RankSetter;
 import twp.database.*;
 import twp.security.Limiter;
@@ -31,23 +32,21 @@ public class Main extends Plugin {
 
     @Override
     public void registerServerCommands(CommandHandler handler) {
-        RankSetter.terminal.register(handler, (args) -> {
-            Log.info(RankSetter.terminal.run(args, ""));
-        });
+        RankSetter.terminal.register(handler, (Command.PlayerCommandRunner) null);
     }
 
     //register commands that player can invoke in-game
     @Override
     public void registerClientCommands(CommandHandler handler) {
-        RankSetter.game.register(handler, (result, message, pd) -> {
-            pd.sendServerMessage(result);
-        });
+        RankSetter.game.register(handler, (Command.PlayerCommandRunner) null);
 
-        AccountManager.game.register(handler, (result, message, pd) -> {
-            if(result.equals(AccountManager.game.success) || result.equals(AccountManager.game.successLogin)) {
-                pd.kick(message, 0);
-            } else {
-                pd.sendServerMessage(message);
+        AccountManager.game.register(handler, (self, pd) -> {
+            switch (self.result){
+                case loginSuccess:
+                case success:
+                    self.kickCaller(0);
+                default:
+                    self.notifyCaller();
             }
         });
 

@@ -1,12 +1,13 @@
 package twp.commands;
 
+import arc.util.Log;
 import twp.database.*;
+import twp.tools.Testing;
 
 import static twp.Main.db;
 import static twp.Main.ranks;
 
 public abstract class RankSetter extends Command {
-    public String wrongRank = "wrongRank", wrongAccess = "wrongAccess";
     public boolean freeAccess = false;
 
     public abstract boolean verification(String id);
@@ -18,43 +19,52 @@ public abstract class RankSetter extends Command {
     }
 
     @Override
-    public String run(String[] args, String id) {
+    public void run(String[] args, String id) {
         // Verify - place dependent
         if (!verification(id)) {
-            return noPerm;
+            result = Result.noPerm; // done
+            return;
         }
 
         // Resolve rank type, tis also checks if rank exists
-        RankType rankType = ranks.rankType(args[1]);
-        if (rankType == null) {
-            return wrongRank;
+        Rank rank = ranks.buildIn.get(args[1]);
+        Log.info(rank);
+        if (rank == null) {
+            arg = new Object[]{
+                    ranks.rankList(RankType.rank),
+            };
+            result = Result.wrongRank; // done
+            return;
         }
 
         // Search target
         Raw data = db.findData(args[0]);
         if (data == null) {
-            return notFound;
+            result = Result.playerNotFound; // done
+            return;
         }
 
         // admin rank can be set only through terminal
-        Rank rank = ranks.getRank(args[1], rankType);
         if (!freeAccess && (rank.admin || data.admin())) {
-            return wrongAccess;
+            result = Result.wrongAccess; // done
+            return;
         }
 
-        db.handler.setRank(data.getId(), rank, rankType);
+        // setting arguments to show change
+        arg = new Object[] {
+                data.getRank(RankType.rank).getSuffix(),
+                rank.getSuffix(),
+        };
+
+        db.handler.setRank(data.getId(), rank, RankType.rank);
 
         // if player is online kick him. I do not want to deal with bag prone code to change his rank manually.
         PD pd = db.online.get(data.getUuid());
         if (pd != null) {
-            if (pd.player.p == null) {
-                new RuntimeException("player is in online but pd.player.p is null").printStackTrace();
-                return success;
-            }
-            pd.kick("kick-rankChange", 0);
+            pd.kick("kick-rankChange", 0, rank.getSuffix());
         }
 
-        return success;
+        result = Result.success; // done
     }
 
     public static RankSetter game = new RankSetter() {
