@@ -42,7 +42,7 @@ public class Limiter {
         });
 
 
-        //registerActionFilter();
+        registerActionFilter();
     }
 
     void registerActionFilter() {
