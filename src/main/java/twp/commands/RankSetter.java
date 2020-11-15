@@ -28,7 +28,6 @@ public abstract class RankSetter extends Command {
 
         // Resolve rank type, tis also checks if rank exists
         Rank rank = ranks.buildIn.get(args[1]);
-        Log.info(rank);
         if (rank == null) {
             arg = new Object[]{
                     ranks.rankList(RankType.rank),

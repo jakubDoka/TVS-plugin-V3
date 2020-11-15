@@ -33,9 +33,10 @@ public abstract class Command {
         }
     }
 
-    public void register(CommandHandler handler, PlayerCommandRunner runner) {
+    public void registerGm(CommandHandler handler, PlayerCommandRunner runner) {
         CommandHandler.CommandRunner<Player> run = (args, player) -> {
             PD pd = db.online.get(player.uuid());
+
             if(pd == null) {
                 Testing.Log("null PD when executing " + name + " command.");
                 player.sendMessage("[yellow]Sorry there is an problem with your profile, " +
@@ -43,7 +44,11 @@ public abstract class Command {
                 return;
             }
 
+            caller = pd;
+
             run(args, player.uuid());
+            resolveArgs();
+
             if (runner != null) {
                 runner.run(this, pd);
             } else {
@@ -77,9 +82,10 @@ public abstract class Command {
         return true;
     }
 
-    public void register(CommandHandler handler, TerminalCommandRunner runner) {
+    public void registerCmp(CommandHandler handler, TerminalCommandRunner runner) {
         Cons<String[]> func = (args) -> {
             run(args, "");
+            resolveArgs();
 
             if (runner != null) {
                 runner.run(this);

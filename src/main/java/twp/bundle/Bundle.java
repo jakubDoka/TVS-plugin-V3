@@ -17,7 +17,7 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
 public class Bundle {
-    static final String bundlePath = "bundles.bundle";
+    static final String bundlePath = "tws-bundles.bundle";
     final Locale locale = new Locale("en","US");
     final ResourceBundle defaultBundle = newBundle(locale);
 

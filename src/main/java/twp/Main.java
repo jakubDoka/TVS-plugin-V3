@@ -2,6 +2,7 @@ package twp;
 
 
 import arc.Events;
+import arc.func.Cons;
 import arc.util.CommandHandler;
 import arc.util.Log;
 import mindustry.gen.Call;
@@ -32,15 +33,15 @@ public class Main extends Plugin {
 
     @Override
     public void registerServerCommands(CommandHandler handler) {
-        RankSetter.terminal.register(handler, (Command.PlayerCommandRunner) null);
+        RankSetter.terminal.registerCmp(handler, null);
     }
 
     //register commands that player can invoke in-game
     @Override
     public void registerClientCommands(CommandHandler handler) {
-        RankSetter.game.register(handler, (Command.PlayerCommandRunner) null);
+        RankSetter.game.registerGm(handler, null);
 
-        AccountManager.game.register(handler, (self, pd) -> {
+        AccountManager.game.registerGm(handler, (self, pd) -> {
             switch (self.result){
                 case loginSuccess:
                 case success:
