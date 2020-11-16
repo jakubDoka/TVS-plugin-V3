@@ -162,8 +162,11 @@ public class Database {
         if (res != null) {
             return res;
         }
-
-        return online.find((pd) -> pd.player.name.equals(target)).getDoc();
+        PD p = online.find((pd) -> pd.player.name.equals(target));
+        if(p != null) {
+            return p.getDoc();
+        }
+        return null;
     }
 
 

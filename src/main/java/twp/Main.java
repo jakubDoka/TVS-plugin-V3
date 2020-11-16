@@ -16,6 +16,7 @@ import twp.security.Limiter;
 import mindustry.game.EventType;
 import mindustry.gen.Player;
 import mindustry.mod.Plugin;
+import twp.tools.MainQueue;
 
 public class Main extends Plugin {
     public static Ranks ranks;
@@ -24,6 +25,8 @@ public class Main extends Plugin {
     public static Bundle bundle;
     public static boolean testMode;
 
+    public static MainQueue queue = new MainQueue();
+
     public Main() {
         Events.on(EventType.ServerLoadEvent.class, e -> {
             ranks = new Ranks();
@@ -31,6 +34,8 @@ public class Main extends Plugin {
             lim = new Limiter();
             bundle = new Bundle();
         });
+
+        Events.run(EventType.Trigger.update, ()-> queue.run());
     }
 
     @Override

@@ -13,12 +13,11 @@ import twp.tools.Testing;
 
 import java.util.concurrent.locks.ReentrantLock;
 
-import static twp.Main.bundle;
-import static twp.Main.db;
+import static twp.Main.*;
 
 // Command is base class of any command and contains utility for making commands bit more cleaner and organised
 public abstract class Command {
-    private ReentrantLock lock = new ReentrantLock();
+    private boolean busy;
 
     // constant
     public String name = "noname", argStruct, description = "description missing";
@@ -66,19 +65,21 @@ public abstract class Command {
     // for registration of commandline commands
     public void registerCmp(CommandHandler handler, TerminalCommandRunner runner) {
         Cons<String[]> func = (args) -> new Thread(() -> {
-            lock.lock();
+            while (isBusy());
+            setBusy(true);
+
             run("", args);
             resolveArgs();
 
-            Core.app.post(() -> {
+            queue.post(() -> {
                 if (runner != null) {
                     runner.run(this);
                 } else {
                     notifyCaller();
                 }
-                lock.unlock();
+                setBusy(false);
             });
-        });
+        }).start();
 
         if (argStruct == null) {
             handler.register(name, description, func);
@@ -90,7 +91,9 @@ public abstract class Command {
     // For registration of in-game commands
     public void registerGm(CommandHandler handler, PlayerCommandRunner runner) {
         CommandHandler.CommandRunner<Player> run = (args, player) -> new Thread(() -> {
-            lock.lock();
+            while (isBusy());
+            setBusy(true);
+
             PD pd = db.online.get(player.uuid());
 
             if(pd == null) {
@@ -105,21 +108,29 @@ public abstract class Command {
             run(player.uuid(), args);
             resolveArgs();
 
-            Core.app.post(() -> {
+            queue.post(() -> {
                 if (runner != null) {
                     runner.run(this, pd);
                 } else {
                     notifyCaller();
                 }
-                lock.unlock();
+                setBusy(false);
             });
-        });
+        }).start();
 
         if (argStruct == null) {
             handler.register(name, description, run);
         } else  {
             handler.register(name, argStruct, description, run);
         }
+    }
+
+    synchronized boolean isBusy() {
+        return busy;
+    }
+
+    synchronized void setBusy(boolean value) {
+        busy = busy;
     }
 
     // getMessage returns bundle key based of result
