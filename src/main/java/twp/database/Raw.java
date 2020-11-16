@@ -81,7 +81,7 @@ public class Raw {
         return (String) data.get("name");
     }
 
-    public boolean isGriefer() {
+    public boolean siGriefer() {
         return getRank(RankType.rank) == ranks.griefer;
     }
 
@@ -93,5 +93,13 @@ public class Raw {
                 stat.name().toUpperCase(),
                 getStat(stat)
         );
+    }
+
+    public String fieldList() {
+        StringBuilder sb = new StringBuilder();
+        for (String s : data.keySet()) {
+            sb.append(s).append(" ");
+        }
+        return sb.toString();
     }
 }

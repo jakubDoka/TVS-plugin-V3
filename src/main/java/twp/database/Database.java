@@ -70,7 +70,7 @@ public class Database {
 
             bundle.resolveBundle(pd);
 
-            if (!pd.isGriefer()) checkAchievements(pd, handler.getDoc(pd.id));
+            if (!pd.cannotInteract()) checkAchievements(pd, handler.getDoc(pd.id));
         });
 
         Events.on(EventType.PlayerLeave.class,e->{

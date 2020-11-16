@@ -5,37 +5,45 @@ import arc.Events;
 import arc.func.Cons;
 import arc.util.CommandHandler;
 import arc.util.Log;
+import arc.util.Timer;
 import mindustry.gen.Call;
+import mindustry.world.blocks.logic.LogicBlock;
 import twp.bundle.Bundle;
-import twp.commands.AccountManager;
-import twp.commands.Command;
-import twp.commands.RankSetter;
-import twp.commands.Searcher;
+import twp.commands.*;
 import twp.database.*;
+import twp.democracy.Hud;
 import twp.security.Limiter;
 import mindustry.game.EventType;
 import mindustry.gen.Player;
 import mindustry.mod.Plugin;
 import twp.tools.MainQueue;
 
+import static mindustry.Vars.world;
+
 public class Main extends Plugin {
     public static Ranks ranks;
     public static Database db;
     public static Limiter lim;
+    public static Hud hud;
     public static Bundle bundle;
     public static boolean testMode;
 
     public static MainQueue queue = new MainQueue();
 
     public Main() {
+
+
         Events.on(EventType.ServerLoadEvent.class, e -> {
             ranks = new Ranks();
             db = new Database();
             lim = new Limiter();
             bundle = new Bundle();
+            hud = new Hud();
         });
 
         Events.run(EventType.Trigger.update, ()-> queue.run());
+
+        Timer.schedule(() -> queue.post(() -> Events.fire(new TickEvent())), 0, 1);
     }
 
     @Override
@@ -43,6 +51,8 @@ public class Main extends Plugin {
         RankSetter.terminal.registerCmp(handler, null);
 
         Searcher.terminal.registerCmp(handler, null);
+
+        Setter.terminal.registerCmp(handler, null);
     }
 
     //register commands that player can invoke in-game
@@ -51,6 +61,8 @@ public class Main extends Plugin {
         RankSetter.game.registerGm(handler, null);
 
         Searcher.game.registerGm(handler, null);
+
+        Setter.game.registerCmp(handler, null);
 
         AccountManager.game.registerGm(handler, (self, pd) -> {
             switch (self.result){
@@ -67,4 +79,6 @@ public class Main extends Plugin {
             Call.infoPopup("hello2", 10, 200, 200, 200, 200, 200);
         });
     }
+
+    public static class TickEvent {}
 }

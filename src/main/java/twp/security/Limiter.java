@@ -36,7 +36,7 @@ public class Limiter {
         // This mostly prevents griefers from shooting
         Events.run(EventType.Trigger.update, () -> {
             db.online.forEachValue((pd) -> {
-                if(pd.isGriefer() && pd.player.p.shooting) {
+                if(pd.cannotInteract() && pd.player.p.shooting) {
                     pd.player.p.unit().kill();
                 }
             });

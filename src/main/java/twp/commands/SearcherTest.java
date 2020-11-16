@@ -36,35 +36,27 @@ class SearcherTest extends Test {
 
         Searcher.terminal.run("", "c");
         Searcher.terminal.assertResult(Command.Result.success);
-        Log.info(Searcher.terminal.arg[0]);
 
         Searcher.terminal.run("", "none");
         Searcher.terminal.assertResult(Command.Result.success);
-        Log.info(Searcher.terminal.arg[0]);
 
         Searcher.terminal.run("", "none", "age");
         Searcher.terminal.assertResult(Command.Result.success);
-        Log.info(Searcher.terminal.arg[0]);
 
         Searcher.terminal.run("", "none", "admin");
         Searcher.terminal.assertResult(Command.Result.success);
-        Log.info(Searcher.terminal.arg[0]);
 
         Searcher.terminal.run("", "none", "age", "2=4");
         Searcher.terminal.assertResult(Command.Result.success);
-        Log.info(Searcher.terminal.arg[0]);
 
         Searcher.terminal.run("", "none", "age", "-1=-3");
         Searcher.terminal.assertResult(Command.Result.success);
-        Log.info(Searcher.terminal.arg[0]);
 
         Searcher.terminal.run("", "none", "age", "-1=-3", "inv");
         Searcher.terminal.assertResult(Command.Result.success);
-        Log.info(Searcher.terminal.arg[0]);
 
         Searcher.terminal.run("", "none", "age", "v");
         Searcher.terminal.assertResult(Command.Result.invalidSlice);
-        Log.info(Searcher.terminal.arg[0]);
 
         Searcher.terminal.run("", "none", "age", "10=10");
         Searcher.terminal.assertResult(Command.Result.emptySlice);

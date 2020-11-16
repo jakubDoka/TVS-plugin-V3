@@ -11,11 +11,7 @@ import static twp.Main.ranks;
 
 // Rank setter lets admins to change build-in ranks of players
 // Its designed for use on multiple places (terminal, game, discord)
-public abstract class RankSetter extends Command {
-    public boolean freeAccess = false;
-
-    // verification is context dependent
-    public abstract boolean verification(String id);
+public class RankSetter extends Command {
 
     public RankSetter() {
         name = "setrank";
@@ -26,7 +22,7 @@ public abstract class RankSetter extends Command {
     @Override
     public void run(String id, String ...args) {
         // Verify - place dependent
-        if (!verification(id)) {
+        if (!verifier.verify(id)) {
             result = Result.noPerm; // done
             return;
         }
@@ -66,22 +62,7 @@ public abstract class RankSetter extends Command {
         result = Result.success; // done
     }
 
-    public static RankSetter game = new RankSetter() {
-        @Override
-        public boolean verification(String id) {
-            PD data = db.online.get(id);
-            return data != null && data.rank.admin;
-        }
-    };
-
-    public static RankSetter terminal = new RankSetter() {
-        {
-            freeAccess = true;
-        }
-
-        @Override
-        public boolean verification(String id) {
-            return true;
-        }
-    };
+    public static RankSetter
+            game = new RankSetter() {{verifier = this::isPlayerAdmin;}},
+            terminal = new RankSetter();
 }

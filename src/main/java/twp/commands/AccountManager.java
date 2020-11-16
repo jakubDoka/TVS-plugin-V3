@@ -109,5 +109,6 @@ public class AccountManager extends Command {
         }
     }
 
-    public static AccountManager game = new AccountManager();
+    public static AccountManager
+            game = new AccountManager();
 }

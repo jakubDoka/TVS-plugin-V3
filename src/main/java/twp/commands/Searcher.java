@@ -113,13 +113,14 @@ public class Searcher extends Command {
             sb.append(raw.summarize(finalStat)).append("\n");
         });
 
-        setArg(sb.toString(), slice.len(), count, (float)count / (float) slice.len() * 100);
+        setArg(sb.toString(), slice.len(), count, (float) slice.len() / (float)count * 100);
         result = Result.success;
     }
 
-    public static Searcher terminal = new Searcher() {{showLimit = 100;}};
-    public static Searcher game = new Searcher() {{showLimit = 40;}};
-    public static Searcher discord = new Searcher() {{showLimit = 20;}};
+    public static Searcher
+            terminal = new Searcher() {{showLimit = 100;}},
+            game = new Searcher() {{showLimit = 40;}},
+            discord = new Searcher() {{showLimit = 20;}};
 
     static class Slice {
         int[] ends;

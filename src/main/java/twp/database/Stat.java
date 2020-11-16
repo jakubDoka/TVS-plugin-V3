@@ -16,6 +16,8 @@ public enum Stat {
     loadoutVotes(3000),
     buildCoreVotes(10000),
     itemsTransported(100),
+    missedVotes(-1000),
+    missedVotesCombo(0),
     mkgfVotes(10000);
 
 

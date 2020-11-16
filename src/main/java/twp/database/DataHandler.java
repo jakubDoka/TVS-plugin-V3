@@ -89,6 +89,10 @@ public class DataHandler {
         data.updateOne(idFilter(id), Updates.set(field, value));
     }
 
+    public void unset(long id, String field) {
+        data.updateOne(idFilter(id), Updates.unset(field));
+    }
+
     public void setUuid(long id, String uuid) {
         set(id, "uuid", uuid);
     }

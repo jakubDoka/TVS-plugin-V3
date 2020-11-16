@@ -2,6 +2,7 @@ package twp.database;
 
 import arc.util.Time;
 import mindustry.gen.Player;
+import twp.Global;
 import twp.Main;
 import twp.tools.Testing;
 import twp.tools.Text;
@@ -83,16 +84,20 @@ public class PD{
         this.bundle = bundle;
     }
 
+    public synchronized String translate(String key, Object ...args) {
+        if(bundle != null && bundle.containsKey(key)) {
+            return Text.format(bundle.getString(key), args);
+        }
+        return Text.format(Main.bundle.getDefault(key), args);
+
+    }
+
     public synchronized void sendServerMessage(String message, Object ... args) {
         if(player.p == null) {
             Testing.Log("sending message to PD with a null player");
             return;
         }
-        if(bundle != null && bundle.containsKey(message)) {
-            player.p.sendMessage(prefix + Text.format(bundle.getString(message), args));
-        } else {
-            player.p.sendMessage(prefix + Text.format(Main.bundle.getDefault(message), args));
-        }
+        player.p.sendMessage(prefix + translate(message, args));
     }
 
     public void sendMessage(String message) {
@@ -108,11 +113,12 @@ public class PD{
             Testing.Log("attempting to disconnect PD with a null player");
             return;
         }
-        if(bundle != null && bundle.containsKey(message)) {
-            player.p.con.kick(Text.format(bundle.getString(message), args), duration);
-        } else {
-            player.p.con.kick(Text.format(Main.bundle.getDefault(message), args), duration);
-        }
+        player.p.con.kick(translate(message, args), duration);
+    }
+
+    public boolean canParticipate() {
+        Raw raw = getDoc();
+        return !cannotInteract() && raw.getStat(Stat.missedVotesCombo) < Global.config.consideredPassive && !afk;
     }
 
     public synchronized boolean hasThisPerm(Perm perm) {
@@ -131,7 +137,7 @@ public class PD{
         return false;
     }
 
-    public boolean isGriefer() {
+    public boolean cannotInteract() {
         return rank == ranks.griefer || paralyzed;
     }
 

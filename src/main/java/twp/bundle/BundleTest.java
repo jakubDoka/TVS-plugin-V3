@@ -6,5 +6,6 @@ public class BundleTest {
     public static void main(String[] args) {
         Bundle bundle = new Bundle();
         Log.info(bundle.getDefault("playerNotFound"));
+        Log.info(String.format("asdad", "asda"));
     }
 }

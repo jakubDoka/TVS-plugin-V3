@@ -20,6 +20,8 @@ import static twp.Main.*;
 public abstract class Command {
     private boolean busy;
 
+    boolean freeAccess;
+    Verifier verifier = (id) -> true;
     // constant
     public String name = "noname", argStruct, description = "description missing";
 
@@ -65,6 +67,7 @@ public abstract class Command {
 
     // for registration of commandline commands
     public void registerCmp(CommandHandler handler, TerminalCommandRunner runner) {
+        freeAccess = true;
         Cons<String[]> func = (args) -> new Thread(() -> {
             while (isBusy());
             setBusy(true);
@@ -163,8 +166,14 @@ public abstract class Command {
         return sb.substring(0, sb.length() -1);
     }
 
+    boolean isPlayerAdmin(String id) {
+        PD data = db.online.get(id);
+        return data != null && data.rank.admin;
+    }
+
     // Used for testing commands
     void assertResult(Result supposed) {
+        Log.info(Text.cleanColors(Text.format(bundle.getDefault(getMessage()), arg)));
         if(supposed != result) {
             throw new RuntimeException(supposed.name() + "!=" + result.name());
         }
@@ -178,6 +187,10 @@ public abstract class Command {
     // lambda for commands called from command prompt
     public interface TerminalCommandRunner {
         void run(Command c);
+    }
+
+    public interface Verifier {
+        boolean verify(String id);
     }
 
     // Result enum contains all possible results command can return
@@ -196,10 +209,12 @@ public abstract class Command {
         confirmSuccess,
         invalidRequest,
         loginSuccess,
+        unsetSuccess,
         emptySlice,
         invalidSlice,
         noOneOnline,
         successOnline,
+        wrongCommand,
 
 
         notInteger(true),
