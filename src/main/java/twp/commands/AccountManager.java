@@ -11,6 +11,8 @@ import java.util.HashMap;
 import static twp.Main.db;
 import static twp.Main.ranks;
 
+// AccountManager lets players to manage their account
+// create new, abandon it and protect it.
 public class AccountManager extends Command {
     static HashMap<Long, String> confirms = new HashMap<>();
 
@@ -21,11 +23,12 @@ public class AccountManager extends Command {
     }
 
     @Override
-    public void run(String[] args, String id) {
+    public void run(String id, String ...args) {
         PD pd = db.online.get(id);
 
+        // griefers cannot manipulate with their account, griefer rank would be then worthless
         if(pd.rank == ranks.griefer) {
-            arg = new Object[] {ranks.griefer.getSuffix()};
+            setArg(ranks.griefer.getSuffix());
             result = Result.noPerm;
             return;
         }
@@ -69,6 +72,7 @@ public class AccountManager extends Command {
                 return;
             case "abandon":
             case "new":
+                // this is little protection for dummies, we dont need accidents, nor we need dead data in database
                 if(!args[0].equals("abandon") && (!pd.paralyzed && !pd.getDoc().isProtected())){
                     result = Result.notExplicit;
                     return;
@@ -81,6 +85,7 @@ public class AccountManager extends Command {
                 if(isNotInteger(args, 0)) {
                     return;
                 }
+
                 long id1 = Long.parseLong(args[0]);
                 Raw raw = db.handler.getDoc(id1);
                 if(raw == null) {
@@ -93,8 +98,7 @@ public class AccountManager extends Command {
                 Object password = raw.getPassword();
                 if(!pd.player.ip.equals(raw.getIp()) && !pd.player.uuid.equals(raw.getUuid()) && password == null) {
                     result = Result.invalidRequest;
-                    return;
-                } else if(password == null || password.equals(Security.hash(pass)) || password.equals(Security.hash2(pass))){
+                } else if(password == null || password.equals(Security.hash(pass)) || password.equals(Security.hash2(pass))){ // due to backward compatibility there are two hashes
                     db.disconnectAccount(pd);
                     db.handler.setIp(id1, pd.player.ip);
                     db.handler.setUuid(id1, pd.player.uuid);

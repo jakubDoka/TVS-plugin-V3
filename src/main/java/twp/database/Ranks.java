@@ -194,6 +194,9 @@ public class Ranks {
 
     // ranksList prints all ranks of same type
     public String rankList(RankType type) {
+        if (getRanks(type).isEmpty()) {
+            return " none\n";
+        }
         StringBuilder b = new StringBuilder();
         for(Rank s : getRanks(type).values()) {
             b.append(s.getSuffix()).append(" ");

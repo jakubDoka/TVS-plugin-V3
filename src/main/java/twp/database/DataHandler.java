@@ -12,6 +12,8 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 
 
+import java.util.regex.Pattern;
+
 import static com.mongodb.client.model.Filters.and;
 import static twp.Main.ranks;
 
@@ -138,6 +140,19 @@ public class DataHandler {
             res++;
         }
         return res;
+    }
+
+    public FindIterable<Document> find(Bson filter) {
+        return data.find(filter);
+    }
+
+    public FindIterable<Document> all() {
+        return data.find();
+    }
+
+    public FindIterable<Document> startsWith(String field, String sub) {
+        Pattern pattern = Pattern.compile("^"+Pattern.quote(sub), Pattern.CASE_INSENSITIVE);
+        return data.find(Filters.regex(field, pattern));
     }
 
     public Rank getRank(long id, RankType type) {

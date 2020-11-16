@@ -84,4 +84,14 @@ public class Raw {
     public boolean isGriefer() {
         return getRank(RankType.rank) == ranks.griefer;
     }
+
+    public String summarize(Stat stat) {
+        return String.format("[gray]ID: [yellow]%d[] NAME: [white]%s[] RANK: %s %s: [orange]%d[] ",
+                getId(),
+                getName(),
+                getRank(RankType.rank).getSuffix(),
+                stat.name().toUpperCase(),
+                getStat(stat)
+        );
+    }
 }

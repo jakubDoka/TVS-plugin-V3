@@ -1,5 +1,6 @@
 package twp.commands;
 
+import arc.Core;
 import arc.func.Cons;
 import arc.util.CommandHandler;
 import arc.util.Log;
@@ -10,10 +11,15 @@ import twp.Global;
 import twp.database.PD;
 import twp.tools.Testing;
 
+import java.util.concurrent.locks.ReentrantLock;
+
 import static twp.Main.bundle;
 import static twp.Main.db;
 
+// Command is base class of any command and contains utility for making commands bit more cleaner and organised
 public abstract class Command {
+    private ReentrantLock lock = new ReentrantLock();
+
     // constant
     public String name = "noname", argStruct, description = "description missing";
 
@@ -22,19 +28,69 @@ public abstract class Command {
     public Object[] arg = {};
     public PD caller;
 
-    abstract void run(String[] args, String id);
+    // main behavior
+    abstract void run(String id, String ...args);
 
+    // in case some general result needs general arguments, they are resolved here
     void resolveArgs() {
         switch (result) {
             case playerNotFound:
-                arg = new Object[] {
-                    listPlayers()
-                };
+                setArg(listPlayers());
         }
     }
 
+    void setArg(Object ... values) {
+        arg = values;
+    }
+
+    // Shorthand for checking whether correct amount of arguments were provided
+    boolean checkArgCount(int count, int supposed) {
+        if (count < supposed) {
+            setArg(count, supposed);
+            result = Result.notEnoughArgs;
+            return true;
+        }
+        return false;
+    }
+
+    // Shorthand for checking and handling invalid non integer arguments
+    boolean isNotInteger(String[] args, int idx) {
+        if(Strings.canParsePositiveInt(args[idx])) {
+            return false;
+        }
+        setArg(idx + 1, args[idx]);
+        result = Result.notInteger;
+        return true;
+    }
+
+    // for registration of commandline commands
+    public void registerCmp(CommandHandler handler, TerminalCommandRunner runner) {
+        Cons<String[]> func = (args) -> new Thread(() -> {
+            lock.lock();
+            run("", args);
+            resolveArgs();
+
+            Core.app.post(() -> {
+                if (runner != null) {
+                    runner.run(this);
+                } else {
+                    notifyCaller();
+                }
+                lock.unlock();
+            });
+        });
+
+        if (argStruct == null) {
+            handler.register(name, description, func);
+        } else  {
+            handler.register(name, argStruct, description, func);
+        }
+    }
+
+    // For registration of in-game commands
     public void registerGm(CommandHandler handler, PlayerCommandRunner runner) {
-        CommandHandler.CommandRunner<Player> run = (args, player) -> {
+        CommandHandler.CommandRunner<Player> run = (args, player) -> new Thread(() -> {
+            lock.lock();
             PD pd = db.online.get(player.uuid());
 
             if(pd == null) {
@@ -46,16 +102,18 @@ public abstract class Command {
 
             caller = pd;
 
-            run(args, player.uuid());
+            run(player.uuid(), args);
             resolveArgs();
 
-            if (runner != null) {
-                runner.run(this, pd);
-            } else {
-                notifyCaller();
-            }
-
-        };
+            Core.app.post(() -> {
+                if (runner != null) {
+                    runner.run(this, pd);
+                } else {
+                    notifyCaller();
+                }
+                lock.unlock();
+            });
+        });
 
         if (argStruct == null) {
             handler.register(name, description, run);
@@ -64,47 +122,13 @@ public abstract class Command {
         }
     }
 
-    boolean checkArgCount(int count, int supposed) {
-        if (count < supposed) {
-            arg = new Object[] {count, supposed};
-            result = Result.notEnoughArgs;
-            return true;
-        }
-        return false;
-    }
-
-    boolean isNotInteger(String[] args, int idx) {
-        if(Strings.canParsePositiveInt(args[idx])) {
-            return false;
-        }
-        arg = new Object[] {idx + 1, args[idx]};
-        result = Result.notInteger;
-        return true;
-    }
-
-    public void registerCmp(CommandHandler handler, TerminalCommandRunner runner) {
-        Cons<String[]> func = (args) -> {
-            run(args, "");
-            resolveArgs();
-
-            if (runner != null) {
-                runner.run(this);
-            } else {
-                notifyCaller();
-            }
-        };
-
-        if (argStruct == null) {
-            handler.register(name, description, func);
-        } else  {
-            handler.register(name, argStruct, description, func);
-        }
-    }
-
+    // getMessage returns bundle key based of result
     public String getMessage() {
         return (result.general ? "" : (name + "-")) + result.name();
     }
 
+    // notifyCaller sends message to caller, its just a shorthand and is atomaticly called if
+    // command lambda is null
     public void notifyCaller() {
         if(caller == null) {
             Log.info(Global.cleanColors(String.format(bundle.getDefault(getMessage()), arg)));
@@ -113,40 +137,46 @@ public abstract class Command {
         caller.sendServerMessage(getMessage(), arg);
     }
 
+    // shorthand for kicking caller
     public void kickCaller(int duration) {
         caller.kick(getMessage(), duration, arg);
     }
 
+    // creates string of information about online players
     public String listPlayers() {
         StringBuilder sb = new StringBuilder();
-        for( PD pd : db.online.values()) {
+        db.online.forEachValue((pd) -> {
             sb.append(pd.summarize()).append("\n");
-        }
+        });
         return sb.substring(0, sb.length() -1);
     }
 
+    // Used for testing commands
     void assertResult(Result supposed) {
         if(supposed != result) {
             throw new RuntimeException(supposed.name() + "!=" + result.name());
         }
     }
 
+    // lambda for commands invoiced by players
     public interface PlayerCommandRunner {
         void run(Command c, PD pd);
     }
 
+    // lambda for commands called from command prompt
     public interface TerminalCommandRunner {
         void run(Command c);
     }
 
+    // Result enum contains all possible results command can return
     public enum Result {
         success,
         notFound,
         notExplicit,
-
         noPerm,
         wrongRank,
         wrongAccess,
+        wrongOption,
         unprotectSuccess,
         alreadyProtected,
         confirm,
@@ -154,6 +184,9 @@ public abstract class Command {
         confirmSuccess,
         invalidRequest,
         loginSuccess,
+        emptySlice,
+        invalidSlice,
+
         notInteger(true),
         playerNotFound(true),
         notEnoughArgs(true),
@@ -166,6 +199,5 @@ public abstract class Command {
         Result(boolean general) {
             this.general = general;
         }
-
     }
 }

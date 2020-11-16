@@ -1,6 +1,7 @@
 package twp.database;
 
 import arc.Events;
+import arc.func.Cons;
 import arc.util.Strings;
 import arc.util.Time;
 import com.mongodb.client.MongoClient;
@@ -14,7 +15,10 @@ import mindustry.gen.Player;
 import mindustry.type.ItemStack;
 import org.bson.Document;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 import static twp.Global.cleanName;
 import static twp.Main.bundle;
@@ -52,7 +56,7 @@ public class Database {
     public DataHandler handler = new DataHandler(rawData, database.getCollection(counter));
 
     // online player are here by their ids
-    public HashMap<String,PD> online = new HashMap<>();
+    public SyncMap<String, PD> online = new SyncMap<>();
 
     public Database(){
         Events.on(EventType.PlayerConnect.class,e-> {
@@ -159,13 +163,7 @@ public class Database {
             return res;
         }
 
-        for(PD pd : online.values()){
-            if(pd.player.name.equals(target)){
-                return handler.getDoc(pd.id);
-            }
-        }
-
-        return null;
+        return online.find((pd) -> pd.player.name.equals(target)).getDoc();
     }
 
 
@@ -209,5 +207,55 @@ public class Database {
         }
 
         return String.valueOf(Time.millis());
+    }
+
+
+    public static class SyncMap<K, V> {
+        private Map<K, V> map = Collections.synchronizedMap(new HashMap<K, V>());
+
+        public synchronized void put(K key, V value) {
+            map.put(key, value);
+        }
+
+        public synchronized V get(K key) {
+            return map.get(key);
+        }
+
+        public synchronized V remove(K key) {
+            return map.remove(key);
+        }
+
+        public synchronized boolean isEmpty() {
+            return map.isEmpty();
+        }
+
+        public synchronized boolean containsKey(K key) {
+            return map.containsKey(key);
+        }
+
+        public synchronized void forEachKey(Cons<K> con) {
+            for(K key : map.keySet()) {
+                con.get(key);
+            }
+        }
+
+        public synchronized void forEachValue(Cons<V> con) {
+            for(V val : map.values()) {
+                con.get(val);
+            }
+        }
+
+        public synchronized V find(Filter<V> con) {
+            for(V val : map.values()) {
+                if(con.run(val)) {
+                    return val;
+                }
+            }
+            return null;
+        }
+
+        interface Filter<T> {
+            boolean run(T val);
+        }
     }
 }

@@ -2,6 +2,7 @@ package twp.security;
 
 import arc.Events;
 import mindustry.net.Administration;
+import twp.Main;
 import twp.database.PD;
 import twp.database.Perm;
 import twp.database.Setting;
@@ -34,15 +35,17 @@ public class Limiter {
 
         // This mostly prevents griefers from shooting
         Events.run(EventType.Trigger.update, () -> {
-            for(PD pd : db.online.values()) {
+            db.online.forEachValue((pd) -> {
                 if(pd.isGriefer() && pd.player.p.shooting) {
                     pd.player.p.unit().kill();
                 }
-            }
+            });
         });
 
 
-        registerActionFilter();
+        if(!Main.testMode) {
+            registerActionFilter();
+        }
     }
 
     void registerActionFilter() {

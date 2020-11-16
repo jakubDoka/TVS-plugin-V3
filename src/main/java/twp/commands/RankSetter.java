@@ -1,15 +1,20 @@
 package twp.commands;
 
-import arc.util.Log;
-import twp.database.*;
-import twp.tools.Testing;
+import arc.Core;
+import twp.database.PD;
+import twp.database.Rank;
+import twp.database.RankType;
+import twp.database.Raw;
 
 import static twp.Main.db;
 import static twp.Main.ranks;
 
+// Rank setter lets admins to change build-in ranks of players
+// Its designed for use on multiple places (terminal, game, discord)
 public abstract class RankSetter extends Command {
     public boolean freeAccess = false;
 
+    // verification is context dependent
     public abstract boolean verification(String id);
 
     public RankSetter() {
@@ -19,7 +24,7 @@ public abstract class RankSetter extends Command {
     }
 
     @Override
-    public void run(String[] args, String id) {
+    public void run(String id, String ...args) {
         // Verify - place dependent
         if (!verification(id)) {
             result = Result.noPerm; // done
@@ -29,9 +34,7 @@ public abstract class RankSetter extends Command {
         // Resolve rank type, tis also checks if rank exists
         Rank rank = ranks.buildIn.get(args[1]);
         if (rank == null) {
-            arg = new Object[]{
-                    ranks.rankList(RankType.rank),
-            };
+            setArg(ranks.rankList(RankType.rank));
             result = Result.wrongRank; // done
             return;
         }
@@ -50,17 +53,14 @@ public abstract class RankSetter extends Command {
         }
 
         // setting arguments to show change
-        arg = new Object[] {
-                data.getRank(RankType.rank).getSuffix(),
-                rank.getSuffix(),
-        };
+        setArg(data.getRank(RankType.rank).getSuffix(), rank.getSuffix());
 
         db.handler.setRank(data.getId(), rank, RankType.rank);
 
         // if player is online kick him. I do not want to deal with bag prone code to change his rank manually.
         PD pd = db.online.get(data.getUuid());
         if (pd != null) {
-            pd.kick("kick-rankChange", 0, rank.getSuffix());
+            Core.app.post(() -> pd.kick("kick-rankChange", 0, rank.getSuffix()));
         }
 
         result = Result.success; // done
