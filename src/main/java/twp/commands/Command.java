@@ -10,6 +10,7 @@ import mindustry.gen.Player;
 import twp.Global;
 import twp.database.PD;
 import twp.tools.Testing;
+import twp.tools.Text;
 
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -130,7 +131,7 @@ public abstract class Command {
     }
 
     synchronized void setBusy(boolean value) {
-        busy = busy;
+        busy = value;
     }
 
     // getMessage returns bundle key based of result
@@ -142,7 +143,7 @@ public abstract class Command {
     // command lambda is null
     public void notifyCaller() {
         if(caller == null) {
-            Log.info(Global.cleanColors(String.format(bundle.getDefault(getMessage()), arg)));
+            Log.info(Text.cleanColors(Text.format(bundle.getDefault(getMessage()), arg)));
             return;
         }
         caller.sendServerMessage(getMessage(), arg);
@@ -197,6 +198,9 @@ public abstract class Command {
         loginSuccess,
         emptySlice,
         invalidSlice,
+        noOneOnline,
+        successOnline,
+
 
         notInteger(true),
         playerNotFound(true),

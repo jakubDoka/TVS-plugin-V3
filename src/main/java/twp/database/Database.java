@@ -14,13 +14,13 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.type.ItemStack;
 import org.bson.Document;
+import twp.tools.Text;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static twp.Global.cleanName;
 import static twp.Main.bundle;
 import static twp.Main.ranks;
 
@@ -193,7 +193,7 @@ public class Database {
     //removes fake ranks and colors
     public void validateName(Player player) {
         String originalName = player.name;
-        player.name = cleanName(player.name);
+        player.name = Text.cleanName(player.name);
         if (!originalName.equals(player.name)) {
             //name cannot be blank so then replace it with some random name
             if (player.name.replace(" ", "").isEmpty()) {

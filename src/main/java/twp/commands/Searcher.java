@@ -27,7 +27,7 @@ public class Searcher extends Command {
 
     public Searcher() {
         name = "search";
-        argStruct = "<name-filter/none> [property] [slice] [inverted]";
+        argStruct = "<name-filter/none/online> [property] [slice] [inverted]";
         description = "lets you query trough tws database. Its fastest way to figure out ID. You can also compare your stats with others.";
     }
 
@@ -35,16 +35,16 @@ public class Searcher extends Command {
     void run(String id, String... args) {
         StringBuilder sb = new StringBuilder();
 
-        if(args.length > 1 && args[1].equals("online")) {
+        if(args[0].equals("online")) {
             if(db.online.isEmpty()) {
-                result = Result.emptySlice;
+                result = Result.noOneOnline;
                 return;
             }
 
             db.online.forEachValue((pd) -> sb.append(pd.getDoc().summarize(Stat.playTime)).append("\n"));
 
             setArg(sb.toString());
-            result = Result.success;
+            result = Result.successOnline;
             return;
         }
 
@@ -56,25 +56,32 @@ public class Searcher extends Command {
         } else {
             found = db.handler.startsWith("name", args[0]);
             for(Document ignored : found) {
-                count++;
+                count++; // fucking iterators
             }
         }
 
-        RankType rankType = null;
         Stat stat = Stat.playTime;
         if(args.length > 1) {
-            rankType = ranks.rankType(args[1]);
-            if(!Enums.contains(Stat.class, args[1]) && rankType == null) {
-                setArg(
-                        Enums.list(Stat.class),
-                        ranks.rankList(RankType.rank),
-                        ranks.rankList(RankType.specialRank),
-                        ranks.rankList(RankType.donationRank)
-                );
-                result = Result.wrongOption;
-                return;
+            RankType rankType = ranks.rankType(args[1]);
+            if (rankType == null) {
+                if(!Enums.contains(Stat.class, args[1])) {
+                    setArg(
+                            Enums.list(Stat.class),
+                            ranks.rankList(RankType.rank),
+                            ranks.rankList(RankType.specialRank),
+                            ranks.rankList(RankType.donationRank)
+                    );
+                    result = Result.wrongOption;
+                    return;
+                }
+                stat = Stat.valueOf(args[1]);
+            } else {
+                found = found.filter(Filters.eq(rankType.name(), args[1]));
+                count = 0;
+                for(Document ignored : found) {
+                    count++;
+                }
             }
-            stat = Stat.valueOf(args[1]);
         }
 
         if(args.length == 4) {
@@ -82,15 +89,6 @@ public class Searcher extends Command {
         } else {
             found = found.sort(Sorts.ascending(stat.name()));
         }
-
-        if (rankType != null) {
-            found = found.filter(Filters.eq(rankType.name(), args[1]));
-            count = 0;
-            for(Document ignored : found) {
-                count++;
-            }
-        }
-
 
         Slice slice;
         if(args.length > 2) {

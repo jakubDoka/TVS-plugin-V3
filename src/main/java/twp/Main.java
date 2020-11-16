@@ -50,7 +50,7 @@ public class Main extends Plugin {
     public void registerClientCommands(CommandHandler handler) {
         RankSetter.game.registerGm(handler, null);
 
-        Searcher.game.registerCmp(handler, null);
+        Searcher.game.registerGm(handler, null);
 
         AccountManager.game.registerGm(handler, (self, pd) -> {
             switch (self.result){

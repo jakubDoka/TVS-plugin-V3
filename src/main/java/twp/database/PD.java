@@ -4,6 +4,7 @@ import arc.util.Time;
 import mindustry.gen.Player;
 import twp.Main;
 import twp.tools.Testing;
+import twp.tools.Text;
 
 
 import javax.swing.text.PlainDocument;
@@ -88,9 +89,9 @@ public class PD{
             return;
         }
         if(bundle != null && bundle.containsKey(message)) {
-            player.p.sendMessage(prefix + String.format(bundle.getString(message), args));
+            player.p.sendMessage(prefix + Text.format(bundle.getString(message), args));
         } else {
-            player.p.sendMessage(prefix + String.format(Main.bundle.getDefault(message), args));
+            player.p.sendMessage(prefix + Text.format(Main.bundle.getDefault(message), args));
         }
     }
 
@@ -108,9 +109,9 @@ public class PD{
             return;
         }
         if(bundle != null && bundle.containsKey(message)) {
-            player.p.con.kick(String.format(bundle.getString(message), args), duration);
+            player.p.con.kick(Text.format(bundle.getString(message), args), duration);
         } else {
-            player.p.con.kick(String.format(Main.bundle.getDefault(message), args), duration);
+            player.p.con.kick(Text.format(Main.bundle.getDefault(message), args), duration);
         }
     }
 
