@@ -33,7 +33,7 @@ public class Text {
         try {
             return String.format(str, args);
         } catch (Exception e) {
-            return str;
+            return str + "[orange]There is a incorrect formatting in bundle. Please report this.";
         }
     }
 }
