@@ -38,7 +38,7 @@ public class RankSetter extends Command {
         // Search target
         Raw data = db.findData(args[0]);
         if (data == null) {
-            result = Result.playerNotFound; // done
+            playerNotFound();
             return;
         }
 

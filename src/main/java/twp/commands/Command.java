@@ -33,14 +33,6 @@ public abstract class Command {
     // main behavior
     abstract void run(String id, String ...args);
 
-    // in case some general result needs general arguments, they are resolved here
-    void resolveArgs() {
-        switch (result) {
-            case playerNotFound:
-                setArg(listPlayers());
-        }
-    }
-
     void setArg(Object ... values) {
         arg = values;
     }
@@ -65,15 +57,23 @@ public abstract class Command {
         return true;
     }
 
+    public Result use(String id, String ...args) {
+        while (isBusy());
+        run(id, args);
+        try {
+            return result;
+        } finally {
+            setBusy(false);
+        }
+    }
+
     // for registration of commandline commands
     public void registerCmp(CommandHandler handler, TerminalCommandRunner runner) {
         freeAccess = true;
         Cons<String[]> func = (args) -> new Thread(() -> {
             while (isBusy());
-            setBusy(true);
 
             run("", args);
-            resolveArgs();
 
             queue.post(() -> {
                 if (runner != null) {
@@ -96,7 +96,6 @@ public abstract class Command {
     public void registerGm(CommandHandler handler, PlayerCommandRunner runner) {
         CommandHandler.CommandRunner<Player> run = (args, player) -> new Thread(() -> {
             while (isBusy());
-            setBusy(true);
 
             PD pd = db.online.get(player.uuid());
 
@@ -110,7 +109,6 @@ public abstract class Command {
             caller = pd;
 
             run(player.uuid(), args);
-            resolveArgs();
 
             queue.post(() -> {
                 if (runner != null) {
@@ -130,7 +128,11 @@ public abstract class Command {
     }
 
     synchronized boolean isBusy() {
-        return busy;
+        if(busy) {
+            return true;
+        }
+        busy = true;
+        return false;
     }
 
     synchronized void setBusy(boolean value) {
@@ -167,8 +169,21 @@ public abstract class Command {
     }
 
     boolean isPlayerAdmin(String id) {
-        PD data = db.online.get(id);
-        return data != null && data.rank.admin;
+        PD pd = db.online.get(id);
+        return pd != null && pd.rank.admin;
+    }
+
+    void playerNotFound() {
+        result = Result.playerNotFound;
+        setArg(listPlayers());
+    }
+
+    boolean cannotInteract(String id) {
+        if(db.online.get(id).cannotInteract()) {
+            result = Result.noPerm;
+            return true;
+        }
+        return false;
     }
 
     // Used for testing commands
@@ -215,12 +230,20 @@ public abstract class Command {
         noOneOnline,
         successOnline,
         wrongCommand,
+        redundant,
+        cannotApplyToSelf,
 
 
         notInteger(true),
         playerNotFound(true),
         notEnoughArgs(true),
-        incorrectPassword(true);
+        incorrectPassword(true),
+        alreadyVoting(true),
+        cannotVote(true),
+        voteStartSuccess(true),
+        invalidVoteSession(true),
+        voteSuccess(true),
+        alreadyVoted(true);
 
         boolean general;
 

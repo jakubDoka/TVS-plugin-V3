@@ -16,10 +16,7 @@ import mindustry.type.ItemStack;
 import org.bson.Document;
 import twp.tools.Text;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static twp.Main.bundle;
 import static twp.Main.ranks;
@@ -214,7 +211,7 @@ public class Database {
 
 
     public static class SyncMap<K, V> {
-        private Map<K, V> map = Collections.synchronizedMap(new HashMap<K, V>());
+        private final Map<K, V> map = Collections.synchronizedMap(new HashMap<K, V>());
 
         public synchronized void put(K key, V value) {
             map.put(key, value);
@@ -237,14 +234,16 @@ public class Database {
         }
 
         public synchronized void forEachKey(Cons<K> con) {
-            for(K key : map.keySet()) {
-                con.get(key);
+            Iterator<K> iter = map.keySet().iterator();
+            while (iter.hasNext()) {
+                con.get(iter.next());
             }
         }
 
         public synchronized void forEachValue(Cons<V> con) {
-            for(V val : map.values()) {
-                con.get(val);
+            Iterator<V> iter = map.values().iterator();
+            while (iter.hasNext()) {
+                con.get(iter.next());
             }
         }
 

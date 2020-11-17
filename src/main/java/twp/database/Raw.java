@@ -81,8 +81,12 @@ public class Raw {
         return (String) data.get("name");
     }
 
-    public boolean siGriefer() {
+    public boolean isGriefer() {
         return getRank(RankType.rank) == ranks.griefer;
+    }
+
+    public boolean markable() {
+        return getRank(RankType.rank) != ranks.candidate && getRank(RankType.rank) != ranks.admin;
     }
 
     public String summarize(Stat stat) {

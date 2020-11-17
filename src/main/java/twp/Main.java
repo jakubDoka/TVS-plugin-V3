@@ -39,11 +39,14 @@ public class Main extends Plugin {
             lim = new Limiter();
             bundle = new Bundle();
             hud = new Hud();
+            if(!testMode) {
+                Timer.schedule(() -> queue.post(() -> Events.fire(new TickEvent())), 0, 1);
+            }
         });
 
         Events.run(EventType.Trigger.update, ()-> queue.run());
 
-        Timer.schedule(() -> queue.post(() -> Events.fire(new TickEvent())), 0, 1);
+
     }
 
     @Override
@@ -58,11 +61,20 @@ public class Main extends Plugin {
     //register commands that player can invoke in-game
     @Override
     public void registerClientCommands(CommandHandler handler) {
+        handler.removeCommand("vote");
+        handler.removeCommand("votekick");
+
         RankSetter.game.registerGm(handler, null);
 
         Searcher.game.registerGm(handler, null);
 
-        Setter.game.registerCmp(handler, null);
+        Setter.game.registerGm(handler, null);
+
+        Voter.game.registerGm(handler, null);
+
+        Mkgf.game.registerGm(handler, null);
+
+        Mkgf.votekick.registerGm(handler, null);
 
         AccountManager.game.registerGm(handler, (self, pd) -> {
             switch (self.result){
