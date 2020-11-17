@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import static twp.Main.db;
 
 public class Mkgf extends Command {
-    Voting main = new Voting(name, 5, 2) {
+    Voting main = new Voting(this, "main", 5, 2) {
         {
             protection = Perm.antiGrief;
         }
@@ -48,8 +48,7 @@ public class Mkgf extends Command {
             return;
         }
 
-        int existingSession = Voting.processor.query(s ->
-                (s.args.length == 3 && s.args[2] instanceof Long) && s.args[2].equals(raw.getId()));
+        int existingSession = Voting.processor.query(s -> (s.voting == main && s.args[1].equals(raw.getId())));
 
         if(existingSession != -1) {
             result = Voter.game.use(id, args[0].equals("mark") ? "y" : "n", "" + existingSession);
@@ -65,7 +64,7 @@ public class Mkgf extends Command {
 
                 result = main.pushSession(pd, s -> {
                     RankSetter.terminal.use("", args[1], "griefer");
-                }, args[0], raw.getName(), raw.getId());
+                }, raw.getName(), raw.getId(), "[red]griefer[]");
                 break;
             case "unmark":
                 if(!raw.isGriefer()) {
@@ -74,7 +73,7 @@ public class Mkgf extends Command {
 
                 result = main.pushSession(pd, s -> {
                     RankSetter.terminal.use("", args[1], "newcomer");
-                }, args[0], raw.getName(), raw.getId());
+                }, raw.getName(), raw.getId(), "[green]newcomer[]");
                 break;
             default:
                 result = Result.wrongOption;

@@ -162,8 +162,8 @@ public abstract class Command {
     // creates string of information about online players
     public String listPlayers() {
         StringBuilder sb = new StringBuilder();
-        db.online.forEachValue((pd) -> {
-            sb.append(pd.summarize()).append("\n");
+        db.online.forEachValue(iter -> {
+            sb.append(iter.next().summarize()).append("\n");
         });
         return sb.substring(0, sb.length() -1);
     }

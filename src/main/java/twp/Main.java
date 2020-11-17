@@ -38,6 +38,8 @@ public class Main extends Plugin {
             db = new Database();
             lim = new Limiter();
             bundle = new Bundle();
+
+            // this has to be last init
             hud = new Hud();
             if(!testMode) {
                 Timer.schedule(() -> queue.post(() -> Events.fire(new TickEvent())), 0, 1);

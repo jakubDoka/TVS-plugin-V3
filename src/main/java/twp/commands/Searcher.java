@@ -41,7 +41,7 @@ public class Searcher extends Command {
                 return;
             }
 
-            db.online.forEachValue((pd) -> sb.append(pd.getDoc().summarize(Stat.playTime)).append("\n"));
+            db.online.forEachValue(iter -> sb.append(iter.next().getDoc().summarize(Stat.playTime)).append("\n"));
 
             setArg(sb.toString());
             result = Result.successOnline;

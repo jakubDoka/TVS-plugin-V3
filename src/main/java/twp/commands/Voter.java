@@ -7,6 +7,12 @@ import static twp.Main.db;
 
 public class Voter extends Command {
 
+    public Voter() {
+        name = "v";
+        argStruct = "<y/n> <session>";
+        description = "Allows you to participate in vote sessions.";
+    }
+
     @Override
     void run(String id, String... args) {
         if(cannotInteract(id)) {

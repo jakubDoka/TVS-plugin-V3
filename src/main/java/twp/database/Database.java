@@ -233,17 +233,17 @@ public class Database {
             return map.containsKey(key);
         }
 
-        public synchronized void forEachKey(Cons<K> con) {
+        public synchronized void forEachKey(Cons<Iterator<K>> con) {
             Iterator<K> iter = map.keySet().iterator();
             while (iter.hasNext()) {
-                con.get(iter.next());
+                con.get(iter);
             }
         }
 
-        public synchronized void forEachValue(Cons<V> con) {
+        public synchronized void forEachValue(Cons<Iterator<V>> con) {
             Iterator<V> iter = map.values().iterator();
             while (iter.hasNext()) {
-                con.get(iter.next());
+                con.get(iter);
             }
         }
 

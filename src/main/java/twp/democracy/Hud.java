@@ -9,6 +9,7 @@ import twp.tools.Testing;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import static twp.Main.db;
 
@@ -17,6 +18,7 @@ public class Hud {
     ArrayList<Displayable> displayable = new ArrayList<>();
 
     public Hud() {
+        displayable.add(Voting.processor);
         Events.on(Main.TickEvent.class, e -> update());
     }
 
@@ -25,26 +27,37 @@ public class Hud {
     }
 
     void update() {
-        db.online.forEachValue(pd -> {
+        db.online.forEachValue(iter -> {
+            PD pd = iter.next();
+            if(pd.player.p == null) {
+                Testing.Log("pd.player.p is null when displaying hud");
+                return;
+            }
             if(!db.hasEnabled(pd.id, Setting.hud)) {
+                Call.hideHudText(pd.player.p.con);
                 return;
             }
             StringBuilder sb = new StringBuilder();
 
             for(Displayable displayable : displayable) {
-                sb.append(displayable.getMessage(pd)).append("\n");
+                sb.append(displayable.getMessage(pd));
             }
 
-            for(Message message  : Message.messages) {
+            Iterator<Message> it = Message.messages.iterator();
+            while (it.hasNext()){
+                Message message = it.next();
                 sb.append(message.getMessage(pd)).append("\n");
+                if (message.counter < 1) {
+                    it.remove();
+                }
             }
 
-            if(pd.player.p == null) {
-                Testing.Log("pd.player.p is null when displaying hud");
-                return;
+            if(sb.length() == 0) {
+                Call.hideHudText(pd.player.p.con);
+            } else {
+                Call.setHudText(pd.player.p.con, "[#cbcbcb]" + sb.substring(0, sb.length() - 1));
             }
 
-            Call.setHudText(pd.player.p.con, sb.substring(0, sb.length() - 1));
         });
 
     }
@@ -77,9 +90,6 @@ public class Hud {
         @Override
         public String getMessage(PD pd) {
             counter--;
-            if (counter < 1) {
-                messages.remove(this);
-            }
             return String.format("[%s]%s[](%ds)", colors[counter % colors.length], pd.translate(message, args), counter);
         }
     }

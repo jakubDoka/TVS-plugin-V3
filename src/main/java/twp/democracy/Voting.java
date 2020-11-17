@@ -17,19 +17,21 @@ import static twp.Main.hud;
 public class Voting {
     public static Processor processor = new Processor();
     int maxVotes, minVotes;
-    public String parentName;
+    public Command parent;
+    public String name;
     public Perm protection;
 
-    public Voting(String parentName, int maxVotes, int minVotes) {
-        this.parentName = parentName;
+    public Voting(Command parent, String name, int maxVotes, int minVotes) {
+        this.name = name;
+        this.parent = parent;
         this.maxVotes = maxVotes;
         this.minVotes = minVotes;
     }
 
     int getMajority() {
         AtomicInteger counter = new AtomicInteger();
-        db.online.forEachValue(pd -> {
-            if(pd.canParticipate()) {
+        db.online.forEachValue(iter -> {
+            if(iter.next().canParticipate()) {
                 counter.getAndIncrement();
             }
         });
@@ -73,7 +75,7 @@ public class Voting {
     }
 
     String getMessage(Messages messages) {
-        return parentName + "-vote-" + messages.name();
+        return parent.name + "-" + name + "-" + messages.name();
     }
 
     public interface VoteRunner {
@@ -83,7 +85,7 @@ public class Voting {
     public static class Session {
         public static final int duration = 60;
 
-        Voting voting;
+        public Voting voting;
         VoteRunner runner;
         int counter, yes, no;
         boolean spacial;
@@ -186,9 +188,12 @@ public class Voting {
                     continue;
                 }
 
+                sb.append(s.counter % 2 == 0 ? "[gray]" : "[white]");
                 sb.append(pd.translate(s.voting.getMessage(Messages.request), s.args));
+                sb.append("[]\n");
+                sb.append(pd.translate(s.spacial ? "vote-specialStatus" : "vote-status", i, s.yes, s.no, major, s.counter));
                 sb.append("\n");
-                sb.append(pd.translate(s.spacial ? "voting-specialStatus" : "voting-status", i, s.yes, s.no, major));
+
                 i++;
             }
             return sb.toString();
