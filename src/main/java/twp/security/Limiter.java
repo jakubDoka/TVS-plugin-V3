@@ -37,6 +37,9 @@ public class Limiter {
         Events.run(EventType.Trigger.update, () -> {
             db.online.forEachValue((iter) -> {
                 PD pd = iter.next();
+                if(pd.isInvalid()) {
+                    return;
+                }
                 if(pd.cannotInteract() && pd.player.p.shooting) {
                     pd.player.p.unit().kill();
                 }

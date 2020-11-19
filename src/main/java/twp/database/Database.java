@@ -14,6 +14,7 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.type.ItemStack;
 import org.bson.Document;
+import twp.tools.Testing;
 import twp.tools.Text;
 
 import java.util.*;
@@ -159,7 +160,13 @@ public class Database {
         if (res != null) {
             return res;
         }
-        PD p = online.find((pd) -> pd.player.name.equals(target));
+        PD p = online.find((pd) -> {
+            if(pd.isInvalid()) {
+                return false;
+            }
+            return pd.player.name.equals(target) || pd.player.p.name.equalsIgnoreCase(target);
+        });
+
         if(p != null) {
             return p.getDoc();
         }

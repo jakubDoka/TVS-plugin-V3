@@ -12,8 +12,7 @@ import javax.swing.text.PlainDocument;
 import java.util.HashSet;
 import java.util.ResourceBundle;
 
-import static twp.Main.db;
-import static twp.Main.ranks;
+import static twp.Main.*;
 
 public class PD{
     private static final String prefix = "[coral][[[scarlet]Server[]]:[#cbcbcb] ";
@@ -64,6 +63,10 @@ public class PD{
     }
 
     public void updateName() {
+        if(isInvalid()) {
+            return;
+        }
+
         String orig = player.name;
         Player player = this.player.p;
         if (afk) {
@@ -93,24 +96,21 @@ public class PD{
     }
 
     public synchronized void sendServerMessage(String message, Object ... args) {
-        if(player.p == null) {
-            Testing.Log("sending message to PD with a null player");
+        if(isInvalid()) {
             return;
         }
         player.p.sendMessage(prefix + translate(message, args));
     }
 
     public void sendMessage(String message) {
-        if(player.p == null) {
-            Testing.Log("sending message to PD with a null player");
+        if(isInvalid()) {
             return;
         }
         player.p.sendMessage(message);
     }
 
     public void kick(String message, int duration, Object ... args) {
-        if(player.p == null) {
-            Testing.Log("attempting to disconnect PD with a null player");
+        if(isInvalid()) {
             return;
         }
         player.p.con.kick(translate(message, args), duration);
@@ -150,6 +150,14 @@ public class PD{
 
     public String summarize() {
         return "[yellow]" + id + "[] " + player.name + " " + rank.getSuffix();
+    }
+
+    public boolean isInvalid() {
+        if(player.p == null) {
+            if(!testMode) Testing.Log("PD has no underling player");
+            return true;
+        }
+        return false;
     }
 
     public synchronized int getHighestPermissionLevel() {

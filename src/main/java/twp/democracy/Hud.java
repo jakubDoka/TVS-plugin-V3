@@ -29,8 +29,7 @@ public class Hud {
     void update() {
         db.online.forEachValue(iter -> {
             PD pd = iter.next();
-            if(pd.player.p == null) {
-                Testing.Log("pd.player.p is null when displaying hud");
+            if(pd.isInvalid()) {
                 return;
             }
             if(!db.hasEnabled(pd.id, Setting.hud)) {
