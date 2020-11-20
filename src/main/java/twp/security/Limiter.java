@@ -75,13 +75,19 @@ public class Limiter {
                 return false;
             }
 
-            int top = pd.getHighestPermissionLevel();
-            int lock = map.getLock(act.tile);
-            if (lock > top) {
-                pd.sendServerMessage("admins-permissionTooLow", top, lock);
-                return false;
-            } else if (pd.hasPermLevel(Perm.high.value) && act.type == Administration.ActionType.placeBlock) {
-                map.setLock(act.tile, db.hasEnabled(pd.id, Setting.lock) ? top : Perm.high.value);
+            switch (act.type) {
+                case placeBlock:
+                case rotate:
+                case depositItem:
+                case configure:
+                    int top = pd.getHighestPermissionLevel();
+                    int lock = map.getLock(act.tile);
+                    if (lock > top) {
+                        pd.sendServerMessage("admins-permissionTooLow", top, lock);
+                        return false;
+                    } else if (pd.hasPermLevel(Perm.high.value)) {
+                        map.setLock(act.tile, db.hasEnabled(pd.id, Setting.lock) ? top : Perm.high.value);
+                    }
             }
 
             return true;
