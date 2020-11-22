@@ -48,7 +48,7 @@ public class Limiter {
 
 
         if(!Main.testMode) {
-            registerActionFilter();
+            //registerActionFilter();
         }
     }
 
@@ -74,21 +74,19 @@ public class Limiter {
                 pd.sendServerMessage("admins-paralyzedCannotBuild");
                 return false;
             }
+
+            if (act.tile == null) {
+                return true;
+            }
+
             int top = pd.getHighestPermissionLevel();
             int lock = map.getLock(act.tile);
+
             if (lock > top) {
                 pd.sendServerMessage("admins-permissionTooLow", top, lock);
                 return false;
-            } else {
-                switch (act.type) {
-                    case placeBlock:
-                    case rotate:
-                    case depositItem:
-                    case configure:
-                        if (pd.hasPermLevel(Perm.high.value)) {
-                            map.setLock(act.tile, db.hasEnabled(pd.id, Setting.lock) ? top : Perm.high.value);
-                        }
-                }
+            } else if (act.type != Administration.ActionType.breakBlock && pd.hasPermLevel(Perm.high.value)) {
+                map.setLock(act.tile, db.hasEnabled(pd.id, Setting.lock) ? top : Perm.high.value);
             }
 
 
@@ -96,3 +94,22 @@ public class Limiter {
         });
     }
 }
+
+/*
+Pertussis = cierny kasel
+Polio = decka obrna
+Procrastination = odkladanie
+Ointment = nasticka
+Medical Record = lekarska sprava
+Blisters = pluzgiere
+Outweigh = prevazovat
+Above = nad
+Rubella = ruzienka
+Soothe = upokojit
+Compresses = obklady
+Splint = dlaha
+Subside = ustupit
+Swell = nafukat
+Tonsils = mandle
+Well-being = zdravie
+ */
