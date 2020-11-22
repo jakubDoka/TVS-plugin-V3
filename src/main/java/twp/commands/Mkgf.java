@@ -19,7 +19,7 @@ public class Mkgf extends Command {
 
     public Mkgf() {
         name = "mkgf";
-        argStruct = "<mark/unmark> <id/name>";
+        argStruct = "<id/name> [unmark]";
         description = "It works like votekick but it also marks player a griefer witch means he can only spectate."; // Todo
     }
 
@@ -31,7 +31,7 @@ public class Mkgf extends Command {
             return;
         }
 
-        Raw raw = db.findData(args[1]);
+        Raw raw = db.findData(args[0]);
 
         if(raw == null) {
             playerNotFound();
@@ -51,32 +51,29 @@ public class Mkgf extends Command {
         int existingSession = Voting.processor.query(s -> (s.voting == main && s.args[1].equals(raw.getId())));
 
         if(existingSession != -1) {
-            result = Voter.game.use(id, args[0].equals("mark") ? "y" : "n", "" + existingSession);
+            result = Voter.game.use(id, args.length == 1 ? "y" : "n", "" + existingSession);
             return;
         }
 
         result = Result.redundant;
-        switch (args[0]) {
-            case "mark":
-                if(raw.isGriefer()) {
-                    return;
-                }
+        if (args.length == 1) {
+            if (raw.isGriefer()) {
+                return;
+            }
 
-                result = main.pushSession(pd, s -> {
-                    RankSetter.terminal.use("", args[1], "griefer");
-                }, raw.getName(), raw.getId(), "[red]griefer[]");
-                break;
-            case "unmark":
-                if(!raw.isGriefer()) {
-                    return;
-                }
+            result = main.pushSession(pd, s -> {
+                RankSetter.terminal.use("", args[0], "griefer");
+            }, raw.getName(), raw.getId(), "[red]griefer[]");
+        } else if(args[1].equals("unmark")) {
+            if (!raw.isGriefer()) {
+                return;
+            }
 
-                result = main.pushSession(pd, s -> {
-                    RankSetter.terminal.use("", args[1], "newcomer");
-                }, raw.getName(), raw.getId(), "[green]newcomer[]");
-                break;
-            default:
-                result = Result.wrongOption;
+            result = main.pushSession(pd, s -> {
+                RankSetter.terminal.use("", args[0], "newcomer");
+            }, raw.getName(), raw.getId(), "[green]newcomer[]");
+        } else {
+            result = Result.wrongOption;
         }
     }
 
