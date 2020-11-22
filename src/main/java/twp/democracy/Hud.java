@@ -27,6 +27,12 @@ public class Hud {
     }
 
     void update() {
+        for (Message value : Message.messages) {
+            value.tick();
+        }
+        for(Displayable displayable : displayable) {
+            displayable.tick();
+        }
         db.online.forEachValue(iter -> {
             PD pd = iter.next();
             if(pd.isInvalid()) {
@@ -63,6 +69,7 @@ public class Hud {
 
     public interface Displayable {
         String getMessage(PD pd);
+        void tick();
     }
 
     static class Message implements Displayable {
@@ -88,8 +95,13 @@ public class Hud {
 
         @Override
         public String getMessage(PD pd) {
-            counter--;
+
             return String.format("[%s]%s[](%ds)", colors[counter % colors.length], pd.translate(message, args), counter);
+        }
+
+        @Override
+        public void tick() {
+            counter--;
         }
     }
 }

@@ -181,12 +181,7 @@ public class Voting {
             int i = 0;
             for(Session s : new ArrayList<>(sessions)) {
                 int major = s.voting.getMajority();
-                s.counter--;
-                if(s.counter < 0) {
-                    s.run();
-                    sessions.remove(s);
-                    continue;
-                }
+
 
                 sb.append(s.counter % 2 == 0 ? "[gray]" : "[white]");
                 sb.append(pd.translate(s.voting.getMessage(Messages.request), s.args));
@@ -197,6 +192,17 @@ public class Voting {
                 i++;
             }
             return sb.toString();
+        }
+
+        @Override
+        public void tick() {
+            for(Session s : new ArrayList<>(sessions)) {
+                s.counter--;
+                if (s.counter < 0) {
+                    s.run();
+                    sessions.remove(s);
+                }
+            }
         }
 
         public interface Query {
