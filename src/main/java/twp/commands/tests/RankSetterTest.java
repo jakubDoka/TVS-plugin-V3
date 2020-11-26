@@ -1,15 +1,11 @@
-package twp.commands;
+package twp.commands.tests;
 
-import arc.Events;
-import arc.util.Log;
-import mindustry.game.EventType;
-import twp.Main;
+import twp.commands.Command;
+import twp.commands.RankSetter;
 import twp.database.DBPlayer;
 import twp.database.PD;
 
 import static twp.Main.db;
-import static org.junit.jupiter.api.Assertions.*;
-import static twp.Main.ranks;
 
 class RankSetterTest extends Test {
     public static void main(String[] args ) {

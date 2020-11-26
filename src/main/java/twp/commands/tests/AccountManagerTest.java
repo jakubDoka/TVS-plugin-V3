@@ -1,5 +1,7 @@
-package twp.commands;
+package twp.commands.tests;
 
+import twp.commands.AccountManager;
+import twp.commands.Command;
 import twp.database.DBPlayer;
 import twp.database.PD;
 import twp.database.enums.RankType;

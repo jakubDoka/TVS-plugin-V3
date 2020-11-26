@@ -8,7 +8,7 @@ import java.io.IOException;
 
 import static twp.Main.db;
 
-public class Test extends twp.commands.Test {
+public class Test extends twp.commands.tests.Test {
     public static void main(String[] args) throws IOException {
         init();
         db.maps.drop();

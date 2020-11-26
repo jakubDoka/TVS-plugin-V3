@@ -14,7 +14,7 @@ public class Voter extends Command {
     }
 
     @Override
-    void run(String id, String... args) {
+    public void run(String id, String... args) {
         if(cannotInteract(id)) {
             return;
         }

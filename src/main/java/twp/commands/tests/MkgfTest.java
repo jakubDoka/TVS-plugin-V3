@@ -1,5 +1,8 @@
-package twp.commands;
+package twp.commands.tests;
 
+import twp.commands.Command;
+import twp.commands.Mkgf;
+import twp.commands.Voter;
 import twp.database.DBPlayer;
 
 import static org.junit.jupiter.api.Assertions.*;

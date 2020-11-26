@@ -6,9 +6,9 @@ import twp.tools.Enums;
 
 import static twp.Main.db;
 
-public class Setter extends Command {
+public class DBSetter extends Command {
 
-    public Setter() {
+    public DBSetter() {
         name = "dbset";
         argStruct = "<id> <field> <value/null>";
         description = "Directly edits player accounts. For example bring down a stats of farmers.";
@@ -23,7 +23,7 @@ public class Setter extends Command {
     };
 
     @Override
-    void run(String id, String... args) {
+    public void run(String id, String... args) {
         if(!verifier.verify(id)) {
             result = Result.noPerm;
             return;
@@ -90,7 +90,7 @@ public class Setter extends Command {
         result = Result.success;
     }
 
-    public static Setter
-            terminal = new Setter(),
-            game = new Setter() {{verifier = this::isPlayerAdmin;}};
+    public static DBSetter
+            terminal = new DBSetter(),
+            game = new DBSetter() {{verifier = this::isPlayerAdmin;}};
 }

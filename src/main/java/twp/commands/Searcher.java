@@ -30,7 +30,7 @@ public class Searcher extends Command {
     }
 
     @Override
-    void run(String id, String... args) {
+    public void run(String id, String... args) {
         StringBuilder sb = new StringBuilder();
 
         if(args[0].equals("online")) {

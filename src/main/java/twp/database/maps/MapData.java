@@ -21,7 +21,11 @@ public class MapData extends Raw {
         return ((Binary) data.get("data")).getData();
     }
 
+    public String getFileName() {
+        return data.getString("fileName");
+    }
+
     public boolean isEnabled() {
-        return new File(Paths.get(MapHandler.mapFolder, getName()).toString()).exists();
+        return new File(Paths.get(MapHandler.mapFolder, getFileName()).toString()).exists();
     }
 }

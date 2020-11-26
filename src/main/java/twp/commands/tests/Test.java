@@ -1,4 +1,4 @@
-package twp.commands;
+package twp.commands.tests;
 
 import arc.Events;
 import mindustry.game.EventType;

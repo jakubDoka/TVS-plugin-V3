@@ -31,7 +31,7 @@ public abstract class Command {
     public PD caller;
 
     // main behavior
-    abstract void run(String id, String ...args);
+    public abstract void run(String id, String ...args);
 
     void setArg(Object ... values) {
         arg = values;
@@ -187,7 +187,7 @@ public abstract class Command {
     }
 
     // Used for testing commands
-    void assertResult(Result supposed) {
+    public void assertResult(Result supposed) {
         Log.info(Text.cleanColors(Text.format(bundle.getDefault(getMessage()), arg)));
         if(supposed != result) {
             throw new RuntimeException(supposed.name() + "!=" + result.name());

@@ -2,23 +2,20 @@ package twp;
 
 
 import arc.Events;
-import arc.func.Cons;
 import arc.util.CommandHandler;
 import arc.util.Log;
 import arc.util.Timer;
+import mindustry.Vars;
 import mindustry.gen.Call;
-import mindustry.world.blocks.logic.LogicBlock;
 import twp.bundle.Bundle;
 import twp.commands.*;
 import twp.database.*;
+import twp.database.maps.MapHandler;
 import twp.democracy.Hud;
 import twp.security.Limiter;
 import mindustry.game.EventType;
-import mindustry.gen.Player;
 import mindustry.mod.Plugin;
 import twp.tools.MainQueue;
-
-import static mindustry.Vars.world;
 
 public class Main extends Plugin {
     public static Ranks ranks;
@@ -57,7 +54,26 @@ public class Main extends Plugin {
 
         Searcher.terminal.registerCmp(handler, null);
 
-        Setter.terminal.registerCmp(handler, null);
+        DBSetter.terminal.registerCmp(handler, null);
+
+        MapManager.terminal.registerCmp(handler, null);
+
+        handler.removeCommand("reloadmaps");
+        handler.register("reloadmaps", "Reload all maps from disk.", arg -> {
+            int beforeMaps = Vars.maps.all().size;
+            Vars.maps.reload();
+            if(!db.maps.validateMaps()) {
+                Log.info("Some of maps are not valid, server will stop hosting when current game ends if you dont fix this issue.");
+                db.maps.invalid = true;
+                return;
+            }
+            db.maps.invalid = false;
+            if(Vars.maps.all().size > beforeMaps){
+                Log.info("@ new map(s) found and reloaded.", Vars.maps.all().size - beforeMaps);
+            }else{
+                Log.info("Maps reloaded.");
+            }
+        });
     }
 
     //register commands that player can invoke in-game
@@ -70,13 +86,15 @@ public class Main extends Plugin {
 
         Searcher.game.registerGm(handler, null);
 
-        Setter.game.registerGm(handler, null);
+        DBSetter.game.registerGm(handler, null);
 
         Voter.game.registerGm(handler, null);
 
         Mkgf.game.registerGm(handler, null);
 
         Mkgf.votekick.registerGm(handler, null);
+
+        MapManager.game.registerGm(handler, null);
 
         AccountManager.game.registerGm(handler, (self, pd) -> {
             switch (self.result){

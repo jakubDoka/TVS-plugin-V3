@@ -22,7 +22,7 @@ public class MapManager extends Command {
     }
 
     @Override
-    void run(String id, String... args) {
+    public void run(String id, String... args) {
         if (!verifier.verify(id)) {
             result = Result.noPerm;
             return;

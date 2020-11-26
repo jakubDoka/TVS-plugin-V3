@@ -21,7 +21,7 @@ public class Mkgf extends Command {
     }
 
     @Override
-    void run(String id, String... args) {
+    public void run(String id, String... args) {
         PD pd = db.online.get(id);
 
         if(cannotInteract(id)) {
