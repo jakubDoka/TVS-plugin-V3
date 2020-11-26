@@ -1,7 +1,7 @@
 package twp.tools;
 
 import arc.util.Log;
-import twp.database.Perm;
+import twp.database.enums.Perm;
 import mindustry.gen.Player;
 
 public class Enums {

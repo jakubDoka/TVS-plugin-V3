@@ -3,6 +3,9 @@ package twp.database;
 import arc.graphics.Color;
 import arc.util.Log;
 import twp.Global;
+import twp.database.enums.Perm;
+import twp.database.enums.RankType;
+import twp.database.enums.Stat;
 import twp.tools.Enums;
 import twp.tools.Json;
 

@@ -24,6 +24,7 @@ public class Global {
         public String alertPrefix = "!!";
         public String dbName = "mindustryServer";
         public String playerCollection = "PlayerData";
+        public String mapCollection = "MapData";
         public String dbAddress = "mongodb://127.0.0.1:27017";
         public String salt = "TWS";
         public HashMap<String, String > rules;
@@ -34,10 +35,12 @@ public class Global {
         public int vpnTimeout;
         public String vpnApi;
 
+
         public Config() {}
 
         @JsonCreator
         public Config(
+                @JsonProperty("mapCollection") String mapCollection,
                 @JsonProperty("consideredPassive") int consideredPassive,
                 @JsonProperty("symbol") String symbol,
                 @JsonProperty("playerCollection") String playerCollection,
@@ -55,6 +58,7 @@ public class Global {
             if(playerCollection != null) this.playerCollection = playerCollection;
             if(alertPrefix != null) this.alertPrefix = alertPrefix;
             if(dbName != null) this.dbName = dbName;
+            if(mapCollection != null) this.mapCollection = mapCollection;
 
             this.consideredPassive = consideredPassive;
             this.rules = rules;

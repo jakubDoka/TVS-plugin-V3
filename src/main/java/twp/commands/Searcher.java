@@ -7,14 +7,12 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Sorts;
 import org.bson.Document;
-import twp.database.PD;
-import twp.database.RankType;
-import twp.database.Raw;
-import twp.database.Stat;
+import twp.database.enums.RankType;
+import twp.database.Account;
+import twp.database.enums.Stat;
 import twp.tools.Enums;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import static twp.Main.db;
 import static twp.Main.ranks;
@@ -41,7 +39,7 @@ public class Searcher extends Command {
                 return;
             }
 
-            db.online.forEachValue(iter -> sb.append(iter.next().getDoc().summarize(Stat.playTime)).append("\n"));
+            db.online.forEachValue(iter -> sb.append(iter.next().getAccount().summarize(Stat.playTime)).append("\n"));
 
             setArg(sb.toString());
             result = Result.successOnline;
@@ -109,8 +107,8 @@ public class Searcher extends Command {
 
         Stat finalStat = stat;
         slice.forEach(found, (doc) -> {
-            Raw raw = new Raw(doc);
-            sb.append(raw.summarize(finalStat)).append("\n");
+            Account account = new Account(doc);
+            sb.append(account.summarize(finalStat)).append("\n");
         });
 
         setArg(sb.toString(), slice.len(), count, (float) slice.len() / (float)count * 100);

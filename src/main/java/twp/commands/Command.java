@@ -18,7 +18,7 @@ import static twp.Main.*;
 
 // Command is base class of any command and contains utility for making commands bit more cleaner and organised
 public abstract class Command {
-    private boolean busy;
+    private static boolean busy;
 
     boolean freeAccess;
     Verifier verifier = (id) -> true;
@@ -127,7 +127,7 @@ public abstract class Command {
         }
     }
 
-    synchronized boolean isBusy() {
+    static synchronized boolean isBusy() {
         if(busy) {
             return true;
         }
@@ -135,7 +135,7 @@ public abstract class Command {
         return false;
     }
 
-    synchronized void setBusy(boolean value) {
+    static synchronized void setBusy(boolean value) {
         busy = value;
     }
 
@@ -232,7 +232,16 @@ public abstract class Command {
         wrongCommand,
         redundant,
         cannotApplyToSelf,
-
+        notExist,
+        invalidFile,
+        enableFail,
+        addSuccess,
+        alreadyEnabled,
+        alreadyDisabled,
+        disableFail,
+        updateSuccess,
+        updateFail,
+        alreadyAdded,
 
         notInteger(true),
         playerNotFound(true),

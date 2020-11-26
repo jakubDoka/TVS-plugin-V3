@@ -1,12 +1,9 @@
 package twp.commands;
 
-import arc.util.Log;
 import twp.database.PD;
-import twp.database.Perm;
-import twp.database.Raw;
+import twp.database.enums.Perm;
+import twp.database.Account;
 import twp.democracy.Voting;
-
-import java.util.ArrayList;
 
 import static twp.Main.db;
 
@@ -31,24 +28,24 @@ public class Mkgf extends Command {
             return;
         }
 
-        Raw raw = db.findData(args[0]);
+        Account account = db.findData(args[0]);
 
-        if(raw == null) {
+        if(account == null) {
             playerNotFound();
             return;
         }
 
-        if(!raw.markable()) {
+        if(!account.markable()) {
             result = Result.wrongAccess;
             return;
         }
 
-        if(raw.getId() == pd.id) {
+        if(account.getId() == pd.id) {
             result = Result.cannotApplyToSelf;
             return;
         }
 
-        int existingSession = Voting.processor.query(s -> (s.voting == main && s.args[1].equals(raw.getId())));
+        int existingSession = Voting.processor.query(s -> (s.voting == main && s.args[1].equals(account.getId())));
 
         if(existingSession != -1) {
             result = Voter.game.use(id, args.length == 1 ? "y" : "n", "" + existingSession);
@@ -57,21 +54,21 @@ public class Mkgf extends Command {
 
         result = Result.redundant;
         if (args.length == 1) {
-            if (raw.isGriefer()) {
+            if (account.isGriefer()) {
                 return;
             }
 
             result = main.pushSession(pd, s -> {
                 RankSetter.terminal.use("", args[0], "griefer");
-            }, raw.getName(), raw.getId(), "[red]griefer[]");
+            }, account.getName(), account.getId(), "[red]griefer[]");
         } else if(args[1].equals("unmark")) {
-            if (!raw.isGriefer()) {
+            if (!account.isGriefer()) {
                 return;
             }
 
             result = main.pushSession(pd, s -> {
                 RankSetter.terminal.use("", args[0], "newcomer");
-            }, raw.getName(), raw.getId(), "[green]newcomer[]");
+            }, account.getName(), account.getId(), "[green]newcomer[]");
         } else {
             result = Result.wrongOption;
         }

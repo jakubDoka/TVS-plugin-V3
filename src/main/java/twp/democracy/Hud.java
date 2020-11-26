@@ -4,10 +4,8 @@ import arc.Events;
 import mindustry.gen.Call;
 import twp.Main;
 import twp.database.PD;
-import twp.database.Setting;
-import twp.tools.Testing;
+import twp.database.enums.Setting;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 

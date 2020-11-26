@@ -1,11 +1,8 @@
 package twp.commands;
 
-import arc.Events;
-import twp.Main;
 import twp.database.DBPlayer;
 import twp.database.PD;
-import twp.database.RankType;
-import mindustry.game.EventType;
+import twp.database.enums.RankType;
 
 import static twp.Main.db;
 import static twp.Main.ranks;

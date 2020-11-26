@@ -3,6 +3,7 @@ package twp.database;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import twp.database.enums.Stat;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -56,7 +57,7 @@ public class Rank implements Serializable {
         return quests == null && linked == null;
     }
 
-    public boolean condition(Raw tested, PD pd){
+    public boolean condition(Account tested, PD pd){
         if (pd.hasObtained(this)) return true;
         if(linked != null) {
             for (String l : linked){

@@ -12,5 +12,6 @@ public class Test {
         Main.testMode = true;
         Events.fire(new EventType.ServerLoadEvent());
         db.handler.drop();
+        db.maps.drop();
     }
 }

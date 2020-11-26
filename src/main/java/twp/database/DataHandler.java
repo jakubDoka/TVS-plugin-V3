@@ -10,21 +10,18 @@ import com.mongodb.client.model.Updates;
 import mindustry.gen.Player;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import twp.database.core.Handler;
+import twp.database.enums.RankType;
+import twp.database.enums.Setting;
+import twp.database.enums.Stat;
 
-
-import java.util.regex.Pattern;
 
 import static com.mongodb.client.model.Filters.and;
 import static twp.Main.ranks;
 
-public class DataHandler {
-    MongoCollection<Document> data;
-    MongoCollection<Document> counter;
-
+public class DataHandler extends Handler {
     public final static long paralyzedId = -1;
     public final static long invalidId = -2;
-
-
 
     enum Indexed {
         uuid,
@@ -32,11 +29,8 @@ public class DataHandler {
         discordLink
     }
 
-
-
     public DataHandler(MongoCollection<Document> data, MongoCollection<Document> counter){
-        this.data = data;
-        this.counter = counter;
+        super(data, counter);
 
         // Initializing indexes
         for(Indexed i : Indexed.values()) {
@@ -44,14 +38,14 @@ public class DataHandler {
         }
 
         // If there isn't paralyzed already, add it
-        Raw doc = getDoc(paralyzedId);
+        Account doc = getAccount(paralyzedId);
         if(doc == null) {
             data.insertOne(new Document("_id", paralyzedId));
         }
     }
 
-
     // utility filter methods
+
     public Bson playerFilter(DBPlayer player){
         return Filters.and(uuidFilter(player.uuid), ipFilter(player.ip));
     }
@@ -68,29 +62,13 @@ public class DataHandler {
         return Filters.eq("ip", ip);
     }
 
-    public Bson idFilter(long id){
-        return Filters.eq("_id", id);
-    }
-
     // Returns raw document holding players account
-    public Raw getDoc(long id) {
-        return Raw.getNew(data.find(idFilter(id)).first());
+    public Account getAccount(long id) {
+        return Account.getNew(data.find(idFilter(id)).first());
     }
 
-    public Raw getDocByDiscordLink(String link) {
-        return Raw.getNew(data.find(Filters.eq("discordLink", link)).first());
-    }
-
-    public void delete(long id){
-        data.deleteOne(idFilter(id));
-    }
-
-    public void set(long id, String field, Object value) {
-        data.updateOne(idFilter(id), Updates.set(field, value));
-    }
-
-    public void unset(long id, String field) {
-        data.updateOne(idFilter(id), Updates.unset(field));
+    public Account getDocByDiscordLink(String link) {
+        return Account.getNew(data.find(Filters.eq("discordLink", link)).first());
     }
 
     public void setUuid(long id, String uuid) {
@@ -106,57 +84,12 @@ public class DataHandler {
         data.updateOne(idFilter(id), Updates.addToSet(field, value));
     }
 
-    public void pull(long id, String field, Object value) {
-        data.updateOne(idFilter( id), Updates.pull(field, value));
-    }
-
-    public boolean contains(long id, String field, Object value) {
-        return data.find(and(idFilter( id), Filters.eq(field, value))).first() != null;
-    }
-
-
-    public Object get(long id, String field) {
-        Document dc = data.find(idFilter( id)).first();
-        if (dc == null) return null;
-        return dc.get(field);
-    }
-
-    public void inc(long id, Stat stat, long amount){
-        data.updateOne(idFilter( id), Updates.inc(stat.name(), amount));
-    }
-
-    public void incOne(long id, Stat stat) {
-        inc( id, stat, 1);
-    }
-
-    public Long getStat(long id, String stat) {
-        Long val = (Long) get( id, stat);
-        return val == null ? 0 : val;
-    }
-
-    public FindIterable<Document> gt(Document doc, String stat) {
-        return data.find(Filters.gt(stat, doc.get(stat)));
-    }
-
-    public long getPlace(Raw doc, String stat){
+    public long getPlace(Account doc, String stat){
         long res = 0;
         for(Document d: gt(doc.data, stat)){
             res++;
         }
         return res;
-    }
-
-    public FindIterable<Document> find(Bson filter) {
-        return data.find(filter);
-    }
-
-    public FindIterable<Document> all() {
-        return data.find();
-    }
-
-    public FindIterable<Document> startsWith(String field, String sub) {
-        Pattern pattern = Pattern.compile("^"+Pattern.quote(sub), Pattern.CASE_INSENSITIVE);
-        return data.find(Filters.regex(field, pattern));
     }
 
     public Rank getRank(long id, RankType type) {
@@ -167,16 +100,8 @@ public class DataHandler {
         return ranks.getRank(rankName, type);
     }
 
-    public void remove(long id, String field) {
-        data.updateOne(idFilter(id), Updates.unset(field));
-    }
-
     public void removeRank(long id, RankType type) {
-        remove( id, type.name());
-    }
-
-    public void setRank(String ip, Rank rank, RankType type) {
-        data.updateOne(ipFilter(ip), Updates.set(type.name(), rank.name));
+        unset( id, type.name());
     }
 
     public void setRank(long id, Rank rank, RankType type) {
@@ -188,22 +113,22 @@ public class DataHandler {
         set(id, "textColor", pd.textColor);
         inc(id, Stat.playTime, Time.timeSinceMillis(pd.joined));
         set(id, "lastActive", Time.millis());
-        Raw doc = getDoc(pd.id);
+        Account doc = getAccount(pd.id);
         if (doc == null) {
             return;
         }
         // add setting level
 
         if (pd.dRank != null) set(id, RankType.donationRank.name(), pd.dRank.name);
-        else remove(id, RankType.donationRank.name());
+        else unset(id, RankType.donationRank.name());
         if (pd.getSpacialRank() != null) set(id, RankType.specialRank.name(), pd.getSpacialRank().name);
-        else remove(id, RankType.specialRank.name());
+        else unset(id, RankType.specialRank.name());
     }
 
     // LoadData finds players account, if there is none it creates new,
     // if found account ip paralyzed it returns paralyzed data
     public PD loadData(DBPlayer player) {
-        Raw doc = findData(player);
+        Account doc = findData(player);
         if(doc == null) {
             doc = makeNewAccount(player.uuid, player.ip);
         } else if(doc.isParalyzed()) {
@@ -216,16 +141,16 @@ public class DataHandler {
 
     // findData searches for player data, it can return null if account does not exist or paralyzed account
     // if there are some account that fit at least with ip or uuid
-    public Raw findData(DBPlayer player) {
+    public Account findData(DBPlayer player) {
         Document cnd = data.find(playerFilter(player)).first();
         if (cnd != null) {
-            return Raw.getNew(cnd);
+            return Account.getNew(cnd);
         }
 
         boolean exists = false;
-        for (Document d : data.find(playerFilter(player))) {
+        for (Document d : data.find(playerOrFilter(player))) {
             exists = true;
-            Raw doc = Raw.getNew(d);
+            Account doc = Account.getNew(d);
             if (doc.isProtected()) continue;
             return doc;
         }
@@ -237,7 +162,7 @@ public class DataHandler {
 
 
         // TODO inform playe that he is paralyzed
-        return Raw.getNew(new Document("paralyzed", true));
+        return Account.getNew(new Document("paralyzed", true));
     }
 
     // Bind binds player to an account so he automatically logs to it
@@ -248,7 +173,7 @@ public class DataHandler {
 
     // creates account with all settings enabled
     // newcomer rank and sets bord date
-    public Raw makeNewAccount(String uuid, String ip){
+    public Account makeNewAccount(String uuid, String ip){
         long id = newId();
         data.insertOne(new Document("_id", id));
         for(Setting s :Setting.values()) {
@@ -257,29 +182,9 @@ public class DataHandler {
         setUuid(id, uuid);
         setIp(id, ip);
         setRank(id, ranks.newcomer, RankType.rank);
-        set(id, "age", Time.millis());
+        setStat(id, Stat.age, Time.millis());
 
-        return getDoc(id);
-    }
-
-    // newID creates new incremented id
-    public long newId() {
-        if(counter.updateOne(idFilter(0), Updates.inc("id", 1)).getModifiedCount() == 0){
-            long id = 0;
-            Document latest = data.find().sort(new Document("_id", -1)).first();
-            if(latest != null) {
-                id = (long)latest.get("_id");
-                if (id == -1) {
-                   id = 0;
-                }
-            }
-            counter.insertOne(new Document("_id", 0).append("id",id));
-        }
-        Document counter = this.counter.find().first();
-        if(counter == null){
-            throw new IllegalStateException("Well then this is fucked.");
-        }
-        return (long) counter.get("id");
+        return getAccount(id);
     }
 
     // returns formatted string of suggested accounts that share ip or uuid with player
@@ -287,16 +192,10 @@ public class DataHandler {
         StringBuilder sb = new StringBuilder("[yellow]");
         FindIterable<Document> fits = data.find(Filters.or(uuidFilter(uuid), ipFilter(ip)));
         for(Document fit : fits) {
-            Raw doc = Raw.getNew(fit);
+            Account doc = Account.getNew(fit);
             sb.append(doc.getName()).append("[gray] || []").append(doc.getId()).append("\n");
         }
         return sb.toString();
-    }
-
-    // For testing purposes
-    public void drop() {
-        data.drop();
-        counter.drop();
     }
 }
 

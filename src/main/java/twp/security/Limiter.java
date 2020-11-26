@@ -4,8 +4,8 @@ import arc.Events;
 import mindustry.net.Administration;
 import twp.Main;
 import twp.database.PD;
-import twp.database.Perm;
-import twp.database.Setting;
+import twp.database.enums.Perm;
+import twp.database.enums.Setting;
 import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.gen.Player;
@@ -96,7 +96,11 @@ public class Limiter {
 }
 
 /*
-Pertussis = cierny kasel
+Get chills = mat zimnicu
+Diphtheria = zaskrt
+-Pertussis = cierny kasel
+-Intestines = creva
+-Lukewarm = vlazny
 Polio = decka obrna
 Procrastination = odkladanie
 Ointment = nasticka
@@ -105,11 +109,15 @@ Blisters = pluzgiere
 Outweigh = prevazovat
 Above = nad
 Rubella = ruzienka
-Soothe = upokojit
+-Soothe = upokojit
 Compresses = obklady
-Splint = dlaha
+-Splint = dlaha
 Subside = ustupit
 Swell = nafukat
-Tonsils = mandle
+-Tonsils = mandle
 Well-being = zdravie
+ */
+
+/*
+drama -> dejstva -> vystupy -> dialogy -> repliky
  */

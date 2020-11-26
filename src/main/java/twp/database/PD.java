@@ -4,11 +4,13 @@ import arc.util.Time;
 import mindustry.gen.Player;
 import twp.Global;
 import twp.Main;
+import twp.database.enums.Perm;
+import twp.database.enums.RankType;
+import twp.database.enums.Stat;
 import twp.tools.Testing;
 import twp.tools.Text;
 
 
-import javax.swing.text.PlainDocument;
 import java.util.HashSet;
 import java.util.ResourceBundle;
 
@@ -41,7 +43,7 @@ public class PD{
     public PD() {}
 
 
-    public PD(DBPlayer player, Raw doc) {
+    public PD(DBPlayer player, Account doc) {
         this.player = player;
         rank = doc.getRank(RankType.rank);
         textColor = doc.getTextColor();
@@ -58,8 +60,8 @@ public class PD{
         }};
     }
 
-    public Raw getDoc() {
-        return db.handler.getDoc(id);
+    public Account getAccount() {
+        return db.handler.getAccount(id);
     }
 
     public void updateName() {
@@ -117,8 +119,8 @@ public class PD{
     }
 
     public boolean canParticipate() {
-        Raw raw = getDoc();
-        return !cannotInteract() && raw.getStat(Stat.missedVotesCombo) < Global.config.consideredPassive && !afk;
+        Account account = getAccount();
+        return !cannotInteract() && account.getStat(Stat.missedVotesCombo) < Global.config.consideredPassive && !afk;
     }
 
     public synchronized boolean hasThisPerm(Perm perm) {

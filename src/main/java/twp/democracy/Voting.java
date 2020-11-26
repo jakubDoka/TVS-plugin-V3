@@ -1,11 +1,9 @@
 package twp.democracy;
 
-import arc.func.Cons;
 import arc.math.Mathf;
-import arc.util.Log;
 import twp.commands.Command;
 import twp.database.PD;
-import twp.database.Perm;
+import twp.database.enums.Perm;
 
 import java.util.ArrayList;
 import java.util.HashSet;

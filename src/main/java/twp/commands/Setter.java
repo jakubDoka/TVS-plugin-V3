@@ -1,10 +1,8 @@
 package twp.commands;
 
-import twp.database.RankType;
-import twp.database.Raw;
+import twp.database.enums.RankType;
+import twp.database.Account;
 import twp.tools.Enums;
-
-import javax.swing.text.Document;
 
 import static twp.Main.db;
 
@@ -55,7 +53,7 @@ public class Setter extends Command {
 
         long i = Long.parseLong(args[0]);
 
-        Raw doc = db.handler.getDoc(i);
+        Account doc = db.handler.getAccount(i);
         if( doc == null) {
             result = Result.notFound;
             return;

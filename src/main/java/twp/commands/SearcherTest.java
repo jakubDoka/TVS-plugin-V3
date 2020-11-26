@@ -1,10 +1,8 @@
 package twp.commands;
 
-import arc.util.Log;
 import twp.database.DBPlayer;
-import twp.database.RankType;
+import twp.database.enums.RankType;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static twp.Main.db;
 import static twp.Main.ranks;
 

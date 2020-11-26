@@ -1,8 +1,8 @@
 package twp.security;
 
 import arc.util.Time;
-import twp.database.RankType;
-import twp.database.Raw;
+import twp.database.enums.RankType;
+import twp.database.Account;
 import mindustry.net.Administration;
 import mindustry.world.Tile;
 
@@ -41,10 +41,10 @@ public class LockMap {
         TileInf ti = map[t.y][t.x];
         StringBuilder sb = new StringBuilder();
         for(ActionInf ai : ti.actions) {
-            Raw raw = db.handler.getDoc(ai.id);
-            sb.append(db.online.containsKey(raw.getUuid()) ? "[green]" : "[gray]");
-            sb.append("[").append(raw.getRank(RankType.rank).color).append("]").append(raw.getName());
-            sb.append(" [](").append(raw.getId()).append(") ");
+            Account account = db.handler.getAccount(ai.id);
+            sb.append(db.online.containsKey(account.getUuid()) ? "[green]" : "[gray]");
+            sb.append("[").append(account.getRank(RankType.rank).color).append("]").append(account.getName());
+            sb.append(" [](").append(account.getId()).append(") ");
             sb.append(Time.timeSinceMillis(ai.time) / 1000 / 60).append("min ago");
             sb.append("[]\n");
         }

@@ -1,4 +1,4 @@
-package twp.database;
+package twp.database.enums;
 
 public enum RankType {
     rank,

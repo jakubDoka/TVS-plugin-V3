@@ -14,7 +14,11 @@ import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.type.ItemStack;
 import org.bson.Document;
-import twp.tools.Testing;
+import twp.database.enums.Perm;
+import twp.database.enums.RankType;
+import twp.database.enums.Setting;
+import twp.database.enums.Stat;
+import twp.database.maps.MapHandler;
 import twp.tools.Text;
 
 import java.util.*;
@@ -26,6 +30,7 @@ public class Database {
     public final String playerCollection = "PlayerData";
     public static final String AFK = "[gray]<AFK>[]";
     public static final String counter = "counter";
+    public static final String mapCounter = "mapCounter";
     static final String subnetFile = Global.save_dir + "subnetBuns.json";
     static final String cpnFile = Global.save_dir + "detectedVpn.json";
 
@@ -49,9 +54,11 @@ public class Database {
     public MongoClient client = MongoClients.create(Global.config.dbAddress);
     public MongoDatabase database = client.getDatabase(Global.config.dbName);
     MongoCollection<Document> rawData = database.getCollection(Global.config.playerCollection);
+    MongoCollection<Document> rawMapData = database.getCollection(Global.config.mapCollection);
 
     // handler has works directly with database
     public DataHandler handler = new DataHandler(rawData, database.getCollection(counter));
+    public MapHandler maps = new MapHandler(rawMapData, database.getCollection(mapCounter));
 
     // online player are here by their ids
     public SyncMap<String, PD> online = new SyncMap<>();
@@ -68,7 +75,7 @@ public class Database {
 
             bundle.resolveBundle(pd);
 
-            if (!pd.cannotInteract()) checkAchievements(pd, handler.getDoc(pd.id));
+            if (!pd.cannotInteract()) checkAchievements(pd, handler.getAccount(pd.id));
         });
 
         Events.on(EventType.PlayerLeave.class,e->{
@@ -108,7 +115,7 @@ public class Database {
 
 
     // function checks whether player can obtain any rank ON THREAD and gives him that
-    public void checkAchievements(PD pd, Raw doc) {
+    public void checkAchievements(PD pd, Account doc) {
         for(Rank r : ranks.special.values()) {
             pd.removeRank(r);
             pd.setSpecialRank(null);
@@ -152,10 +159,10 @@ public class Database {
         handler = new DataHandler(rawData, database.getCollection(counter));
     }
 
-    public Raw findData(String target) {
-        Raw res = null;
+    public Account findData(String target) {
+        Account res = null;
         if(Strings.canParsePositiveInt(target)) {
-            res = handler.getDoc(Long.parseLong(target));
+            res = handler.getAccount(Long.parseLong(target));
         }
         if (res != null) {
             return res;
@@ -168,7 +175,7 @@ public class Database {
         });
 
         if(p != null) {
-            return p.getDoc();
+            return p.getAccount();
         }
         return null;
     }
@@ -180,7 +187,7 @@ public class Database {
 
     public void disconnectAccount(PD pd){
         if(pd.paralyzed) return;
-        if(!pd.getDoc().isProtected()) {
+        if(!pd.getAccount().isProtected()) {
             handler.delete(pd.id);
         } else {
             handler.setUuid(pd.id, "why cant i just die");
@@ -189,7 +196,7 @@ public class Database {
     }
 
     static String docToString(Document doc) {
-        Raw d = Raw.getNew(doc);
+        Account d = Account.getNew(doc);
         return "[gray][yellow]" + d.getId() + "[] | " + d.getName() + " | []" + d.getRank(RankType.rank).getSuffix() ;
 
     }

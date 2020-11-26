@@ -1,10 +1,8 @@
 package twp.commands;
 
-import arc.util.Strings;
 import twp.database.PD;
-import twp.database.Raw;
+import twp.database.Account;
 import twp.tools.Security;
-import twp.tools.Testing;
 
 import java.util.HashMap;
 
@@ -38,10 +36,10 @@ public class AccountManager extends Command {
                 if (checkArgCount(args.length, 2)) {
                     return;
                 }
-                Raw raw1 = pd.getDoc();
-                if (raw1.isProtected()) {
-                    if (raw1.getPassword().equals(Security.hash2(args[1]))) {
-                        db.handler.remove(pd.id, "password");
+                Account account1 = pd.getAccount();
+                if (account1.isProtected()) {
+                    if (account1.getPassword().equals(Security.hash2(args[1]))) {
+                        db.handler.unset(pd.id, "password");
                         result = Result.unprotectSuccess;
                     } else {
                         result = Result.incorrectPassword;
@@ -52,7 +50,7 @@ public class AccountManager extends Command {
                 if (checkArgCount(args.length, 2)) {
                     return;
                 }
-                if (pd.getDoc().isProtected()) {
+                if (pd.getAccount().isProtected()) {
                     result = Result.alreadyProtected;
                     return;
                 }
@@ -73,7 +71,7 @@ public class AccountManager extends Command {
             case "abandon":
             case "new":
                 // this is little protection for dummies, we dont need accidents, nor we need dead data in database
-                if(!args[0].equals("abandon") && (!pd.paralyzed && !pd.getDoc().isProtected())){
+                if(!args[0].equals("abandon") && (!pd.paralyzed && !pd.getAccount().isProtected())){
                     result = Result.notExplicit;
                     return;
                 }
@@ -87,16 +85,16 @@ public class AccountManager extends Command {
                 }
 
                 long id1 = Long.parseLong(args[0]);
-                Raw raw = db.handler.getDoc(id1);
-                if(raw == null) {
+                Account account = db.handler.getAccount(id1);
+                if(account == null) {
                     result = Result.notFound;
                     return;
                 }
 
                 String pass = args.length == 2 ? args[1] : "";
 
-                Object password = raw.getPassword();
-                if(!pd.player.ip.equals(raw.getIp()) && !pd.player.uuid.equals(raw.getUuid()) && password == null) {
+                Object password = account.getPassword();
+                if(!pd.player.ip.equals(account.getIp()) && !pd.player.uuid.equals(account.getUuid()) && password == null) {
                     result = Result.invalidRequest;
                 } else if(password == null || password.equals(Security.hash(pass)) || password.equals(Security.hash2(pass))){ // due to backward compatibility there are two hashes
                     db.disconnectAccount(pd);

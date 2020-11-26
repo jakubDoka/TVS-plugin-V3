@@ -3,8 +3,8 @@ package twp.commands;
 import arc.Core;
 import twp.database.PD;
 import twp.database.Rank;
-import twp.database.RankType;
-import twp.database.Raw;
+import twp.database.enums.RankType;
+import twp.database.Account;
 
 import static twp.Main.db;
 import static twp.Main.ranks;
@@ -36,7 +36,7 @@ public class RankSetter extends Command {
         }
 
         // Search target
-        Raw data = db.findData(args[0]);
+        Account data = db.findData(args[0]);
         if (data == null) {
             playerNotFound();
             return;

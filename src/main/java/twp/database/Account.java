@@ -1,28 +1,22 @@
 package twp.database;
 
 import org.bson.Document;
+import twp.database.core.Raw;
+import twp.database.enums.RankType;
+import twp.database.enums.Stat;
 
 import static twp.Main.ranks;
 
-public class Raw {
-    Document data;
+public class Account extends Raw {
 
-    public static Raw getNew(Document document){
+
+    public static Account getNew(Document document){
         if (document == null) return null;
-        return new Raw(document);
+        return new Account(document);
     }
 
-    public Raw(Document data){
+    public Account(Document data){
         this.data = data;
-    }
-
-    public Long getStat( Stat stat) {
-        return getStat(stat.name());
-    }
-
-    public Long getStat(String stat) {
-        Long val = (Long) data.get(stat);
-        return val == null ? 0 : val;
     }
 
     public boolean isProtected() {
@@ -39,14 +33,6 @@ public class Raw {
 
     public String getLink(){
         return (String) data.get("link");
-    }
-
-    public Long getPrevious() {
-        return (Long) data.get("previous");
-    }
-
-    public Long getId() {
-        return (Long) data.get("_id");
     }
 
     public String getIp() {
@@ -77,10 +63,6 @@ public class Raw {
         return ranks.getRank(rankName, type);
     }
 
-    public String getName() {
-        return (String) data.get("name");
-    }
-
     public boolean isGriefer() {
         return getRank(RankType.rank) == ranks.griefer;
     }
@@ -99,11 +81,5 @@ public class Raw {
         );
     }
 
-    public String fieldList() {
-        StringBuilder sb = new StringBuilder();
-        for (String s : data.keySet()) {
-            sb.append(s).append(" ");
-        }
-        return sb.toString();
-    }
+
 }

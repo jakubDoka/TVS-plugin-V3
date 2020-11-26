@@ -1,4 +1,6 @@
-package twp.database;
+package twp.database.enums;
+
+import twp.database.enums.Stat;
 
 public enum Perm {
     normal(0),
