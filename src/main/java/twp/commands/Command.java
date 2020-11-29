@@ -20,7 +20,7 @@ import static twp.Main.*;
 public abstract class Command {
     private static boolean busy;
 
-    boolean freeAccess;
+    public boolean freeAccess;
     Verifier verifier = (id) -> true;
     // constant
     public String name = "noname", argStruct, description = "description missing";

@@ -7,6 +7,8 @@ import arc.util.Log;
 import arc.util.Timer;
 import mindustry.Vars;
 import mindustry.gen.Call;
+import mindustry.gen.Groups;
+import mindustry.gen.Unit;
 import twp.bundle.Bundle;
 import twp.commands.*;
 import twp.database.*;
@@ -43,8 +45,9 @@ public class Main extends Plugin {
             }
         });
 
-        Events.run(EventType.Trigger.update, ()-> queue.run());
-
+        Events.run(EventType.Trigger.update, ()-> {
+            queue.run();
+        });
 
     }
 
