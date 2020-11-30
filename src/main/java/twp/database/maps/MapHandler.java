@@ -1,5 +1,6 @@
 package twp.database.maps;
 
+import arc.Core;
 import arc.Events;
 import arc.util.Log;
 import arc.util.OS;
@@ -37,20 +38,23 @@ import static twp.Main.ranks;
 
 public class MapHandler extends Handler {
     public static String mapFolder = "config/maps/";
-    public boolean invalid;
 
     public MapHandler(MongoCollection<Document> data, MongoCollection<Document> counter) {
         super(data, counter);
         Events.on(EventType.GameOverEvent.class, (e)-> {
-            Vars.net.closeServer();
-            Vars.state.set(GameState.State.menu);
-            Log.info("server wos closed due to presence of invalid maps");
-            validateMaps();
+            if (validateMaps()) {
+                return;
+            }
+
+            Log.info("Server was closed due to presence of invalid maps.");
+            Vars.net.dispose();
+            Core.app.exit();
         });
+
         data.createIndex(Indexes.descending("fileName"));
         if (!validateMaps()) {
-            Log.info("Some of maps are invalid, rename them of use /maps update <fileName> in case you tiring to update them.");
-            System.exit(2);
+            Log.info("Server wos closed due to some of maps being invalid, rename them or use /maps update <fileName> in case you tiring to update them.");
+            Core.app.exit();
         }
     }
 
@@ -62,7 +66,7 @@ public class MapHandler extends Handler {
         for(Map m : Vars.maps.customMaps()) {
             MapData md = getMap(m.file.name());
             if (md == null) {
-                db.maps.makeNewMapData(m);
+                makeNewMapData(m);
                 continue;
             }
             try {

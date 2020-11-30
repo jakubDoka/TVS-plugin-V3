@@ -67,10 +67,8 @@ public class Main extends Plugin {
             Vars.maps.reload();
             if(!db.maps.validateMaps()) {
                 Log.info("Some of maps are not valid, server will stop hosting when current game ends if you dont fix this issue.");
-                db.maps.invalid = true;
                 return;
             }
-            db.maps.invalid = false;
             if(Vars.maps.all().size > beforeMaps){
                 Log.info("@ new map(s) found and reloaded.", Vars.maps.all().size - beforeMaps);
             }else{
