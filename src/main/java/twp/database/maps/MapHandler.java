@@ -3,38 +3,25 @@ package twp.database.maps;
 import arc.Core;
 import arc.Events;
 import arc.util.Log;
-import arc.util.OS;
 import arc.util.Time;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Indexes;
-import com.mongodb.client.model.Updates;
 import mindustry.Vars;
-import mindustry.core.GameState;
 import mindustry.game.EventType;
 import mindustry.maps.Map;
-import mindustry.world.Tile;
 import org.bson.Document;
 import twp.Main;
-import twp.database.Account;
 import twp.database.core.Handler;
-import twp.database.enums.RankType;
-import twp.database.enums.Setting;
 import twp.database.enums.Stat;
 import twp.tools.Testing;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-
-import static twp.Main.db;
-import static twp.Main.ranks;
 
 public class MapHandler extends Handler {
     public static String mapFolder = "config/maps/";

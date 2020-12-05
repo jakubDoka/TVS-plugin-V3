@@ -19,6 +19,7 @@ import twp.database.enums.RankType;
 import twp.database.enums.Setting;
 import twp.database.enums.Stat;
 import twp.database.maps.MapHandler;
+import twp.tools.Testing;
 import twp.tools.Text;
 
 import java.util.*;
@@ -80,11 +81,12 @@ public class Database {
 
         Events.on(EventType.PlayerLeave.class,e->{
             PD pd = online.get(e.player.uuid());
-            if(pd == null) throw new RuntimeException("player left without ewen being present");
-
+            if(pd == null) {
+                Testing.Log("player left without ewen being present");
+                return;
+            }
             online.remove(e.player.uuid());
             handler.free(pd);
-
         });
 
         Events.on(EventType.WithdrawEvent.class, e-> {
@@ -105,21 +107,13 @@ public class Database {
 
     }
 
-    private static ItemStack[] multiplyReq(ItemStack[] requirements, int multiplier) {
-        ItemStack[] res = new ItemStack[requirements.length];
-        for(int i = 0; i < res.length; i++){
-            res[i] = new ItemStack(requirements[i].item, requirements[i].amount * multiplier);
-        }
-        return res;
-    }
-
-
     // function checks whether player can obtain any rank ON THREAD and gives him that
     public void checkAchievements(PD pd, Account doc) {
         for(Rank r : ranks.special.values()) {
             pd.removeRank(r);
             pd.setSpecialRank(null);
         }
+
         new Thread(()->{
             for(Rank rank : ranks.special.values()){
                 if(rank.condition(doc,pd)){

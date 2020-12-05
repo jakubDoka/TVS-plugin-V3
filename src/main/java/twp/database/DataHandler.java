@@ -165,12 +165,6 @@ public class DataHandler extends Handler {
         return Account.getNew(new Document("paralyzed", true));
     }
 
-    // Bind binds player to an account so he automatically logs to it
-    public void bind(Player player, long id) {
-        setUuid(id, player.uuid());
-        setIp(id, player.con.address);
-    }
-
     // creates account with all settings enabled
     // newcomer rank and sets bord date
     public Account makeNewAccount(String uuid, String ip){
