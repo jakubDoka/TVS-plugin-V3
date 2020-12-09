@@ -1,13 +1,10 @@
 package twp.commands;
 
-import arc.Core;
 import arc.func.Cons;
 import arc.util.CommandHandler;
 import arc.util.Log;
 import arc.util.Strings;
-import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import twp.Global;
 import twp.database.PD;
 import twp.tools.Testing;
 import twp.tools.Text;
@@ -17,8 +14,9 @@ import java.util.concurrent.locks.ReentrantLock;
 import static twp.Main.*;
 
 // Command is base class of any command and contains utility for making commands bit more cleaner and organised
+// One good advice, dont write your game in java... newer.
 public abstract class Command {
-    private static boolean busy;
+    private static final ReentrantLock lock1 = new ReentrantLock();
 
     public boolean freeAccess;
     Verifier verifier = (id) -> true;
@@ -57,32 +55,34 @@ public abstract class Command {
         return true;
     }
 
-    public Result use(String id, String ...args) {
-        while (isBusy());
-        run(id, args);
-        try {
-            return result;
-        } finally {
-            setBusy(false);
-        }
-    }
-
     // for registration of commandline commands
     public void registerCmp(CommandHandler handler, TerminalCommandRunner runner) {
         freeAccess = true;
         Cons<String[]> func = (args) -> new Thread(() -> {
-            while (isBusy());
+            lock1.lock();
 
-            run("", args);
-
-            queue.post(() -> {
-                if (runner != null) {
-                    runner.run(this);
-                } else {
+            try {
+                run("", args);
+                queue.post(() -> {
+                    if (runner != null) {
+                        runner.run(this);
+                    } else {
+                        notifyCaller();
+                    }
+                });
+            } catch (Exception ex) {
+                result = Result.bug;
+                // fucking java and deadlocks
+                try {
                     notifyCaller();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                setBusy(false);
-            });
+                ex.printStackTrace();
+                return;
+            }
+
+            lock1.unlock();
         }).start();
 
         if (argStruct == null) {
@@ -95,8 +95,6 @@ public abstract class Command {
     // For registration of in-game commands
     public void registerGm(CommandHandler handler, PlayerCommandRunner runner) {
         CommandHandler.CommandRunner<Player> run = (args, player) -> new Thread(() -> {
-            while (isBusy());
-
             PD pd = db.online.get(player.uuid());
 
             if(pd == null) {
@@ -106,18 +104,34 @@ public abstract class Command {
                 return;
             }
 
+            lock1.lock();
             caller = pd;
 
-            run(player.uuid(), args);
+            try {
+                run(player.uuid(), args);
 
-            queue.post(() -> {
-                if (runner != null) {
-                    runner.run(this, pd);
-                } else {
+                queue.post(() -> {
+                    if (runner != null) {
+                        runner.run(this, pd);
+                    } else {
+                        notifyCaller();
+                    }
+                });
+            } catch (Exception ex) {
+                result = Result.bug;
+                // fucking java and deadlocks
+                try {
                     notifyCaller();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                setBusy(false);
-            });
+                ex.printStackTrace();
+                return;
+            }
+
+
+
+            lock1.unlock();
         }).start();
 
         if (argStruct == null) {
@@ -125,18 +139,6 @@ public abstract class Command {
         } else  {
             handler.register(name, argStruct, description, run);
         }
-    }
-
-    static synchronized boolean isBusy() {
-        if(busy) {
-            return true;
-        }
-        busy = true;
-        return false;
-    }
-
-    static synchronized void setBusy(boolean value) {
-        busy = value;
     }
 
     // getMessage returns bundle key based of result
@@ -243,6 +245,7 @@ public abstract class Command {
         updateFail,
         alreadyAdded,
 
+        bug(true),
         notInteger(true),
         playerNotFound(true),
         notEnoughArgs(true),

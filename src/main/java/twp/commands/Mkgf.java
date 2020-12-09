@@ -48,7 +48,7 @@ public class Mkgf extends Command {
         int existingSession = Voting.processor.query(s -> (s.voting == main && s.args[1].equals(account.getId())));
 
         if(existingSession != -1) {
-            result = Voter.game.use(id, args.length == 1 ? "y" : "n", "" + existingSession);
+            Voter.game.run(id, args.length == 1 ? "y" : "n", "" + existingSession);
             return;
         }
 
@@ -59,7 +59,7 @@ public class Mkgf extends Command {
             }
 
             result = main.pushSession(pd, s -> {
-                RankSetter.terminal.use("", args[0], "griefer");
+                RankSetter.terminal.run("", args[0], "griefer");
             }, account.getName(), account.getId(), "[red]griefer[]");
         } else if(args[1].equals("unmark")) {
             if (!account.isGriefer()) {
@@ -67,7 +67,7 @@ public class Mkgf extends Command {
             }
 
             result = main.pushSession(pd, s -> {
-                RankSetter.terminal.use("", args[0], "newcomer");
+                RankSetter.terminal.run("", args[0], "newcomer");
             }, account.getName(), account.getId(), "[green]newcomer[]");
         } else {
             result = Result.wrongOption;
