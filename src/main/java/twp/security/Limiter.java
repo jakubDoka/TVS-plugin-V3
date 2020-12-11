@@ -48,7 +48,7 @@ public class Limiter {
 
 
         if(!Main.testMode) {
-            //registerActionFilter();
+            registerActionFilter();
         }
     }
 
