@@ -98,8 +98,8 @@ public class MapHandler extends Handler {
         try {
             set(id, "data", Files.readAllBytes(Paths.get(map.file.absolutePath())));
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException("unable to cache a map into a database");
+            Testing.Log(e);
+            Testing.Log("unable to cache a map into a database");
         }
     }
 

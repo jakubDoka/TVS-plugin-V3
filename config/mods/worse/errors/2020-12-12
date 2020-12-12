@@ -1,0 +1,5 @@
+java.lang.RuntimeException: beep
+	at twp.tools.Testing.Log(Testing.java:21)
+	at twp.tools.Testing.Log(Testing.java:17)
+	at twp.tools.Testing.main(Testing.java:13)
+
