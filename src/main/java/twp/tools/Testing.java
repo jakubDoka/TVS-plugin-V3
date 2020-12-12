@@ -11,6 +11,7 @@ public class Testing {
     static final String outDir = Global.dir + "/errors/";
     public static void main(String[] args){
         Log("hello");
+        Log("hello");
     }
 
     public static void Log(String message) {
@@ -19,7 +20,7 @@ public class Testing {
 
     public static void Log(Throwable t) {
         String ex = ExceptionUtils.readStackTrace(t);
-        SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH-mm-ss z");
+        SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH-mm-ss-SSS z");
         Date date = new Date(System.currentTimeMillis());
         Json.makeFullPath(outDir);
         try (PrintWriter out = new PrintWriter(outDir+formatter.format(date))) {
