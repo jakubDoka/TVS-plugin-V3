@@ -79,7 +79,6 @@ public abstract class Command {
                     e.printStackTrace();
                 }
                 ex.printStackTrace();
-                return;
             }
 
             lock1.unlock();
@@ -126,7 +125,6 @@ public abstract class Command {
                     e.printStackTrace();
                 }
                 ex.printStackTrace();
-                return;
             }
 
 
