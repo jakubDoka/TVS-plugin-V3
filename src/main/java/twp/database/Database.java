@@ -2,8 +2,7 @@ package twp.database;
 
 import arc.Events;
 import arc.func.Cons;
-import arc.util.Strings;
-import arc.util.Time;
+import arc.util.*;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -12,14 +11,13 @@ import twp.Global;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import mindustry.type.ItemStack;
 import org.bson.Document;
 import twp.database.enums.Perm;
 import twp.database.enums.RankType;
 import twp.database.enums.Setting;
 import twp.database.enums.Stat;
 import twp.database.maps.MapHandler;
-import twp.tools.Testing;
+import twp.tools.Logging;
 import twp.tools.Text;
 
 import java.util.*;
@@ -65,7 +63,7 @@ public class Database {
     public SyncMap<String, PD> online = new SyncMap<>();
 
     public Database(){
-        Events.on(EventType.PlayerConnect.class,e-> {
+        Logging.on(EventType.PlayerConnect.class, e-> {
 
             validateName(e.player);
 
@@ -79,17 +77,17 @@ public class Database {
             if (!pd.cannotInteract()) checkAchievements(pd, handler.getAccount(pd.id));
         });
 
-        Events.on(EventType.PlayerLeave.class,e->{
+        Logging.on(EventType.PlayerLeave.class,e-> {
             PD pd = online.get(e.player.uuid());
             if(pd == null) {
-                Testing.Log("player left without ewen being present");
+                Logging.log("player left without ewen being present");
                 return;
             }
             online.remove(e.player.uuid());
             handler.free(pd);
         });
 
-        Events.on(EventType.WithdrawEvent.class, e-> {
+        Logging.on(EventType.WithdrawEvent.class, e-> {
             PD pd = online.get(e.player.uuid());
             if (pd == null) {
                 return;
@@ -97,7 +95,7 @@ public class Database {
             handler.inc(pd.id, Stat.itemsTransported, e.amount);
         });
 
-        Events.on(EventType.DepositEvent.class, e-> {
+        Logging.on(EventType.DepositEvent.class, e-> {
             PD pd = online.get(e.player.uuid());
             if (pd == null) {
                 return;

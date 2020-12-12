@@ -7,17 +7,14 @@ import arc.util.Log;
 import arc.util.Timer;
 import mindustry.Vars;
 import mindustry.gen.Call;
-import mindustry.gen.Groups;
-import mindustry.gen.Unit;
 import twp.bundle.Bundle;
 import twp.commands.*;
 import twp.database.*;
-import twp.database.maps.MapHandler;
 import twp.democracy.Hud;
 import twp.security.Limiter;
 import mindustry.game.EventType;
 import mindustry.mod.Plugin;
-import twp.tools.MainQueue;
+import twp.tools.*;
 
 public class Main extends Plugin {
     public static Ranks ranks;
@@ -32,7 +29,7 @@ public class Main extends Plugin {
     public Main() {
 
 
-        Events.on(EventType.ServerLoadEvent.class, e -> {
+        Logging.on(EventType.ServerLoadEvent.class, e -> {
             ranks = new Ranks();
             db = new Database();
             lim = new Limiter();
@@ -45,9 +42,7 @@ public class Main extends Plugin {
             }
         });
 
-        Events.run(EventType.Trigger.update, ()-> {
-            queue.run();
-        });
+        Logging.run(EventType.Trigger.update, queue::run);
 
     }
 

@@ -98,7 +98,7 @@ public class MapManager extends Command {
                     db.maps.hideMap(mid);
                     if ( !Main.testMode) Core.app.post(()-> Vars.maps.reload());
                 } catch (IOException e) {
-                    if (args[0].equals("disable")) Testing.Log(e);
+                    if (args[0].equals("disable")) Logging.log(e);
                 }
 
                 if (args[0].equals("remove")) {

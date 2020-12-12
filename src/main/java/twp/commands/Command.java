@@ -6,7 +6,7 @@ import arc.util.Log;
 import arc.util.Strings;
 import mindustry.gen.Player;
 import twp.database.PD;
-import twp.tools.Testing;
+import twp.tools.Logging;
 import twp.tools.Text;
 
 import java.util.concurrent.locks.ReentrantLock;
@@ -76,9 +76,9 @@ public abstract class Command {
                 try {
                     notifyCaller();
                 } catch (Exception e) {
-                    Testing.Log(ex);
+                    Logging.log(ex);
                 }
-                Testing.Log(ex);
+                Logging.log(ex);
             }
 
             lock1.unlock();
@@ -97,7 +97,7 @@ public abstract class Command {
             PD pd = db.online.get(player.uuid());
 
             if(pd == null) {
-                Testing.Log("null PD when executing " + name + " command.");
+                Logging.log("null PD when executing " + name + " command.");
                 player.sendMessage("[yellow]Sorry there is an problem with your profile, " +
                         "try reconnecting or contact admins that you see this message.");
                 return;
@@ -122,9 +122,9 @@ public abstract class Command {
                 try {
                     notifyCaller();
                 } catch (Exception e) {
-                    Testing.Log(e);
+                    Logging.log(e);
                 }
-                Testing.Log(ex);
+                Logging.log(ex);
             }
 
 

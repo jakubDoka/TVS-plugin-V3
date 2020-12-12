@@ -9,7 +9,7 @@ import twp.database.enums.Setting;
 import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.gen.Player;
-import twp.tools.Testing;
+import twp.tools.Logging;
 
 import static twp.Main.db;
 import static twp.Main.ranks;
@@ -21,26 +21,26 @@ public class Limiter {
 
     public Limiter() {
         // Initializing LockMap on start of a game
-        Events.on(EventType.PlayEvent.class, e -> map = new LockMap(Vars.world.width(), Vars.world.height()));
+        Logging.on(EventType.PlayEvent.class, e -> map = new LockMap(Vars.world.width(), Vars.world.height()));
 
         // Cases when lock should reset
 
-        Events.on(EventType.BlockDestroyEvent.class, e -> map.setLock(e.tile,0));
+        Logging.on(EventType.BlockDestroyEvent.class, e -> map.setLock(e.tile,0));
 
-        Events.on(EventType.BlockBuildEndEvent.class, e -> {
-            if(e.breaking) {
+        Logging.on(EventType.BlockBuildEndEvent.class, e -> {
+            if(e.breaking){
                 map.setLock(e.tile, 0);
             }
         });
 
         // This mostly prevents griefers from shooting
-        Events.run(EventType.Trigger.update, () -> {
+        Logging.run(EventType.Trigger.update, () -> {
             db.online.forEachValue((iter) -> {
                 PD pd = iter.next();
-                if(pd.isInvalid()) {
+                if(pd.isInvalid()){
                     return;
                 }
-                if(pd.cannotInteract() && pd.player.p.shooting) {
+                if(pd.cannotInteract() && pd.player.p.shooting){
                     pd.player.p.unit().kill();
                 }
             });
@@ -61,7 +61,7 @@ public class Limiter {
 
             PD pd = db.online.get(player.uuid());
             if (pd == null) {
-                Testing.Log("player data is missing ewen though player is attempting actions");
+                Logging.log("player data is missing ewen though player is attempting actions");
                 return true;
             }
 

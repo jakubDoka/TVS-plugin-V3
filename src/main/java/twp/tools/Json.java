@@ -21,7 +21,7 @@ public class Json {
             return mapper.readValue(new File(filename), jt);
         } catch (IOException e) {
             Log.info("failed to load config file");
-            Testing.Log(e);
+            Logging.log(e);
             return null;
         }
     }
@@ -32,7 +32,7 @@ public class Json {
         try {
             mapper.writeValue(new File(filename), obj);
         } catch (IOException e) {
-            Testing.Log(e);
+            Logging.log(e);
         }
     }
 
@@ -67,7 +67,7 @@ public class Json {
             mapper.writeValue(f, obj);
             return obj;
         } catch (Exception e){
-            Testing.Log(e);
+            Logging.log(e);
         }
         return null;
     }

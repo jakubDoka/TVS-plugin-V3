@@ -7,7 +7,7 @@ import twp.Main;
 import twp.database.enums.Perm;
 import twp.database.enums.RankType;
 import twp.database.enums.Stat;
-import twp.tools.Testing;
+import twp.tools.Logging;
 import twp.tools.Text;
 
 
@@ -156,7 +156,7 @@ public class PD{
 
     public boolean isInvalid() {
         if(player.p == null) {
-            if(!testMode) Testing.Log("PD has no underling player");
+            if(!testMode) Logging.log("PD has no underling player");
             return true;
         }
         return false;

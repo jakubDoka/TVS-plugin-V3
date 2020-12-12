@@ -14,7 +14,7 @@ import org.bson.Document;
 import twp.Main;
 import twp.database.core.Handler;
 import twp.database.enums.Stat;
-import twp.tools.Testing;
+import twp.tools.Logging;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -28,7 +28,7 @@ public class MapHandler extends Handler {
 
     public MapHandler(MongoCollection<Document> data, MongoCollection<Document> counter) {
         super(data, counter);
-        Events.on(EventType.GameOverEvent.class, (e)-> {
+        Logging.on(EventType.GameOverEvent.class, (e)-> {
             if (validateMaps()) {
                 return;
             }
@@ -98,15 +98,15 @@ public class MapHandler extends Handler {
         try {
             set(id, "data", Files.readAllBytes(Paths.get(map.file.absolutePath())));
         } catch (IOException e) {
-            Testing.Log(e);
-            Testing.Log("unable to cache a map into a database");
+            Logging.log(e);
+            Logging.log("unable to cache a map into a database");
         }
     }
 
     public void withdrawMap(long id, String dest) throws IOException {
         MapData md = getMap(id);
         if(md == null) {
-            Testing.Log("calling withdrawMap on map that does not exist");
+            Logging.log("calling withdrawMap on map that does not exist");
             return;
         }
 
@@ -126,7 +126,7 @@ public class MapHandler extends Handler {
     public void hideMap(long id) throws IOException {
         MapData md = getMap(id);
         if(md == null) {
-            Testing.Log("calling hideMap on map that does not exist");
+            Logging.log("calling hideMap on map that does not exist");
             return;
         }
 
