@@ -30,16 +30,8 @@ public class Logging {
         } catch(IOException e) { e.printStackTrace();}
     }
 
-    public static void logWrapper(Runnable r) {
-        try {
-            r.run();
-        } catch(Exception e) {
-            log(e);
-        }
-    }
-
     public static <T> void on(Class<T> event, Cons<T> cons) {
-        Logging.on(event, e -> {
+        Events.on(event, e -> {
             try{
                 cons.get(e);
             } catch(Exception ex) {
@@ -49,7 +41,7 @@ public class Logging {
     }
 
     public static <T> void run(Object event, Runnable listener) {
-        Logging.run(event, () -> {
+        Events.run(event, () -> {
             try{
                 listener.run();
             } catch(Exception ex) {
