@@ -75,6 +75,10 @@ public class Limiter {
                 return false;
             }
 
+            if (act.tile == null) {
+                return true;
+            }
+
             int top = pd.getHighestPermissionLevel();
             int lock = map.getLock(act.tile);
 
