@@ -59,7 +59,7 @@ public class Mkgf extends Command {
             }
 
             result = main.pushSession(pd, s -> {
-                RankSetter.terminal.run("", args[0], "griefer");
+                RankSetter.terminal.run("", args[0], "griefer", caller.player.name);
             }, account.getName(), account.getId(), "[red]griefer[]");
         } else if(args[1].equals("unmark")) {
             if (!account.isGriefer()) {
@@ -67,7 +67,7 @@ public class Mkgf extends Command {
             }
 
             result = main.pushSession(pd, s -> {
-                RankSetter.terminal.run("", args[0], "newcomer");
+                RankSetter.terminal.run("", args[0], "newcomer", caller.player.name);
             }, account.getName(), account.getId(), "[green]newcomer[]");
         } else {
             result = Result.wrongOption;

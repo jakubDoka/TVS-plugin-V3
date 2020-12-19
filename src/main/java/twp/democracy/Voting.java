@@ -2,7 +2,7 @@ package twp.democracy;
 
 import arc.math.Mathf;
 import twp.commands.Command;
-import twp.database.PD;
+import twp.database.*;
 import twp.database.enums.Perm;
 
 import java.util.ArrayList;
@@ -177,14 +177,15 @@ public class Voting {
         public synchronized String getMessage(PD pd) {
             StringBuilder sb = new StringBuilder();
             int i = 0;
+
             for(Session s : new ArrayList<>(sessions)) {
                 int major = s.voting.getMajority();
-
+                Account ac = db.handler.getAccount(s.owner);
 
                 sb.append(s.counter % 2 == 0 ? "[gray]" : "[white]");
                 sb.append(pd.translate(s.voting.getMessage(Messages.request), s.args));
                 sb.append("[]\n");
-                sb.append(pd.translate(s.spacial ? "vote-specialStatus" : "vote-status", i, s.yes, s.no, major, s.counter));
+                sb.append(pd.translate(s.spacial ? "vote-specialStatus" : "vote-status", i, s.yes, s.no, major, s.counter, ac.getName(), s.owner));
                 sb.append("\n");
 
                 i++;
