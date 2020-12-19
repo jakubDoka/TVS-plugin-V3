@@ -1,5 +1,7 @@
 package twp.commands.tests;
 
+import arc.util.*;
+import twp.*;
 import twp.commands.AccountManager;
 import twp.commands.Command;
 import twp.database.DBPlayer;
@@ -11,6 +13,7 @@ import static twp.Main.ranks;
 
 class AccountManagerTest extends Test {
     public static void main(String[] args) {
+        Log.info(Global.config.actionMemorySize);
         init();
 
         db.online.put("", db.handler.loadData(new DBPlayer(){}));

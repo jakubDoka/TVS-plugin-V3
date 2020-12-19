@@ -2,9 +2,10 @@ package twp;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import twp.security.LockMap.*;
 import twp.tools.Json;
 
-import java.util.HashMap;
+import java.util.*;
 
 public class Global {
     public static final String dir = "config/mods/worse";
@@ -34,6 +35,8 @@ public class Global {
 
         public int vpnTimeout;
         public String vpnApi;
+        public int actionMemorySize = 5;
+        public long doubleClickSpacing = 300;
 
 
         public Config() {}
@@ -47,11 +50,13 @@ public class Global {
                 @JsonProperty("dbAddress") String dbAddress,
                 @JsonProperty("alertPrefix") String alertPrefix,
                 @JsonProperty("dbName") String dbName,
-                @JsonProperty("rules") HashMap<String, String > rules,
-                @JsonProperty("guide") HashMap<String, String > guide,
-                @JsonProperty("welcomeMessage") HashMap<String, String > welcomeMessage,
+                @JsonProperty("rules") HashMap<String, String> rules,
+                @JsonProperty("guide") HashMap<String, String> guide,
+                @JsonProperty("welcomeMessage") HashMap<String, String> welcomeMessage,
                 @JsonProperty("vpnApi") String vpnApi,
-                @JsonProperty("vpnTimeout") int vpnTimeout
+                @JsonProperty("vpnTimeout") int vpnTimeout,
+                @JsonProperty("actionMemorySize") int actionMemorySize,
+                @JsonProperty("doubleClickSpacing") long doubleClickSpacing
         ){
             if(symbol != null) this.symbol = symbol;
             if(dbAddress != null) this.dbAddress = dbAddress;
@@ -59,6 +64,8 @@ public class Global {
             if(alertPrefix != null) this.alertPrefix = alertPrefix;
             if(dbName != null) this.dbName = dbName;
             if(mapCollection != null) this.mapCollection = mapCollection;
+            if(actionMemorySize != 0) this.actionMemorySize = actionMemorySize;
+            if(doubleClickSpacing != 0) this.doubleClickSpacing = doubleClickSpacing;
 
             this.consideredPassive = consideredPassive;
             this.rules = rules;

@@ -194,9 +194,14 @@ public abstract class Command {
 
     // Used for testing commands
     public void assertResult(Result supposed) {
-        Logging.info(getMessage(), arg);
-        if(supposed != result) {
-            throw new RuntimeException(supposed.name() + "!=" + result.name());
+        try{
+            Logging.info(getMessage(), arg);
+
+            if(supposed != result){
+                throw new RuntimeException(supposed.name() + "!=" + result.name());
+            }
+        } finally {
+            result = Result.success;
         }
     }
 

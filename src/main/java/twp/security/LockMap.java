@@ -1,12 +1,15 @@
 package twp.security;
 
-import arc.util.Time;
-import twp.database.enums.RankType;
-import twp.database.Account;
-import mindustry.net.Administration;
-import mindustry.world.Tile;
+import arc.util.*;
+import mindustry.gen.*;
+import mindustry.net.*;
+import mindustry.net.Administration.*;
+import mindustry.world.*;
+import twp.*;
+import twp.database.*;
+import twp.database.enums.*;
 
-import java.util.ArrayList;
+import java.util.*;
 
 import static twp.Main.db;
 
@@ -30,39 +33,53 @@ public class LockMap {
         map[t.y][t.x].lock = level;
     }
 
-    void AddAction(Tile t, ActionInf inf) {
-        map[t.y][t.x].actions.add(inf);
-        if(map[t.y][t.x].actions.size() > 5) {
-            map[t.y][t.x].actions.remove(0);
-        }
+    void displayInfo(Tile t, Player p) {
+        Call.label(p.con, map[t.x][t.y].format(), 10, t.worldx(), t.worldy());
     }
 
-    String getActions(Tile t) {
-        TileInf ti = map[t.y][t.x];
-        StringBuilder sb = new StringBuilder();
-        for(ActionInf ai : ti.actions) {
-            Account account = db.handler.getAccount(ai.id);
-            sb.append(db.online.containsKey(account.getUuid()) ? "[green]" : "[gray]");
-            sb.append("[").append(account.getRank(RankType.rank).color).append("]").append(account.getName());
-            sb.append(" [](").append(account.getId()).append(") ");
-            sb.append(Time.timeSinceMillis(ai.time) / 1000 / 60).append("min ago");
-            sb.append("[]\n");
-        }
-        return sb.substring(0, sb.length() - 2);
+    public void addAction(Tile t, long id, ActionType type){
+        map[t.x][t.y].addAction(id, type);
     }
 
     static class TileInf {
         int lock;
         ArrayList<ActionInf> actions = new ArrayList<>();
+
+        String format() {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Lock: ").append(lock).append("\n");
+            for (ActionInf ai : actions) {
+                sb.append(ai.format()).append("\n");
+            }
+            return sb.substring(0, sb.length()-1);
+        }
+
+        public void addAction(long id, ActionType type){
+            if(actions.size() != 0 && actions.get(0).type == type && actions.get(0).id == id) {
+                return;
+            }
+            actions.add(0, new ActionInf(id, type));
+            if (actions.size() > Global.config.actionMemorySize) {
+                actions.remove(actions.size()-1);
+            }
+        }
     }
 
     static class ActionInf {
-        long id, time = Time.millis();
+        long id;
         Administration.ActionType type;
 
         ActionInf(long id, Administration.ActionType type) {
             this.id = id;
             this.type = type;
+        }
+
+        String format() {
+            Account pd = db.handler.getAccount(id);
+            if (pd == null) {
+                return "hello there, i em corrupted";
+            }
+            return id + "-" + pd.getName() + "-" + pd.getRank(RankType.rank).getSuffix() + "-" + type.name();
         }
     }
 }

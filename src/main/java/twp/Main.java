@@ -27,7 +27,7 @@ public class Main extends Plugin {
     public static MainQueue queue = new MainQueue();
 
     public Main() {
-
+        Global.loadConfig();
 
         Logging.on(EventType.ServerLoadEvent.class, e -> {
             ranks = new Ranks();

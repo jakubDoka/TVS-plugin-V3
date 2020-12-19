@@ -1,8 +1,9 @@
 package twp.security;
 
 import arc.Events;
+import arc.util.*;
 import mindustry.net.Administration;
-import twp.Main;
+import twp.*;
 import twp.database.PD;
 import twp.database.enums.Perm;
 import twp.database.enums.Setting;
@@ -11,12 +12,15 @@ import mindustry.game.EventType;
 import mindustry.gen.Player;
 import twp.tools.Logging;
 
+import java.util.*;
+
 import static twp.Main.db;
 import static twp.Main.ranks;
 import static mindustry.Vars.netServer;
 
 public class Limiter {
     LockMap map;
+    HashMap<String, Long> doubleClicks = new HashMap<>();
 
 
     public Limiter() {
@@ -46,6 +50,12 @@ public class Limiter {
             });
         });
 
+        Logging.on(EventType.TapEvent.class, e -> {
+            if (Time.timeSinceMillis(doubleClicks.getOrDefault(e.player.uuid(), 0L)) < Global.config.doubleClickSpacing) {
+                map.displayInfo(e.tile, e.player);
+            }
+            doubleClicks.put(e.player.uuid(), Time.millis());
+        });
 
         if(!Main.testMode) {
             registerActionFilter();
@@ -88,6 +98,8 @@ public class Limiter {
             } else if (act.type != Administration.ActionType.breakBlock && pd.hasPermLevel(Perm.high.value)) {
                 map.setLock(act.tile, db.hasEnabled(pd.id, Setting.lock) ? top : Perm.high.value);
             }
+            map.addAction(act.tile, pd.id, act.type);
+
 
 
             return true;
