@@ -185,7 +185,7 @@ public class Voting {
                 sb.append(s.counter % 2 == 0 ? "[gray]" : "[white]");
                 sb.append(pd.translate(s.voting.getMessage(Messages.request), s.args));
                 sb.append("[]\n");
-                sb.append(pd.translate(s.spacial ? "vote-specialStatus" : "vote-status", i, s.yes, s.no, major, s.counter, ac.getName(), s.owner));
+                sb.append(pd.translate(s.spacial ? "vote-specialStatus" : "vote-status", i, s.yes, s.no, major, ac.getName(), s.owner, s.counter));
                 sb.append("\n");
 
                 i++;
