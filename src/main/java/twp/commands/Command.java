@@ -2,7 +2,6 @@ package twp.commands;
 
 import arc.func.Cons;
 import arc.util.CommandHandler;
-import arc.util.Log;
 import arc.util.Strings;
 import mindustry.gen.Player;
 import twp.database.PD;
@@ -24,7 +23,7 @@ public abstract class Command {
     public String name = "noname", argStruct, description = "description missing";
 
     // dynamic
-    public Result result;
+    public Result result = Result.success;
     public Object[] arg = {};
     public PD caller;
 
@@ -62,6 +61,7 @@ public abstract class Command {
             lock1.lock();
 
             try {
+                result = Result.success;
                 run("", args);
                 queue.post(() -> {
                     if (runner != null) {
@@ -107,6 +107,7 @@ public abstract class Command {
             caller = pd;
 
             try {
+                result = Result.success;
                 run(player.uuid(), args);
 
                 queue.post(() -> {
@@ -141,14 +142,19 @@ public abstract class Command {
 
     // getMessage returns bundle key based of result
     public String getMessage() {
-        return (result.general ? "" : (name + "-")) + result.name();
+        return getMessage(result);
+    }
+
+    // getMessage returns bundle key based of result
+    public String getMessage(Result r) {
+        return (r.general ? "" : (name + "-")) + r.name();
     }
 
     // notifyCaller sends message to caller, its just a shorthand and is atomaticly called if
     // command lambda is null
     public void notifyCaller() {
         if(caller == null) {
-            Log.info(Text.cleanColors(Text.format(bundle.getDefault(getMessage()), arg)));
+            Logging.info(getMessage(), arg);
             return;
         }
         caller.sendServerMessage(getMessage(), arg);
@@ -188,7 +194,7 @@ public abstract class Command {
 
     // Used for testing commands
     public void assertResult(Result supposed) {
-        Log.info(Text.cleanColors(Text.format(bundle.getDefault(getMessage()), arg)));
+        Logging.info(getMessage(), arg);
         if(supposed != result) {
             throw new RuntimeException(supposed.name() + "!=" + result.name());
         }
@@ -242,6 +248,7 @@ public abstract class Command {
         updateSuccess,
         updateFail,
         alreadyAdded,
+        recoverSuccess,
 
         bug(true),
         notInteger(true),

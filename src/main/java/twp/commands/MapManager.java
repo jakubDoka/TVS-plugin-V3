@@ -109,8 +109,6 @@ public class MapManager extends Command {
                 result = Result.wrongOption;
                 return;
         }
-
-        result = Result.success;
     }
 
     public static MapManager terminal = new MapManager();

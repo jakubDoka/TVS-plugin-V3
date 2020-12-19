@@ -58,8 +58,6 @@ public class RankSetter extends Command {
         if (pd != null) {
             Core.app.post(() -> pd.kick("kick-rankChange", 0, rank.getSuffix()));
         }
-
-        result = Result.success; // done
     }
 
     public static RankSetter

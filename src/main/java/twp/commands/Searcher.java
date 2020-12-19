@@ -112,7 +112,6 @@ public class Searcher extends Command {
         });
 
         setArg(sb.toString(), slice.len(), count, (float) slice.len() / (float)count * 100);
-        result = Result.success;
     }
 
     public static Searcher

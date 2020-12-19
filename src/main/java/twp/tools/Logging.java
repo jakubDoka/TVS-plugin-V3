@@ -2,31 +2,53 @@ package twp.tools;
 
 import arc.*;
 import arc.func.*;
+import arc.util.*;
+import mindustry.gen.*;
 import org.junit.platform.commons.util.*;
 import twp.*;
+import twp.database.*;
 
 import java.io.*;
 import java.sql.*;
 import java.text.*;
 
+import static twp.Main.*;
+
 public class Logging {
     static final String outDir = Global.dir + "/errors/";
+
     public static void main(String[] args){
         log("hello");
         log("hello");
+    }
+
+    public static void info(String key, Object ...args) {
+        Log.info(Text.cleanColors(Text.format(bundle.getDefault(key), args)));
     }
 
     public static void log(String message) {
         log(new RuntimeException(message));
     }
 
+    public static void sendMessage(String key, Object ...args) {
+        db.online.forEachValue(pd -> {
+            pd.next().sendServerMessage(key, args);
+        });
+    }
+
     public static void log(Throwable t) {
         String ex = ExceptionUtils.readStackTrace(t);
         SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH-mm-ss-SSS z");
         Date date = new Date(System.currentTimeMillis());
-        Json.makeFullPath(outDir);
-        try (PrintWriter out = new PrintWriter(outDir+formatter.format(date))) {
+        File f = new File(outDir+formatter.format(date));
+
+        try {
+            Json.makeFullPath(f.getAbsolutePath());
+            f.createNewFile();
+            PrintWriter out = new PrintWriter(f.getAbsolutePath());
+
             out.println(ex);
+            out.close();
         } catch(IOException e) { e.printStackTrace();}
     }
 

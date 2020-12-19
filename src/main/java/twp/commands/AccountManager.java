@@ -77,7 +77,6 @@ public class AccountManager extends Command {
                 }
                 db.handler.makeNewAccount(pd.player.uuid, pd.player.ip);
                 db.disconnectAccount(pd);
-                result = Result.success;
                 return;
             default:
                 if(isNotInteger(args, 0)) {

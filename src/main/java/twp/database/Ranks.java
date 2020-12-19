@@ -1,13 +1,11 @@
 package twp.database;
 
 import arc.graphics.Color;
-import arc.util.Log;
 import twp.Global;
 import twp.database.enums.Perm;
 import twp.database.enums.RankType;
 import twp.database.enums.Stat;
-import twp.tools.Enums;
-import twp.tools.Json;
+import twp.tools.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -91,7 +89,7 @@ public class Ranks {
             special.clear();
             donation.clear();
             loadBuildIn();
-            Log.info("Special rank file is invalid. No ranks loaded");
+            Logging.info("ranks-fileInvalid");
         };
 
         for (Rank r : srs) {
@@ -132,7 +130,7 @@ public class Ranks {
             if (r.linked != null) {
                 for (String l : r.linked) {
                     if (!ranks.containsKey(l)) {
-                        Log.info("missing rank " + l);
+                        Logging.info("ranks-missing", l);
                         end.run();
                         return;
                     }
@@ -185,7 +183,6 @@ public class Ranks {
         HashMap<String, ArrayList<Rank>> ranks = new HashMap<>();
         ranks.put("ranks", arr);
         saveSimple(rankFile, ranks);
-        Log.info("Special ranks created");
         for (Rank sr : arr) {
             special.put(sr.name, sr);
         }

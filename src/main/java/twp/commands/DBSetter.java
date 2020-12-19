@@ -87,7 +87,6 @@ public class DBSetter extends Command {
 
         setArg(field.toString(), args[2]);
 
-        result = Result.success;
     }
 
     public static DBSetter

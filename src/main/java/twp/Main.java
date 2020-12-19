@@ -3,7 +3,6 @@ package twp;
 
 import arc.Events;
 import arc.util.CommandHandler;
-import arc.util.Log;
 import arc.util.Timer;
 import mindustry.Vars;
 import mindustry.gen.Call;
@@ -23,6 +22,7 @@ public class Main extends Plugin {
     public static Hud hud;
     public static Bundle bundle;
     public static boolean testMode;
+    public static CommandHandler serverHandler;
 
     public static MainQueue queue = new MainQueue();
 
@@ -60,16 +60,21 @@ public class Main extends Plugin {
         handler.register("reloadmaps", "Reload all maps from disk.", arg -> {
             int beforeMaps = Vars.maps.all().size;
             Vars.maps.reload();
-            if(!db.maps.validateMaps()) {
-                Log.info("Some of maps are not valid, server will stop hosting when current game ends if you dont fix this issue.");
+            if(db.maps.invalidMaps()) {
+                Logging.info("maps-notValid");
+                Deferrer.terminal.run("", "close");
                 return;
             }
             if(Vars.maps.all().size > beforeMaps){
-                Log.info("@ new map(s) found and reloaded.", Vars.maps.all().size - beforeMaps);
+                Logging.info("maps-reloadedCount", Vars.maps.all().size - beforeMaps);
             }else{
-                Log.info("Maps reloaded.");
+                Logging.info("maps-reloaded");
             }
         });
+
+        Deferrer.terminal.registerCmp(handler, null);
+
+        serverHandler = handler;
     }
 
     //register commands that player can invoke in-game

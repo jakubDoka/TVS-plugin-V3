@@ -1,6 +1,5 @@
 package twp.tools;
 
-import arc.util.Log;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -20,28 +19,27 @@ public class Json {
         try {
             return mapper.readValue(new File(filename), jt);
         } catch (IOException e) {
-            Log.info("failed to load config file");
+            Logging.info("json-failLoad", filename, e.getMessage());
             Logging.log(e);
             return null;
         }
     }
 
     public static void saveSimple(String filename, Object obj){
-        makeFullPath(filename);
         ObjectMapper mapper = new ObjectMapper();
         try {
+            makeFullPath(filename);
             mapper.writeValue(new File(filename), obj);
         } catch (IOException e) {
-            Logging.log(e);
+            Logging.info("json-failSave", filename, e.getMessage());
         }
     }
 
-    public static void makeFullPath(String filename){
-        StringBuilder path = new StringBuilder();
-        String[] dirs = filename.split("/");
-        for(int i = 0; i<dirs.length-1; i++){
-            path.append(dirs[i]).append("/");
-            new File(path.toString()).mkdir();
+    public static void makeFullPath(String filename) throws IOException {
+        File targetFile = new File(filename);
+        File parent = targetFile.getParentFile();
+        if (!parent.exists() && !parent.mkdirs()) {
+            throw new IOException("Couldn't create dir: " + parent);
         }
     }
 
@@ -53,21 +51,22 @@ public class Json {
                 return saveJackson(filename, type);
             }
             return mapper.readValue(f, type);
-        } catch (IOException ex){
+        } catch (IOException e){
+            Logging.info("json-failLoad", filename, e.getMessage());
             return null;
         }
     }
 
     public static <T> T saveJackson(String filename, Class<T> type){
         ObjectMapper mapper = new ObjectMapper();
-        makeFullPath(filename);
-        File f = new File(filename);
         try {
-            T obj = type.newInstance();
+            makeFullPath(filename);
+            File f = new File(filename);
+            T obj = type.getDeclaredConstructor().newInstance();
             mapper.writeValue(f, obj);
             return obj;
         } catch (Exception e){
-            Logging.log(e);
+            Logging.info("json-failSave", filename, e.getMessage());
         }
         return null;
     }

@@ -1,14 +1,11 @@
 package twp.database.maps;
 
 import arc.Core;
-import arc.Events;
-import arc.util.Log;
-import arc.util.Time;
+import arc.util.*;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Indexes;
 import mindustry.Vars;
-import mindustry.game.EventType;
 import mindustry.maps.Map;
 import org.bson.Document;
 import twp.Main;
@@ -28,28 +25,19 @@ public class MapHandler extends Handler {
 
     public MapHandler(MongoCollection<Document> data, MongoCollection<Document> counter) {
         super(data, counter);
-        Logging.on(EventType.GameOverEvent.class, (e)-> {
-            if (validateMaps()) {
-                return;
-            }
-
-            Log.info("Server was closed due to presence of invalid maps.");
-            Vars.net.dispose();
-            Core.app.exit();
-        });
-
         data.createIndex(Indexes.descending("fileName"));
-        if (!validateMaps()) {
-            Log.info("Server wos closed due to some of maps being invalid, rename them or use /maps update <fileName> in case you tiring to update them.");
+        if (invalidMaps()) {
+            Logging.info("maps-closingDueToInvalid");
             Core.app.exit();
         }
     }
 
-    public boolean validateMaps() {
+    public boolean invalidMaps() {
         if (Main.testMode) {
-            return true;
+            return false;
         }
-        boolean valid = true;
+
+        boolean invalid = false;
         for(Map m : Vars.maps.customMaps()) {
             MapData md = getMap(m.file.name());
             if (md == null) {
@@ -59,16 +47,16 @@ public class MapHandler extends Handler {
             try {
                 byte[] dt = Files.readAllBytes(Paths.get(m.file.absolutePath()));
                 if(!Arrays.equals(dt, md.GetData())) {
-                    Log.info("Map file with name " + m.file.name() + " is duplicate.");
-                    valid = false;
+                    Logging.info("maps-duplicate", m.file.name());
+                    invalid = true;
                 }
             } catch (IOException e) {
-                Log.info("Unable to read a map file, strange.");
+                Logging.info("maps-unableToRead", m.file.name());
             }
 
         }
 
-        return valid;
+        return invalid;
     }
 
     public MapData getMap(long id) {
