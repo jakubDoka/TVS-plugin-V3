@@ -34,11 +34,11 @@ public class LockMap {
     }
 
     void displayInfo(Tile t, Player p) {
-        Call.label(p.con, map[t.x][t.y].format(), 10, t.worldx(), t.worldy());
+        Call.label(p.con, map[t.y][t.x].format(), 10, t.worldx(), t.worldy());
     }
 
     public void addAction(Tile t, long id, ActionType type){
-        map[t.x][t.y].addAction(id, type);
+        map[t.y][t.x].addAction(id, type);
     }
 
     static class TileInf {
