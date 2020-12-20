@@ -38,6 +38,7 @@ public class Global {
         public int actionMemorySize = 5;
         public long doubleClickSpacing = 300;
         public int maxNameLength = 25;
+        public long testPenalty = 15 * 60 * 1000;
 
 
         public Config() {}
@@ -58,7 +59,8 @@ public class Global {
                 @JsonProperty("vpnTimeout") int vpnTimeout,
                 @JsonProperty("actionMemorySize") int actionMemorySize,
                 @JsonProperty("doubleClickSpacing") long doubleClickSpacing,
-                @JsonProperty("maxNameLength") int maxNameLength
+                @JsonProperty("maxNameLength") int maxNameLength,
+                @JsonProperty("testPenalty") long testPenalty
         ){
             if(symbol != null) this.symbol = symbol;
             if(dbAddress != null) this.dbAddress = dbAddress;
@@ -77,6 +79,7 @@ public class Global {
             this.welcomeMessage = welcomeMessage;
             this.vpnApi = vpnApi;
             this.vpnTimeout = vpnTimeout;
+            this.testPenalty = testPenalty;
         }
     }
 }

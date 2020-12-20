@@ -6,8 +6,7 @@ import twp.database.Rank;
 import twp.database.enums.RankType;
 import twp.database.Account;
 
-import static twp.Main.db;
-import static twp.Main.ranks;
+import static twp.Main.*;
 
 // Rank setter lets admins to change build-in ranks of players
 // Its designed for use on multiple places (terminal, game, discord)
@@ -55,7 +54,7 @@ public class RankSetter extends Command {
 
         // if player is online kick him. I do not want to deal with bag prone code to change his rank manually.
         PD pd = db.online.get(data.getUuid());
-        if (pd != null) {
+        if (pd != null && !testMode) {
             Core.app.post(() -> pd.kick("kick-rankChange", 0, rank.getSuffix()));
         }
     }

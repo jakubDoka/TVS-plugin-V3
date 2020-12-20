@@ -79,7 +79,7 @@ public class Ranks {
         special.clear();
         donation.clear();
 
-        HashMap<String, Rank[]> ranks = Json.loadHashmap(rankFile, Rank[].class, this::defaultRanks);
+        HashMap<String, Rank[]> ranks = Json.loadHashmap(rankFile, Rank[].class, defaultRanks);
         if (ranks == null) return;
         Rank[] srs = ranks.get("ranks");
         if (srs == null) return;
@@ -141,52 +141,46 @@ public class Ranks {
         }
     }
 
-    // hardcoded example generator
-    public void defaultRanks() {
-        ArrayList<Rank> arr = new ArrayList<>();
-        arr.add(new Rank() {
-            {
-                name = "kamikaze";
-                color = "scarlet";
+    public static HashMap<String, Rank[]> defaultRanks = new HashMap<String, Rank[]>(){{
+        put("ranks", new Rank[]{
+            new Rank() {
+                {
+                    name = "kamikaze";
+                    color = "scarlet";
+                    description = new HashMap<String, String>() {{
+                        put("default", "put your description here.");
+                        put("en_US", "Put translation like this.");
+                    }};
+                    value = 1;
+                    permissions = new HashSet<String>() {{
+                        add(Perm.suicide.name());
+                    }};
+                    quests = new HashMap<String, HashMap<String, Integer>>() {{
+                        put(Stat.deaths.name(), new HashMap<String, Integer>() {{
+                            put(Mod.best.name(), 10);
+                            put(Mod.required.name(), 100);
+                            put(Mod.frequency.name(), 20);
+                        }});
+                    }};
+                }
+            },
+            new Rank() {{
+                name = "donor";
+                color = "#" + Color.gold.toString();
                 description = new HashMap<String, String>() {{
-                    put("default", "put your description here.");
-                    put("en_US", "Put translation like this.");
+                    put("default", "For people who support server financially.");
                 }};
-                value = 1;
                 permissions = new HashSet<String>() {{
+                    add(Perm.colorCombo.name());
                     add(Perm.suicide.name());
                 }};
-                quests = new HashMap<String, HashMap<String, Integer>>() {{
-                    put(Stat.deaths.name(), new HashMap<String, Integer>() {{
-                        put(Mod.best.name(), 10);
-                        put(Mod.required.name(), 100);
-                        put(Mod.frequency.name(), 20);
-                    }});
+                pets = new ArrayList<String>() {{
+                    add("fire-pet");
+                    add("fire-pet");
                 }};
-            }
+            }}
         });
-        arr.add(new Rank() {{
-            name = "donor";
-            color = "#" + Color.gold.toString();
-            description = new HashMap<String, String>() {{
-                put("default", "For people who support server financially.");
-            }};
-            permissions = new HashSet<String>() {{
-                add(Perm.colorCombo.name());
-                add(Perm.suicide.name());
-            }};
-            pets = new ArrayList<String>() {{
-                add("fire-pet");
-                add("fire-pet");
-            }};
-        }});
-        HashMap<String, ArrayList<Rank>> ranks = new HashMap<>();
-        ranks.put("ranks", arr);
-        saveSimple(rankFile, ranks);
-        for (Rank sr : arr) {
-            special.put(sr.name, sr);
-        }
-    }
+    }};
 
     public Rank getRank(String name, RankType type) {
         return getRanks(type).getOrDefault(name, type == RankType.rank ? newcomer : error);

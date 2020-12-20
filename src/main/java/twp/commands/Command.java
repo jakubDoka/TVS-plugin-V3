@@ -153,6 +153,10 @@ public abstract class Command {
     // notifyCaller sends message to caller, its just a shorthand and is atomaticly called if
     // command lambda is null
     public void notifyCaller() {
+        if(result == Result.none) {
+            return;
+        }
+
         if(caller == null) {
             Logging.info(getMessage(), arg);
             return;
@@ -195,7 +199,9 @@ public abstract class Command {
     // Used for testing commands
     public void assertResult(Result supposed) {
         try{
-            Logging.info(getMessage(), arg);
+            if (result != Result.none){
+                Logging.info(getMessage(), arg);
+            }
 
             if(supposed != result){
                 throw new RuntimeException(supposed.name() + "!=" + result.name());
@@ -254,6 +260,11 @@ public abstract class Command {
         updateFail,
         alreadyAdded,
         recoverSuccess,
+        penalty,
+
+        start,
+        hint,
+        testFail,
 
         bug(true),
         notInteger(true),
@@ -265,7 +276,9 @@ public abstract class Command {
         voteStartSuccess(true),
         invalidVoteSession(true),
         voteSuccess(true),
-        alreadyVoted(true);
+        alreadyVoted(true),
+
+        none;
 
         boolean general;
 

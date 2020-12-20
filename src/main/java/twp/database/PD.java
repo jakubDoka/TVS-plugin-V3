@@ -1,6 +1,6 @@
 package twp.database;
 
-import arc.util.Time;
+import arc.util.*;
 import mindustry.gen.Player;
 import twp.Global;
 import twp.Main;
@@ -98,6 +98,10 @@ public class PD{
     }
 
     public synchronized void sendServerMessage(String message, Object ... args) {
+        if(testMode) {
+            Logging.info(message, args);
+            return;
+        }
         if(isInvalid()) {
             return;
         }
@@ -105,6 +109,10 @@ public class PD{
     }
 
     public void sendMessage(String message) {
+        if(testMode) {
+            Log.info(message);
+            return;
+        }
         if(isInvalid()) {
             return;
         }

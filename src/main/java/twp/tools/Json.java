@@ -8,13 +8,16 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public class Json {
-    public static <V> HashMap<String, V> loadHashmap(String filename, Class<V> val, Runnable save) {
+    public static <V> HashMap<String, V> loadHashmap(String filename, Class<V> val, HashMap<String, V> def) {
         ObjectMapper mapper = new ObjectMapper();
         JavaType jt = mapper.getTypeFactory().constructMapLikeType(HashMap.class, String.class, val);
         File fi = new File(filename);
         if(!fi.exists()) {
-            save.run();
-            return null;
+            if (def == null) {
+                return null;
+            }
+            saveSimple(filename, def);
+            return def;
         }
         try {
             return mapper.readValue(new File(filename), jt);
