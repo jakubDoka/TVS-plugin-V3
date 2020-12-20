@@ -37,6 +37,7 @@ public class Global {
         public String vpnApi;
         public int actionMemorySize = 5;
         public long doubleClickSpacing = 300;
+        public int maxNameLength = 25;
 
 
         public Config() {}
@@ -56,7 +57,8 @@ public class Global {
                 @JsonProperty("vpnApi") String vpnApi,
                 @JsonProperty("vpnTimeout") int vpnTimeout,
                 @JsonProperty("actionMemorySize") int actionMemorySize,
-                @JsonProperty("doubleClickSpacing") long doubleClickSpacing
+                @JsonProperty("doubleClickSpacing") long doubleClickSpacing,
+                @JsonProperty("maxNameLength") int maxNameLength
         ){
             if(symbol != null) this.symbol = symbol;
             if(dbAddress != null) this.dbAddress = dbAddress;
@@ -64,8 +66,10 @@ public class Global {
             if(alertPrefix != null) this.alertPrefix = alertPrefix;
             if(dbName != null) this.dbName = dbName;
             if(mapCollection != null) this.mapCollection = mapCollection;
+
             if(actionMemorySize != 0) this.actionMemorySize = actionMemorySize;
             if(doubleClickSpacing != 0) this.doubleClickSpacing = doubleClickSpacing;
+            if(maxNameLength != 0) this.maxNameLength = maxNameLength;
 
             this.consideredPassive = consideredPassive;
             this.rules = rules;

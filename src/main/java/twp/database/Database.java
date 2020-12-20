@@ -47,6 +47,8 @@ public class Database {
             "Ezechiel",
             "Arlong",
             "Luffy",
+            "Prometeus",
+            "Gerald"
     };
 
     // mongo stuff
@@ -197,7 +199,7 @@ public class Database {
     public void validateName(Player player) {
         String originalName = player.name;
         player.name = Text.cleanName(player.name);
-        if (!originalName.equals(player.name)) {
+        if (!originalName.equals(player.name) || player.name.length() > Global.config.maxNameLength) {
             //name cannot be blank so then replace it with some random name
             if (player.name.replace(" ", "").isEmpty()) {
                 player.name = pickFreeName();
