@@ -83,6 +83,8 @@ public class Main extends Plugin {
         handler.removeCommand("vote");
         handler.removeCommand("votekick");
 
+        Tester.game.registerGm(handler, null);
+
         RankSetter.game.registerGm(handler, null);
 
         Searcher.game.registerGm(handler, null);
