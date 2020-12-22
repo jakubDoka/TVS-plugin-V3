@@ -1,12 +1,12 @@
 package twp.commands.tests;
 
 import arc.util.*;
-import twp.*;
-import twp.commands.AccountManager;
-import twp.commands.Command;
 import twp.database.DBPlayer;
 import twp.database.PD;
 import twp.database.enums.RankType;
+import twp.*;
+import twp.commands.AccountManager;
+import twp.commands.Command;
 
 import static twp.Main.db;
 import static twp.Main.ranks;

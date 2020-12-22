@@ -1,12 +1,12 @@
 package twp.database;
 
 import arc.util.*;
-import mindustry.gen.Player;
-import twp.Global;
-import twp.Main;
 import twp.database.enums.Perm;
 import twp.database.enums.RankType;
 import twp.database.enums.Stat;
+import mindustry.gen.Player;
+import twp.Global;
+import twp.Main;
 import twp.tools.Logging;
 import twp.tools.Text;
 

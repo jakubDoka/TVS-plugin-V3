@@ -1,8 +1,8 @@
 package twp.security;
 
-import arc.Events;
 import arc.util.*;
 import mindustry.net.Administration;
+import mindustry.world.Tile;
 import twp.*;
 import twp.database.PD;
 import twp.database.enums.Perm;
@@ -20,7 +20,7 @@ import static mindustry.Vars.netServer;
 
 public class Limiter {
     LockMap map;
-    HashMap<String, Long> doubleClicks = new HashMap<>();
+    HashMap<String, DoubleClickData> doubleClicks = new HashMap<>();
 
 
     public Limiter() {
@@ -51,10 +51,17 @@ public class Limiter {
         });
 
         Logging.on(EventType.TapEvent.class, e -> {
-            if (Time.timeSinceMillis(doubleClicks.getOrDefault(e.player.uuid(), 0L)) < Global.config.doubleClickSpacing) {
+            DoubleClickData dcd = doubleClicks.get(e.player.uuid());
+            if (dcd == null || !dcd.Equal(e.tile)) {
+                doubleClicks.put(e.player.uuid(), new DoubleClickData(e.tile));
+                return;
+            }
+
+            if (Time.timeSinceMillis(dcd.time) < Global.config.doubleClickSpacing) {
                 map.displayInfo(e.tile, e.player);
             }
-            doubleClicks.put(e.player.uuid(), Time.millis());
+
+            doubleClicks.remove(e.player.uuid());
         });
 
         if(!Main.testMode) {
@@ -104,6 +111,19 @@ public class Limiter {
 
             return true;
         });
+    }
+
+    static class DoubleClickData {
+        long time = Time.millis();
+        Tile t;
+
+        DoubleClickData(Tile t) {
+            this.t = t;
+        }
+
+        boolean Equal(Tile t) {
+            return this.t == t;
+        }
     }
 }
 

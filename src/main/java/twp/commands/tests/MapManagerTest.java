@@ -1,8 +1,8 @@
 package twp.commands.tests;
 
+import twp.database.maps.MapHandler;
 import twp.commands.Command;
 import twp.commands.MapManager;
-import twp.database.maps.MapHandler;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static twp.Main.db;

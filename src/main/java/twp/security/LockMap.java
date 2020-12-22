@@ -1,6 +1,5 @@
 package twp.security;
 
-import arc.util.*;
 import mindustry.gen.*;
 import mindustry.net.*;
 import mindustry.net.Administration.*;
@@ -9,9 +8,9 @@ import twp.*;
 import twp.database.*;
 import twp.database.enums.*;
 
-import java.util.*;
+import static twp.Main.*;
 
-import static twp.Main.db;
+import java.util.*;
 
 public class LockMap {
     TileInf[][] map;

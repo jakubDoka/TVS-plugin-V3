@@ -1,9 +1,9 @@
 package twp.database;
 
-import org.bson.Document;
 import twp.database.core.Raw;
 import twp.database.enums.RankType;
 import twp.database.enums.Stat;
+import org.bson.Document;
 
 import static twp.Main.*;
 

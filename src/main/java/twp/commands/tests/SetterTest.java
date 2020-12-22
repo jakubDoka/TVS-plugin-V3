@@ -1,10 +1,10 @@
 package twp.commands.tests;
 
-import twp.commands.Command;
-import twp.commands.DBSetter;
 import twp.database.DBPlayer;
 import twp.database.enums.RankType;
 import twp.database.enums.Stat;
+import twp.commands.Command;
+import twp.commands.DBSetter;
 
 import static twp.Main.db;
 import static twp.Main.ranks;

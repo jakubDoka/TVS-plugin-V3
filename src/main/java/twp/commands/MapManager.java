@@ -2,12 +2,12 @@ package twp.commands;
 
 import arc.Core;
 import arc.files.Fi;
+import twp.database.maps.MapData;
+import twp.database.maps.MapHandler;
 import mindustry.Vars;
 import mindustry.io.MapIO;
 import mindustry.maps.Map;
 import twp.Main;
-import twp.database.maps.MapData;
-import twp.database.maps.MapHandler;
 import twp.tools.*;
 
 import java.io.File;

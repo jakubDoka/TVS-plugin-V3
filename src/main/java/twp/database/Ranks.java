@@ -1,17 +1,16 @@
 package twp.database;
 
 import arc.graphics.Color;
-import twp.Global;
 import twp.database.enums.Perm;
 import twp.database.enums.RankType;
 import twp.database.enums.Stat;
+import twp.Global;
 import twp.tools.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import static twp.tools.Json.saveSimple;
 
 // Ranks contains all ranks available to players
 // further explanation in class

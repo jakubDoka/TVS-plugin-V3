@@ -1,8 +1,6 @@
 package twp.commands;
 
-import jdk.incubator.jpackage.internal.*;
 import mindustry.game.*;
-import mindustry.gen.*;
 import twp.database.*;
 import twp.democracy.*;
 import twp.tools.*;

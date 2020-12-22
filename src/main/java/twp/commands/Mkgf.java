@@ -1,8 +1,8 @@
 package twp.commands;
 
+import twp.database.Account;
 import twp.database.PD;
 import twp.database.enums.Perm;
-import twp.database.Account;
 import twp.democracy.Voting;
 
 import static twp.Main.db;

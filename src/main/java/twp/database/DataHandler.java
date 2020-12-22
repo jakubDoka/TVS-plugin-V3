@@ -7,13 +7,12 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Indexes;
 import com.mongodb.client.model.Updates;
 
-import mindustry.gen.Player;
-import org.bson.Document;
-import org.bson.conversions.Bson;
 import twp.database.core.Handler;
 import twp.database.enums.RankType;
 import twp.database.enums.Setting;
 import twp.database.enums.Stat;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 
 
 import static com.mongodb.client.model.Filters.and;

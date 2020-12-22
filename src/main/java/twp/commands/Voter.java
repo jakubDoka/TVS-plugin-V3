@@ -1,6 +1,5 @@
 package twp.commands;
 
-import twp.database.PD;
 import twp.democracy.Voting;
 
 import static twp.Main.db;

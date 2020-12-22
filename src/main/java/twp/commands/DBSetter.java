@@ -1,7 +1,7 @@
 package twp.commands;
 
-import twp.database.enums.RankType;
 import twp.database.Account;
+import twp.database.enums.RankType;
 import twp.tools.Enums;
 
 import static twp.Main.db;

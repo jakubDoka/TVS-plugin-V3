@@ -1,7 +1,7 @@
 package twp.database.core;
 
-import org.bson.Document;
 import twp.database.enums.Stat;
+import org.bson.Document;
 
 public class Raw {
     public Document data;

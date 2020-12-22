@@ -1,9 +1,9 @@
 package twp.commands.tests;
 
-import twp.commands.Command;
-import twp.commands.RankSetter;
 import twp.database.DBPlayer;
 import twp.database.PD;
+import twp.commands.Command;
+import twp.commands.RankSetter;
 
 import static twp.Main.db;
 

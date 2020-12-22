@@ -1,7 +1,5 @@
 package twp.commands.tests;
 
-import arc.*;
-import mindustry.game.*;
 import twp.commands.*;
 import twp.commands.Command.*;
 

@@ -1,11 +1,11 @@
 package twp.commands.tests;
 
+import twp.database.DBPlayer;
 import twp.commands.Command;
 import twp.commands.Mkgf;
 import twp.commands.Voter;
-import twp.database.DBPlayer;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
 import static twp.Main.db;
 
 class MkgfTest extends Test {

@@ -1,6 +1,5 @@
 package twp.democracy;
 
-import arc.Events;
 import mindustry.gen.Call;
 import twp.Main;
 import twp.database.PD;

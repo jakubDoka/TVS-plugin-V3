@@ -1,10 +1,10 @@
 package twp.commands;
 
 import arc.Core;
+import twp.database.Account;
 import twp.database.PD;
 import twp.database.Rank;
 import twp.database.enums.RankType;
-import twp.database.Account;
 
 import static twp.Main.*;
 
