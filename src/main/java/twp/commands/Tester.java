@@ -128,7 +128,7 @@ public class Tester extends Command{
         }
 
         public void processAnswer(int answer){
-            if(answer > options.length || answer < 0){
+            if(answer > options.length || answer <= 0){
                 tester.result = Result.invalidRequest;
                 tester.setArg(answer, options.length);
                 return;
