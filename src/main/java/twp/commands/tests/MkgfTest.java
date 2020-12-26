@@ -2,7 +2,7 @@ package twp.commands.tests;
 
 import twp.database.DBPlayer;
 import twp.commands.Command;
-import twp.commands.Mkgf;
+import twp.commands.VoteKick;
 import twp.commands.Voter;
 
 import static org.junit.Assert.assertEquals;
@@ -16,34 +16,34 @@ class MkgfTest extends Test {
         db.handler.loadData(new DBPlayer(){{uuid = "a";}});
         db.online.put("b", db.handler.loadData(new DBPlayer(){{uuid = "b";}}));
 
-        Mkgf.game.run("", "1", "asdas");
-        Mkgf.game.assertResult(Command.Result.wrongOption);
+        VoteKick.game.run("", "1", "asdas");
+        VoteKick.game.assertResult(Command.Result.wrongOption);
 
-        Mkgf.game.run("", "100");
-        Mkgf.game.assertResult(Command.Result.playerNotFound);
+        VoteKick.game.run("", "100");
+        VoteKick.game.assertResult(Command.Result.playerNotFound);
 
-        Mkgf.game.run("",  "1", "unmark");
-        Mkgf.game.assertResult(Command.Result.redundant);
+        VoteKick.game.run("",  "1", "unmark");
+        VoteKick.game.assertResult(Command.Result.redundant);
 
-        Mkgf.game.run("",  "1");
-        Mkgf.game.assertResult(Command.Result.voteStartSuccess);
+        VoteKick.game.run("",  "1");
+        VoteKick.game.assertResult(Command.Result.voteStartSuccess);
 
-        Mkgf.game.run("",  "1");
-        Mkgf.game.assertResult(Command.Result.alreadyVoted);
+        VoteKick.game.run("",  "1");
+        VoteKick.game.assertResult(Command.Result.alreadyVoted);
 
-        Mkgf.game.run("",  "0");
-        Mkgf.game.assertResult(Command.Result.cannotApplyToSelf);
+        VoteKick.game.run("",  "0");
+        VoteKick.game.assertResult(Command.Result.cannotApplyToSelf);
 
-        Mkgf.game.run("",  "2");
-        Mkgf.game.assertResult(Command.Result.alreadyVoting);
+        VoteKick.game.run("",  "2");
+        VoteKick.game.assertResult(Command.Result.alreadyVoting);
 
-        Mkgf.game.run("b",  "1");
-        Mkgf.game.assertResult(Command.Result.voteSuccess);
+        VoteKick.game.run("b",  "1");
+        VoteKick.game.assertResult(Command.Result.voteSuccess);
 
         assertEquals("griefer", db.handler.get(1, "rank"));
 
-        Mkgf.game.run("",  "1", "unmark");
-        Mkgf.game.assertResult(Command.Result.voteStartSuccess);
+        VoteKick.game.run("",  "1", "unmark");
+        VoteKick.game.assertResult(Command.Result.voteStartSuccess);
 
         Voter.game.run("b", "y");
         Voter.game.assertResult(Command.Result.voteSuccess);

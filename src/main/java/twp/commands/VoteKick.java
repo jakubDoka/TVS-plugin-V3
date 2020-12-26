@@ -7,17 +7,17 @@ import twp.democracy.Voting;
 
 import static twp.Main.db;
 
-public class Mkgf extends Command {
+public class VoteKick extends Command {
     Voting main = new Voting(this, "main", 5, 2) {
         {
             protection = Perm.antiGrief;
         }
     };
 
-    public Mkgf() {
-        name = "mkgf";
+    public VoteKick() {
+        name = "votekick";
         argStruct = "<id/name> [unmark]";
-        description = "It works like votekick but it also marks player a griefer witch means he can only spectate."; // Todo
+        description = "Marks player a griefer witch means he/she can only spectate.";
     }
 
     @Override
@@ -59,7 +59,7 @@ public class Mkgf extends Command {
             }
 
             result = main.pushSession(pd, s -> {
-                RankSetter.terminal.run("", args[0], "griefer", caller.player.name);
+                RankSetter.terminal.run("", args[0], "griefer");
             }, account.getName(), account.getId(), "[red]griefer[]");
         } else if(args[1].equals("unmark")) {
             if (!account.isGriefer()) {
@@ -67,14 +67,12 @@ public class Mkgf extends Command {
             }
 
             result = main.pushSession(pd, s -> {
-                RankSetter.terminal.run("", args[0], "newcomer", caller.player.name);
+                RankSetter.terminal.run("", args[0], "newcomer");
             }, account.getName(), account.getId(), "[green]newcomer[]");
         } else {
             result = Result.wrongOption;
         }
     }
 
-    public static Mkgf
-                game = new Mkgf(),
-                votekick = new Mkgf(){{name = "votekick";}};
+    public static VoteKick game = new VoteKick();
 }

@@ -18,7 +18,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
+
+import static twp.Main.testMode;
 
 public class MapHandler extends Handler {
     public static String mapFolder = "config/maps/";
@@ -33,7 +36,7 @@ public class MapHandler extends Handler {
     }
 
     public boolean invalidMaps() {
-        if (Main.testMode) {
+        if (testMode) {
             return false;
         }
 
@@ -59,16 +62,38 @@ public class MapHandler extends Handler {
         return invalid;
     }
 
+    public ArrayList<String> listMaps() {
+        ArrayList<String> res = new ArrayList<>();
+
+        if (testMode) {
+            for(int i = 0; i < 100; i++) {
+                res.add("map info" + i);
+            }
+            return res;
+        }
+
+        for(Map map : Vars.maps.customMaps()) {
+            MapData md = getMap(map.file.name());
+            if(md == null) {
+                Logging.log(new RuntimeException("map does not exist withing database but is loaded in server"));
+                continue;
+            }
+            res.add(md.summarize(map));
+        }
+
+        return res;
+    }
+
+    public void addRating(long id, String uuid, int rating) {
+        set(id, "rating."+uuid, rating);
+    }
+
     public MapData getMap(long id) {
         return MapData.getNew(data.find(idFilter(id)).first());
     }
 
     public MapData getMap(String name) {
-        return  MapData.getNew(data.find(Filters.eq("fileName", name)).first());
-    }
-
-    public MapData FindMap(Map map) {
-        return null;
+        return MapData.getNew(data.find(Filters.eq("fileName", name)).first());
     }
 
     // creates account with all settings enabled

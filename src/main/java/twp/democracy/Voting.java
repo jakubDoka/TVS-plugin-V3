@@ -47,11 +47,14 @@ public class Voting {
         if(processor.isVoting(pd.id)) {
             return Command.Result.alreadyVoting;
         }
+
         if(pd.cannotInteract()) {
             return Command.Result.cannotVote;
         }
+
         processor.addSession(new Session(pd.hasThisPerm(protection), this, runner, args, pd.id));
         processor.addVote(pd.id);
+
         return Command.Result.voteStartSuccess;
     }
 
@@ -168,9 +171,7 @@ public class Voting {
         }
 
         synchronized void addVote(long id) {
-            Session s = sessions.get(sessions.size() - 1);
-            s.yes++;
-            s.voted.add(id);
+            addVote(sessions.size() - 1, id, "y");
         }
 
         @Override

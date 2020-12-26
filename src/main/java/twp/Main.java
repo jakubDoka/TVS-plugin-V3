@@ -56,6 +56,8 @@ public class Main extends Plugin {
 
         MapManager.terminal.registerCmp(handler, null);
 
+        MapChanger.terminal.registerCmp(handler, null);
+
         handler.removeCommand("reloadmaps");
         handler.register("reloadmaps", "Reload all maps from disk.", arg -> {
             int beforeMaps = Vars.maps.all().size;
@@ -85,17 +87,17 @@ public class Main extends Plugin {
 
         Tester.game.registerGm(handler, null);
 
+        VoteKick.game.registerGm(handler, null);
+
         RankSetter.game.registerGm(handler, null);
+
+        MapChanger.game.registerGm(handler, null);
 
         Searcher.game.registerGm(handler, null);
 
         DBSetter.game.registerGm(handler, null);
 
         Voter.game.registerGm(handler, null);
-
-        Mkgf.game.registerGm(handler, null);
-
-        Mkgf.votekick.registerGm(handler, null);
 
         MapManager.game.registerGm(handler, null);
 

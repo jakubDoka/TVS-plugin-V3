@@ -1,8 +1,10 @@
 package twp.database.maps;
 
+import mindustry.maps.Map;
 import org.bson.Document;
 import org.bson.types.Binary;
 import twp.database.core.Raw;
+import twp.tools.Logging;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -27,5 +29,27 @@ public class MapData extends Raw {
 
     public boolean isEnabled() {
         return new File(Paths.get(MapHandler.mapFolder, getFileName()).toString()).exists();
+    }
+
+    public String getRating() {
+        Document ratings = (Document) data.get("rating");
+        if(ratings == null || ratings.size() == 0) {
+            return "none";
+        }
+
+        int total = 0;
+        for(Object r : ratings.values()) {
+            if(r instanceof Integer) {
+                total += (Integer) r;
+            } else {
+                Logging.log(new RuntimeException("illegal data in map ratings"));
+            }
+        }
+
+        return String.valueOf(total/ratings.size());
+    }
+
+    public String summarize(Map map) {
+        return String.format("%d - %s - (%s/10)", getId(), map.name(), getRating());
     }
 }

@@ -260,7 +260,6 @@ public abstract class Command {
         alreadyAdded,
         recoverSuccess,
         penalty,
-
         start,
         hint,
         testFail,
@@ -277,7 +276,7 @@ public abstract class Command {
         voteSuccess(true),
         alreadyVoted(true),
 
-        none;
+        none, rateSuccess;
 
         boolean general;
 

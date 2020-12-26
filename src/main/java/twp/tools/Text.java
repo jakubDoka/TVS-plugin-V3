@@ -1,5 +1,11 @@
 package twp.tools;
 
+import arc.math.Mathf;
+
+import java.util.ArrayList;
+
+import static java.lang.Math.min;
+
 public class Text {
     public static String clean(String string, String  begin, String  end){
         int fromBegin = 0,fromEnd = 0;
@@ -43,5 +49,24 @@ public class Text {
         long hour = min / 60;
         long days = hour / 24;
         return String.format("%d:%02d:%02d:%02d", days%365 ,hour%24 ,min%60 ,sec%60 );
+    }
+
+    public static String formPage(ArrayList<String> data, int page, String title, int pageSize) {
+        StringBuilder b = new StringBuilder();
+        int pageCount = (int) Math.ceil(data.size() / (float) pageSize);
+
+        page = Mathf.clamp(page, 1, pageCount) - 1;
+
+        int start = page * pageSize;
+        int end = min(data.size(), (page + 1) * pageSize);
+
+        b.append("[orange]==").append(title.toUpperCase()).append("(").append(page + 1).append("/");
+        b.append(pageCount).append(")==[]\n\n");
+
+        for (int i = start; i < end; i++) {
+            b.append(data.get(i)).append("\n");
+        }
+
+        return b.toString();
     }
 }
