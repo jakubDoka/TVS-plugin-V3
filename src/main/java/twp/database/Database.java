@@ -152,15 +152,8 @@ public class Database {
         handler = new DataHandler(rawData, database.getCollection(counter));
     }
 
-    public Account findData(String target) {
-        Account res = null;
-        if(Strings.canParsePositiveInt(target)) {
-            res = handler.getAccount(Long.parseLong(target));
-        }
-        if (res != null) {
-            return res;
-        }
-        PD p = online.find((pd) -> {
+    public Account findAccount(String target) {
+        PD p = online.find(pd -> {
             if(pd.isInvalid()) {
                 return false;
             }
@@ -170,6 +163,11 @@ public class Database {
         if(p != null) {
             return p.getAccount();
         }
+
+        if(Strings.canParsePositiveInt(target)) {
+            return handler.getAccount(Long.parseLong(target));
+        }
+
         return null;
     }
 

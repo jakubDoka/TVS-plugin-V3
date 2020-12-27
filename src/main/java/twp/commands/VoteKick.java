@@ -28,7 +28,7 @@ public class VoteKick extends Command {
             return;
         }
 
-        Account account = db.findData(args[0]);
+        Account account = db.findAccount(args[0]);
 
         if(account == null) {
             playerNotFound();

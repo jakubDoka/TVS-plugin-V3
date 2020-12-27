@@ -35,7 +35,7 @@ public class RankSetter extends Command {
         }
 
         // Search target
-        Account data = db.findData(args[0]);
+        Account data = db.findAccount(args[0]);
         if (data == null) {
             playerNotFound();
             return;
