@@ -78,16 +78,6 @@ public class Database {
             if (!pd.cannotInteract()) checkAchievements(pd, handler.getAccount(pd.id));
         });
 
-        Logging.on(EventType.PlayerLeave.class,e-> {
-            PD pd = online.get(e.player.uuid());
-            if(pd == null) {
-                Logging.log("player left without ewen being present");
-                return;
-            }
-            online.remove(e.player.uuid());
-            handler.free(pd);
-        });
-
         Logging.on(EventType.WithdrawEvent.class, e-> {
             PD pd = online.get(e.player.uuid());
             if (pd == null) {

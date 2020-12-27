@@ -32,11 +32,18 @@ public class Hud {
         for(Displayable displayable : displayable) {
             displayable.tick();
         }
+
         db.online.forEachValue(iter -> {
             PD pd = iter.next();
+
             if(pd.isInvalid()) {
                 return;
             }
+
+            if(pd.disconnected()) {
+                iter.remove();
+            }
+
             if(!db.hasEnabled(pd.id, Setting.hud)) {
                 Call.hideHudText(pd.player.p.con);
                 return;

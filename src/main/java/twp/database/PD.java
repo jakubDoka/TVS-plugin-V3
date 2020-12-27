@@ -85,6 +85,13 @@ public class PD{
         }
     }
 
+    public synchronized boolean disconnected() {
+        if(isInvalid()) {
+            return false;
+        }
+        return !player.p.con.isConnected();
+    }
+
     public synchronized void setBundle(ResourceBundle bundle) {
         this.bundle = bundle;
     }
