@@ -152,12 +152,12 @@ public class Voting {
                 return Command.Result.alreadyVoted;
             }
 
-            switch (vote) {
-                case "y":
-                    s.yes++;
-                    break;
-                case "n":
-                    s.no++;
+            s.voted.add(id);
+
+            if ("y".equals(vote)) {
+                s.yes++;
+            } else {
+                s.no++;
             }
 
             int major = s.voting.getMajority();
