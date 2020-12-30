@@ -103,7 +103,7 @@ public class Limiter {
                 pd.sendServerMessage("admins-permissionTooLow", top, lock);
                 return false;
             } else if (act.type != Administration.ActionType.breakBlock && pd.hasPermLevel(Perm.high.value)) {
-                map.setLock(act.tile, db.hasEnabled(pd.id, Setting.lock) ? top : Perm.high.value);
+                map.setLock(act.tile, /*db.hasEnabled(pd.id, Setting.lock) ? top :*/ Perm.high.value);
             }
             map.addAction(act.tile, pd.id, act.type);
 
