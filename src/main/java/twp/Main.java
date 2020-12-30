@@ -15,6 +15,8 @@ import mindustry.game.EventType;
 import mindustry.mod.Plugin;
 import twp.tools.*;
 
+import static arc.Core.app;
+
 public class Main extends Plugin {
     public static Ranks ranks;
     public static Database db;
@@ -23,8 +25,6 @@ public class Main extends Plugin {
     public static Bundle bundle;
     public static boolean testMode;
     public static CommandHandler serverHandler;
-
-    public static MainQueue queue = new MainQueue();
 
     public Main() {
         Global.loadConfig();
@@ -38,11 +38,9 @@ public class Main extends Plugin {
             // this has to be last init
             hud = new Hud();
             if(!testMode) {
-                Timer.schedule(() -> queue.post(() -> Events.fire(new TickEvent())), 0, 1);
+                Timer.schedule(() -> app.post(() -> Events.fire(new TickEvent())), 0, 1);
             }
         });
-
-        Logging.run(EventType.Trigger.update, queue::run);
 
     }
 

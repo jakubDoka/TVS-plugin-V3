@@ -12,6 +12,7 @@ import static twp.Main.*;
 
 import java.util.*;
 
+// LockMap saves data about player actions, It is rebuild on start of each game to fit the map
 public class LockMap {
     TileInf[][] map;
 

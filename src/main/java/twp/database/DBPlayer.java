@@ -3,7 +3,7 @@ package twp.database;
 import mindustry.gen.Player;
 
 // This is basically absolutely useless peace of shit that is only needed because
-// player class is cannot be constructed
+// player class cannot be constructed
 public class DBPlayer {
     public String name = "noname", uuid = "", usid = "", ip = "127.0.0.1";
     public boolean admin;

@@ -4,6 +4,7 @@ import arc.util.Log;
 import twp.database.enums.Perm;
 import mindustry.gen.Player;
 
+// Enum utility functions
 public class Enums {
     // returns whether enum contains a value
     public static <T extends Enum<T>> boolean contains(Class<T> cl, String value) {

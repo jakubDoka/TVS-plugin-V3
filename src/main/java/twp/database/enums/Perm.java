@@ -1,5 +1,6 @@
 package twp.database.enums;
 
+// player permission enumeration
 public enum Perm {
     normal(0),
     high(1),

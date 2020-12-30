@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 // Ranks contains all ranks available to players
-// further explanation in class
 public class Ranks {
     static final String rankFile = Global.config_dir + "specialRanks.json";
 

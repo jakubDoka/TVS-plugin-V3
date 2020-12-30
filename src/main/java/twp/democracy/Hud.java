@@ -11,6 +11,7 @@ import java.util.Iterator;
 
 import static twp.Main.db;
 
+// Hud manages updating of ingame hud, it also removes disconnected players from online list
 public class Hud {
 
     ArrayList<Displayable> displayable = new ArrayList<>();

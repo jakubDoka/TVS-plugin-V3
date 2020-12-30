@@ -11,6 +11,7 @@ import twp.democracy.Voting;
 import twp.tools.Logging;
 import twp.tools.Text;
 
+import static arc.Core.app;
 import static mindustry.Vars.*;
 import static twp.Main.*;
 
@@ -70,7 +71,7 @@ public class MapChanger extends Command {
                     return;
                 }
 
-                queue.post(() -> {
+                app.post(() -> {
                     if (caller != null) {
                         main.pushSession(caller, s -> changeMap(map), map.name());
                     } else {

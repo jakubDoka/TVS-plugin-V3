@@ -16,6 +16,7 @@ import java.util.ResourceBundle;
 
 import static twp.Main.*;
 
+// PD stores data about player that is accessed often and also handles communication with player
 public class PD{
     private static final String prefix = "[coral][[[scarlet]Server[]]:[#cbcbcb] ";
 
@@ -56,7 +57,7 @@ public class PD{
             player = p;
             paralyzed = true;
             rank = ranks.paralyzed;
-            id = DataHandler.paralyzedId;
+            id = AccountHandler.paralyzedId;
         }};
     }
 

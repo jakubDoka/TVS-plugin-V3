@@ -6,6 +6,7 @@ import twp.tools.Enums;
 
 import static twp.Main.db;
 
+// Command used for editing database
 public class DBSetter extends Command {
 
     public DBSetter() {

@@ -13,6 +13,7 @@ import java.text.*;
 
 import static twp.Main.*;
 
+// Serializing errors and sending messages to cmd is performed from here
 public class Logging {
     static final String outDir = Global.dir + "/errors/";
 

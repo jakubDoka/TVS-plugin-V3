@@ -1,5 +1,6 @@
 package twp.database.enums;
 
+// all the stats that user profile stores
 public enum Stat {
     playTime(0, false),
     age(0, false),

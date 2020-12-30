@@ -18,6 +18,7 @@ import static twp.Main.db;
 import static twp.Main.ranks;
 import static mindustry.Vars.netServer;
 
+// Limiter restricts player actions and manages instance of LockMap
 public class Limiter {
     LockMap map;
     HashMap<String, DoubleClickData> doubleClicks = new HashMap<>();

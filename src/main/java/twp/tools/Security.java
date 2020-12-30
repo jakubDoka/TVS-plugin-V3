@@ -3,7 +3,9 @@ package twp.tools;
 import twp.Global;
 import org.apache.commons.codec.digest.DigestUtils;
 
+// some hash functions
 public class Security {
+    // ignore this big mistake pls
     public static long hash(String password) {
         password += Global.config.salt;
         long res = 0;

@@ -3,6 +3,7 @@ package twp.database.core;
 import twp.database.enums.Stat;
 import org.bson.Document;
 
+// common behavior of database document
 public class Raw {
     public Document data;
 

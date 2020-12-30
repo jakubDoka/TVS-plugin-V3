@@ -7,6 +7,7 @@ import org.bson.Document;
 
 import static twp.Main.*;
 
+// Account is player account handle, its used more to withdraw data
 public class Account extends Raw {
 
 

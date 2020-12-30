@@ -9,6 +9,7 @@ import twp.tools.Logging;
 import java.io.File;
 import java.nio.file.Paths;
 
+// Map document abstraction
 public class MapData extends Raw {
     public static MapData getNew(Document data) {
         if (data == null) return null;

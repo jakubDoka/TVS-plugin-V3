@@ -6,6 +6,7 @@ import twp.tools.Json;
 
 import java.util.*;
 
+// plugin config is stored here
 public class Global {
     public static final String dir = "config/mods/worse";
     public static final String config_dir = dir + "/config";

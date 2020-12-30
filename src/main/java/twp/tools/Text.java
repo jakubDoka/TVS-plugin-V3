@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import static java.lang.Math.min;
 
+// Text formatting utility
 public class Text {
     public static String clean(String string, String  begin, String  end){
         int fromBegin = 0,fromEnd = 0;

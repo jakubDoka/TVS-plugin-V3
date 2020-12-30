@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 
 import static com.mongodb.client.model.Filters.and;
 
+// common behavior of db handler
 public class Handler {
     protected MongoCollection<Document> data;
     protected MongoCollection<Document> counter;

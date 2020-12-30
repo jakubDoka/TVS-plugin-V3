@@ -23,6 +23,7 @@ import java.util.Arrays;
 
 import static twp.Main.testMode;
 
+// MapHandler manages data about maps
 public class MapHandler extends Handler {
     public static String mapFolder = "config/maps/";
 

@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
+// Json loading ans saving logic
 public class Json {
     public static <V> HashMap<String, V> loadHashmap(String filename, Class<V> val, HashMap<String, V> def) {
         ObjectMapper mapper = new ObjectMapper();

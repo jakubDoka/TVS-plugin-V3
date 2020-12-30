@@ -12,6 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static twp.Main.db;
 import static twp.Main.hud;
 
+// Voting handles all of the vote sessions
 public class Voting {
     public static Processor processor = new Processor();
     int maxVotes, minVotes;

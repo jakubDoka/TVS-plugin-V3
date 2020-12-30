@@ -13,7 +13,7 @@ import java.util.HashSet;
 import static twp.Main.db;
 import static twp.Main.ranks;
 
-
+// Rank is what ppl has behind their names
 public class Rank implements Serializable {
     static final long hour = 1000 * 60 * 60;
     public String name = "noName";

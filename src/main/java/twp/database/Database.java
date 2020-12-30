@@ -24,6 +24,7 @@ import java.util.*;
 import static twp.Main.bundle;
 import static twp.Main.ranks;
 
+// Main database interface
 public class Database {
     public final String playerCollection = "PlayerData";
     public static final String AFK = "[gray]<AFK>[]";
@@ -57,7 +58,7 @@ public class Database {
     MongoCollection<Document> rawMapData = database.getCollection(Global.config.mapCollection);
 
     // handler has works directly with database
-    public DataHandler handler = new DataHandler(rawData, database.getCollection(counter));
+    public AccountHandler handler = new AccountHandler(rawData, database.getCollection(counter));
     public MapHandler maps = new MapHandler(rawMapData, database.getCollection(mapCounter));
 
     // online player are here by their ids
@@ -139,7 +140,7 @@ public class Database {
         client = MongoClients.create(Global.config.dbAddress);
         database = client.getDatabase(Global.config.dbName);
         rawData = database.getCollection(playerCollection);
-        handler = new DataHandler(rawData, database.getCollection(counter));
+        handler = new AccountHandler(rawData, database.getCollection(counter));
     }
 
     public Account findAccount(String target) {

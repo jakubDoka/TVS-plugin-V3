@@ -18,7 +18,8 @@ import org.bson.conversions.Bson;
 import static com.mongodb.client.model.Filters.and;
 import static twp.Main.ranks;
 
-public class DataHandler extends Handler {
+// Manages data about players, mainly modifies the accounts
+public class AccountHandler extends Handler {
     public final static long paralyzedId = -1;
     public final static long invalidId = -2;
 
@@ -28,7 +29,7 @@ public class DataHandler extends Handler {
         discordLink
     }
 
-    public DataHandler(MongoCollection<Document> data, MongoCollection<Document> counter){
+    public AccountHandler(MongoCollection<Document> data, MongoCollection<Document> counter){
         super(data, counter);
 
         // Initializing indexes
