@@ -16,14 +16,14 @@ ext{
     mindustryVersion = 'v122'
 }
 
-repositories {
+/*repositories {
     flatDir {
         dirs 'libs'
     }
-}
+}*/
 
 dependencies{
-    implementation name: 'Mindustry'
+    //implementation name: 'Mindustry'
     implementation 'junit:junit:4.12'
     implementation 'org.junit.jupiter:junit-jupiter:5.4.2'
     compileOnly "com.github.Anuken.Arc:arc-core:$mindustryVersion"
@@ -32,15 +32,19 @@ dependencies{
     compile 'org.mongodb:mongo-java-driver:3.12.7'
     compile 'commons-codec:commons-codec:1.11'
     compile group: 'org.jsoup', name: 'jsoup', version: '1.12.1'
+    implementation 'org.javacord:javacord:3.1.2'
 }
 
-jar{
+jar {
     archiveFileName = "${project.archivesBaseName}.jar"
-    from{
-        configurations.runtimeClasspath.collect{it.isDirectory() ? it : zipTree(it)}
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    } {
+        exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
     }
 
-    from(rootDir){
+
+    from(rootDir) {
         include "plugin.json"
     }
 }

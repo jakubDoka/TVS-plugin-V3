@@ -116,6 +116,17 @@ public class PD{
         player.p.sendMessage(prefix + translate(message, args));
     }
 
+    public synchronized void sendDiscordMessage(String message, String sender) {
+        if(testMode) {
+            Logging.info(message);
+            return;
+        }
+        if(isInvalid()) {
+            return;
+        }
+        player.p.sendMessage(translate("discord-message", sender, message));
+    }
+
     public void sendMessage(String message) {
         if(testMode) {
             Log.info(message);

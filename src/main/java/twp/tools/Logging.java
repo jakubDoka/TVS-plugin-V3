@@ -22,8 +22,12 @@ public class Logging {
         log("hello");
     }
 
+    public static String translate(String key, Object ...args) {
+        return Text.cleanColors(Text.format(bundle.getDefault(key), args));
+    }
+
     public static void info(String key, Object ...args) {
-        Log.info(Text.cleanColors(Text.format(bundle.getDefault(key), args)));
+        Log.info(translate(key, args));
     }
 
     public static void log(String message) {
@@ -41,7 +45,7 @@ public class Logging {
         SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH-mm-ss-SSS z");
         Date date = new Date(System.currentTimeMillis());
         File f = new File(outDir+formatter.format(date));
-
+        t.printStackTrace();
         try {
             Json.makeFullPath(f.getAbsolutePath());
             f.createNewFile();
@@ -50,6 +54,7 @@ public class Logging {
             out.println(ex);
             out.close();
         } catch(IOException e) { e.printStackTrace();}
+
     }
 
     public static <T> void on(Class<T> event, Cons<T> cons) {

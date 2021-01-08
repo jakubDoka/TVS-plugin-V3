@@ -1,11 +1,13 @@
 package twp;
 
 
+import arc.Core;
 import arc.Events;
 import arc.util.CommandHandler;
 import arc.util.Timer;
 import twp.bundle.Bundle;
 import twp.democracy.Hud;
+import twp.discord.Bot;
 import twp.security.Limiter;
 import mindustry.Vars;
 import mindustry.gen.Call;
@@ -16,6 +18,8 @@ import mindustry.mod.Plugin;
 import twp.tools.*;
 
 import static arc.Core.app;
+import static arc.util.Log.info;
+import static mindustry.Vars.net;
 
 public class Main extends Plugin {
     public static Ranks ranks;
@@ -25,6 +29,7 @@ public class Main extends Plugin {
     public static Bundle bundle;
     public static boolean testMode;
     public static CommandHandler serverHandler;
+    public static Bot bot;
 
     public Main() {
         Global.loadConfig();
@@ -34,6 +39,7 @@ public class Main extends Plugin {
             db = new Database();
             lim = new Limiter();
             bundle = new Bundle();
+            bot = new Bot();
 
             // this has to be last init
             hud = new Hud();
@@ -55,6 +61,16 @@ public class Main extends Plugin {
         MapManager.terminal.registerCmp(handler, null);
 
         MapChanger.terminal.registerCmp(handler, null);
+
+        handler.removeCommand("exit");
+        handler.register("exit", "Exit the server application.", arg -> {
+            info("Shutting down server.");
+            if(bot.api != null) {
+                bot.api.disconnect();
+            }
+            net.dispose();
+            Core.app.exit();
+        });
 
         handler.removeCommand("reloadmaps");
         handler.register("reloadmaps", "Reload all maps from disk.", arg -> {
