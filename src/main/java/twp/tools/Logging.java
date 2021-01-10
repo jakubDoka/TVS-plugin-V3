@@ -3,13 +3,15 @@ package twp.tools;
 import arc.*;
 import arc.func.*;
 import arc.util.*;
+import org.javacord.api.entity.channel.TextChannel;
+import org.javacord.api.entity.message.Message;
 import org.junit.platform.commons.util.*;
 import twp.*;
-import twp.database.*;
 
 import java.io.*;
 import java.sql.*;
 import java.text.*;
+import java.util.concurrent.CompletableFuture;
 
 import static twp.Main.*;
 
@@ -20,6 +22,10 @@ public class Logging {
     public static void main(String[] args){
         log("hello");
         log("hello");
+    }
+
+    public static CompletableFuture<Message> sendDiscordMessage(TextChannel ch, String key, Object ...args) {
+         return ch.sendMessage(translate(key, args));
     }
 
     public static String translate(String key, Object ...args) {

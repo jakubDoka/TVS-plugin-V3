@@ -4,6 +4,7 @@ import arc.util.Log;
 import mindustry.game.EventType;
 import org.javacord.api.entity.channel.Channel;
 import org.javacord.api.entity.channel.ServerTextChannel;
+import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.MessageAuthor;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
@@ -15,7 +16,7 @@ import static twp.Main.db;
 import static twp.discord.Bot.Channels.*;
 
 public class Logger implements MessageCreateListener {
-    ServerTextChannel chn;
+    TextChannel chn;
     Channel curr;
 
     public Logger(Bot bot) {

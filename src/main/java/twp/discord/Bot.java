@@ -22,6 +22,7 @@ public class Bot {
     public Logger log;
     public DiscordApi api;
     public Long serverID;
+    public Handler handler;
 
     public static String
             configDir = Global.config_dir + "/bot",
@@ -51,6 +52,8 @@ public class Bot {
                 continue;
             }
             channels.put(key, optional.get());
+
+            if(serverID == null) serverID = optional.get().getServer().getId();
         }
 
         for (Object o : cfg.roles.keySet()) {
@@ -67,6 +70,9 @@ public class Bot {
 
         log = new Logger(this);
         api.addMessageCreateListener(log);
+
+        handler = new Handler(this, new CommandLoader());
+        api.addMessageCreateListener(handler);
     }
 
     public ServerTextChannel Channel(Channels ch) {

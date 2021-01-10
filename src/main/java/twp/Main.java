@@ -4,6 +4,7 @@ package twp;
 import arc.Core;
 import arc.Events;
 import arc.util.CommandHandler;
+import arc.util.Log;
 import arc.util.Timer;
 import twp.bundle.Bundle;
 import twp.democracy.Hud;
@@ -86,6 +87,23 @@ public class Main extends Plugin {
             }else{
                 Logging.info("maps-reloaded");
             }
+        });
+
+        handler.register("reload", "<bot/config>", "reloads stuff", (args) -> {
+            switch (args[0]) {
+                case "bot":
+                    if (bot != null && bot.api != null) {
+                        bot.api.disconnect();
+                    }
+                    bot = new Bot();
+                    break;
+                case "config":
+                    Global.loadConfig();
+                default:
+                    Log.info("wrong option");
+                    return;
+            }
+            Log.info("reloaded");
         });
 
         Deferrer.terminal.registerCmp(handler, null);

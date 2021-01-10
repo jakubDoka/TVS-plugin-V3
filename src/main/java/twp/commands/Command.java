@@ -3,8 +3,10 @@ package twp.commands;
 import arc.func.Cons;
 import arc.util.CommandHandler;
 import arc.util.Strings;
+import org.junit.platform.commons.util.ExceptionUtils;
 import twp.database.PD;
 import mindustry.gen.Player;
+import twp.discord.Handler;
 import twp.tools.Logging;
 
 import java.util.concurrent.locks.ReentrantLock;
@@ -138,6 +140,28 @@ public abstract class Command {
         } else  {
             handler.register(name, argStruct, description, run);
         }
+    }
+
+    public void registerDs(Handler handler) {
+        handler.addCommand(new Handler.Command(argStruct) {
+            {
+                name = Command.this.name;
+                purpose = description;
+            }
+            @Override
+            public void run(Handler.Context ctx) {
+                lock1.lock();
+                try {
+                    Command.this.run("", ctx.args);
+                    ctx.reply(getMessage(), Command.this.arg);
+                } catch (Exception e) {
+                    lock1.unlock(); // fuck deadlocks
+                    ctx.reply("discord-internalError", ExceptionUtils.readStackTrace(e));
+                    return;
+                }
+                lock1.unlock();
+            }
+        });
     }
 
     // getMessage returns bundle key based of result

@@ -17,8 +17,11 @@ public class Config {
                 put(liveChat.name(), "");
                 put(commandLog.name(), "");
                 put(commands.name(), "");
-            }},
-            permissions = new HashMap<>();
+            }};
+
+    public HashMap<String, String[]> permissions = new HashMap<String, String[]>(){{
+        put("setrank", new String[]{"admin role here", "other roles..."});
+    }};
 
     public Config() {}
 
@@ -28,7 +31,7 @@ public class Config {
             @JsonProperty("token") String token,
             @JsonProperty("roles") HashMap<String, String> roles,
             @JsonProperty("channels") HashMap<String, String> channels,
-            @JsonProperty("permissions") HashMap<String, String> permissions
+            @JsonProperty("permissions") HashMap<String, String[]> permissions
     ) {
         if (prefix != null) {
             this.prefix = prefix;
