@@ -63,6 +63,8 @@ public class Main extends Plugin {
 
         MapChanger.terminal.registerCmp(handler, null);
 
+        Informer.general.registerCmp(handler, null);
+
         handler.removeCommand("exit");
         handler.register("exit", "Exit the server application.", arg -> {
             info("Shutting down server.");
@@ -141,6 +143,10 @@ public class Main extends Plugin {
                 default:
                     self.notifyCaller();
             }
+        });
+
+        Informer.general.registerGm(handler, (self, pd) -> {
+            pd.sendInfoMessage(self.getMessage(), self.arg);
         });
 
         handler.register("a", "test", (args, player)-> {

@@ -1,9 +1,11 @@
 package twp.database;
 
+import arc.util.Time;
 import twp.database.core.Raw;
 import twp.database.enums.RankType;
 import twp.database.enums.Stat;
 import org.bson.Document;
+import twp.tools.Text;
 
 import static twp.Main.*;
 
@@ -53,7 +55,7 @@ public class Account extends Raw {
     }
 
     public long getLatestActivity() {
-        Long la = data.getLong("lastActive");
+        Long la = data.getLong("lastConnect");
         if (la == null) {
             return 0;
         }
@@ -89,5 +91,46 @@ public class Account extends Raw {
         );
     }
 
+    public Object[] basicStats() {
+        Object[] os = new Object[]{
+                getId(),
+                getName(),
+                getRank(RankType.rank).getSuffix(),
+                null,
+                null,
+                data.get("country"),
+                Text.milsToTime(Time.timeSinceMillis(getLatestActivity())),
+        };
+
+        for(int i = 1; i < RankType.values().length; i++) {
+            Rank s = getRank(RankType.values()[i]);
+            if (s != ranks.newcomer) {
+                os[i+2] = s.getSuffix();
+            } else {
+                os[i+2] = "none";
+            }
+        }
+
+        return os;
+    }
+
+    public Object[] stats() {
+        Object[] os = new Object[Stat.values().length];
+
+        for(int i = 0; i < Stat.values().length; i++) {
+            Stat s = Stat.values()[i];
+            if (s == Stat.age) {
+                os[i] = Text.milsToTime(Time.timeSinceMillis(getStat(s)));
+                continue;
+            }
+            if (s.time) {
+                os[i] = Text.milsToTime(getStat(s));
+            } else {
+                os[i] = getStat(s);
+            }
+        }
+
+        return os;
+    }
 
 }

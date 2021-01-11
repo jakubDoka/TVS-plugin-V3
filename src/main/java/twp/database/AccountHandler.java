@@ -112,7 +112,7 @@ public class AccountHandler extends Handler {
         long id = pd.id;
         set(id, "textColor", pd.textColor);
         inc(id, Stat.playTime, Time.timeSinceMillis(pd.joined));
-        set(id, "lastActive", Time.millis());
+
         Account doc = getAccount(pd.id);
         if (doc == null) {
             return;
@@ -136,6 +136,7 @@ public class AccountHandler extends Handler {
         }
         PD pd = new PD(player, doc);
         set(pd.id, "name", player.name);
+        set(pd.id, "lastConnect", Time.millis());
         return pd;
     }
 

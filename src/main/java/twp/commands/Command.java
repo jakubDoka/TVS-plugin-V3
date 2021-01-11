@@ -142,7 +142,7 @@ public abstract class Command {
         }
     }
 
-    public void registerDs(Handler handler) {
+    public void registerDs(Handler handler, DiscordCommandRunner run) {
         handler.addCommand(new Handler.Command(argStruct) {
             {
                 name = Command.this.name;
@@ -151,9 +151,14 @@ public abstract class Command {
             @Override
             public void run(Handler.Context ctx) {
                 lock1.lock();
+
                 try {
                     Command.this.run("", ctx.args);
-                    ctx.reply(getMessage(), Command.this.arg);
+                    if (run != null) {
+                        run.run(ctx, Command.this);
+                    } else {
+                        ctx.reply(getMessage(), Command.this.arg);
+                    }
                 } catch (Exception e) {
                     lock1.unlock(); // fuck deadlocks
                     ctx.reply("discord-internalError", ExceptionUtils.readStackTrace(e));
@@ -245,6 +250,10 @@ public abstract class Command {
         void run(Command c);
     }
 
+    public interface DiscordCommandRunner {
+        void run(Handler.Context ctx, Command self);
+    }
+
     public interface Verifier {
         boolean verify(String id);
     }
@@ -301,7 +310,7 @@ public abstract class Command {
         voteSuccess(true),
         alreadyVoted(true),
 
-        none, rateSuccess;
+        none, rateSuccess, info, stats;
 
         boolean general;
 

@@ -1,7 +1,10 @@
 package twp.discord;
 
 import org.javacord.api.entity.message.embed.EmbedBuilder;
+import twp.commands.Informer;
 import twp.commands.RankSetter;
+import twp.commands.Searcher;
+import twp.tools.Logging;
 
 import java.awt.*;
 
@@ -30,6 +33,14 @@ public class CommandLoader implements Handler.Loader {
             }
         });
 
-        RankSetter.terminal.registerDs(h);
+        RankSetter.terminal.registerDs(h, null);
+
+        Searcher.discord.registerDs(h, null);
+
+        Informer.general.registerDs(h, (ctx, self) -> {
+            ctx.channel.sendMessage(new EmbedBuilder()
+                    .setDescription(Logging.translate(self.getMessage(), self.arg))
+            );
+        });
     }
 }

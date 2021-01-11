@@ -2,9 +2,9 @@ package twp.database.enums;
 
 // all the stats that user profile stores
 public enum Stat {
-    playTime(0, false),
-    age(0, false),
-    level(0, false),
+    playTime(0, true),
+    age(0, true),
+    level(0),
 
     buildingsBuilt(100),
     buildingsBroken(50),
@@ -23,13 +23,13 @@ public enum Stat {
 
 
     public int value;
-    public boolean inStats = true;
+    public boolean time;
     Stat(int value) {
         this.value = value;
     }
 
-    Stat(int value, boolean inStats) {
+    Stat(int value, boolean time) {
         this.value = value;
-        this.inStats = inStats;
+        this.time = time;
     }
 }

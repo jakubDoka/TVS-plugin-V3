@@ -31,5 +31,4 @@ public class Raw {
     public String getName() {
         return (String) data.get("name");
     }
-
 }

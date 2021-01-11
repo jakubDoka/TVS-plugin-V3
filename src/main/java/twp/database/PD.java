@@ -1,6 +1,7 @@
 package twp.database;
 
 import arc.util.*;
+import mindustry.gen.Call;
 import twp.database.enums.Perm;
 import twp.database.enums.RankType;
 import twp.database.enums.Stat;
@@ -12,6 +13,7 @@ import twp.tools.Text;
 
 
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static twp.Main.*;
@@ -38,7 +40,6 @@ public class PD{
     public long joined = lastAction = lastMessage = Time.millis();
     private ResourceBundle bundle;
 
-    //public ResourceBundle bundle = Bundle.defaultBundle;
     public String locString = "en_US";
 
     public PD() {}
@@ -94,6 +95,7 @@ public class PD{
     }
 
     public synchronized void setBundle(ResourceBundle bundle) {
+        db.handler.set(id, "country", bundle.getLocale().getDisplayCountry());
         this.bundle = bundle;
     }
 
@@ -136,6 +138,16 @@ public class PD{
             return;
         }
         player.p.sendMessage(message);
+    }
+
+    public void sendInfoMessage(String key, Object ...args) {
+        if(testMode) {
+            Logging.info(key, args);
+        }
+        if(isInvalid()) {
+            return;
+        }
+        Call.infoMessage(player.p.con, translate(key, args));
     }
 
     public void kick(String message, int duration, Object ... args) {
