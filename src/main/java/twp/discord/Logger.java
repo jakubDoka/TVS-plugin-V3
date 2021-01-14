@@ -22,19 +22,21 @@ public class Logger implements MessageCreateListener {
     public Logger(Bot bot) {
         chn = bot.Channel(commandLog);
         if (chn != null) {
+            TextChannel ch = chn;
             Logging.on(EventType.PlayerChatEvent.class, e -> {
                 if (e.message.startsWith("/")) {
                     PD pd = db.online.get(e.player.uuid());
-                    chn.sendMessage(Logging.translate("discord-commandLog", pd.player.name, pd.id, pd.rank.name, e.message));
+                    ch.sendMessage(Logging.translate("discord-commandLog", pd.player.name, pd.id, pd.rank.name, e.message));
                 }
             });
         }
         chn = bot.Channel(liveChat);
         if(chn != null) {
+            TextChannel ch = chn;
             Logging.on(EventType.PlayerChatEvent.class, e -> {
                 if (!e.message.startsWith("/")) {
                     PD pd = db.online.get(e.player.uuid());
-                    chn.sendMessage(Logging.translate("discord-serverMessage",pd.player.name, pd.id, e.message));
+                    ch.sendMessage(Logging.translate("discord-serverMessage",pd.player.name, pd.id, e.message));
                 }
             });
         }
