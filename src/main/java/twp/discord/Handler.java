@@ -110,7 +110,7 @@ public class Handler implements MessageCreateListener {
             }
         }
 
-        boolean can(Context ctx) throws Exception {
+        boolean can(Context ctx) throws NoSuchElementException {
             if (ctx.event.isPrivateMessage()) return false;
             if (restriction.size() == 0) return true;
             List<Role> roles = ctx.event.getMessageAuthor().asUser().get().getRoles(ctx.event.getServer().get());

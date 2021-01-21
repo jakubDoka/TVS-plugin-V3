@@ -68,7 +68,7 @@ public class Main extends Plugin {
         handler.removeCommand("exit");
         handler.register("exit", "Exit the server application.", arg -> {
             info("Shutting down server.");
-            if(bot.api != null) {
+            if(bot != null && bot.api != null) {
                 bot.api.disconnect();
             }
             net.dispose();

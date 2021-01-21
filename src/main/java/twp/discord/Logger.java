@@ -20,23 +20,22 @@ public class Logger implements MessageCreateListener {
     Channel curr;
 
     public Logger(Bot bot) {
-        chn = bot.Channel(commandLog);
-        if (chn != null) {
-            TextChannel ch = chn;
+        TextChannel chn1 = bot.Channel(commandLog);
+        if (chn1 != null) {
             Logging.on(EventType.PlayerChatEvent.class, e -> {
-                if (e.message.startsWith("/")) {
+                if (e.message.startsWith("/") && !e.message.startsWith("/account")) {
                     PD pd = db.online.get(e.player.uuid());
-                    ch.sendMessage(Logging.translate("discord-commandLog", pd.player.name, pd.id, pd.rank.name, e.message));
+                    chn1.sendMessage(Logging.translate("discord-commandLog", pd.player.name, pd.id, pd.rank.name, e.message));
                 }
             });
         }
-        chn = bot.Channel(liveChat);
-        if(chn != null) {
-            TextChannel ch = chn;
+
+        TextChannel chn2 = bot.Channel(liveChat);
+        if(chn2 != null) {
             Logging.on(EventType.PlayerChatEvent.class, e -> {
                 if (!e.message.startsWith("/")) {
                     PD pd = db.online.get(e.player.uuid());
-                    ch.sendMessage(Logging.translate("discord-serverMessage",pd.player.name, pd.id, e.message));
+                    chn2.sendMessage(Logging.translate("discord-serverMessage",pd.player.name, pd.id, e.message));
                 }
             });
         }
