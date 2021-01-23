@@ -35,7 +35,7 @@ public class Limiter {
 
         // Cases when lock should reset
 
-        Logging.on(EventType.BlockDestroyEvent.class, e -> map.setLock(e.tile,0));
+        Logging.on(EventType.BlockDestroyEvent.class, e -> map.remove(e.tile));
 
         Logging.on(EventType.BlockBuildEndEvent.class, e -> {
             if(e.breaking){
