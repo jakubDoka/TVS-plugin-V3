@@ -55,7 +55,7 @@ public class RankSetter extends Command {
         // if player is online kick him. I do not want to deal with bag prone code to change his rank manually.
         PD pd = db.online.get(data.getUuid());
         if (pd != null && !testMode) {
-            Core.app.post(() -> pd.kick("kick-rankChange", 0, rank.getSuffix()));
+            queue.post(() -> pd.kick("kick-rankChange", 0, rank.getSuffix()));
         }
     }
 

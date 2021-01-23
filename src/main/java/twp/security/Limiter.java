@@ -1,12 +1,14 @@
 package twp.security;
 
+import arc.Core;
 import arc.util.*;
+import arc.util.Timer;
 import mindustry.net.Administration;
 import mindustry.world.Tile;
 import twp.*;
+import twp.commands.RankSetter;
 import twp.database.PD;
 import twp.database.enums.Perm;
-import twp.database.enums.Setting;
 import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.gen.Player;
@@ -14,8 +16,8 @@ import twp.tools.Logging;
 
 import java.util.*;
 
-import static twp.Main.db;
-import static twp.Main.ranks;
+import static twp.Main.*;
+import static twp.Global.config;
 import static mindustry.Vars.netServer;
 
 // Limiter restricts player actions and manages instance of LockMap
@@ -26,7 +28,10 @@ public class Limiter {
 
     public Limiter() {
         // Initializing LockMap on start of a game
-        Logging.on(EventType.PlayEvent.class, e -> map = new LockMap(Vars.world.width(), Vars.world.height()));
+        Logging.on(EventType.PlayEvent.class, e -> {
+            Action.actions.clear();
+            map = new LockMap(Vars.world.width(), Vars.world.height());
+        });
 
         // Cases when lock should reset
 
@@ -39,17 +44,15 @@ public class Limiter {
         });
 
         // This mostly prevents griefers from shooting
-        Logging.run(EventType.Trigger.update, () -> {
-            db.online.forEachValue((iter) -> {
-                PD pd = iter.next();
-                if(pd.isInvalid()){
-                    return;
-                }
-                if(pd.cannotInteract() && pd.player.p.shooting){
-                    pd.player.p.unit().kill();
-                }
-            });
-        });
+        Logging.run(EventType.Trigger.update, () -> db.online.forEachValue((iter) -> {
+            PD pd = iter.next();
+            if(pd.isInvalid()){
+                return;
+            }
+            if(pd.cannotInteract() && pd.player.p.shooting){
+                pd.player.p.unit().kill();
+            }
+        }));
 
         Logging.on(EventType.TapEvent.class, e -> {
             DoubleClickData dcd = doubleClicks.get(e.player.uuid());
@@ -58,7 +61,7 @@ public class Limiter {
                 return;
             }
 
-            if (Time.timeSinceMillis(dcd.time) < Global.config.doubleClickSpacing) {
+            if (Time.timeSinceMillis(dcd.time) < config.doubleClickSpacing) {
                 map.displayInfo(e.tile, e.player);
             }
 
@@ -104,11 +107,18 @@ public class Limiter {
                 pd.sendServerMessage("admins-permissionTooLow", top, lock);
                 return false;
             } else if (act.type != Administration.ActionType.breakBlock && pd.hasPermLevel(Perm.high.value)) {
-                map.setLock(act.tile, /*db.hasEnabled(pd.id, Setting.lock) ? top :*/ Perm.high.value);
+                map.setLock(act.tile, Perm.high.value);
             }
-            map.addAction(act.tile, pd.id, act.type);
 
-
+            Action a = Action.resolve(act, pd.id);
+            if(a != null) {
+                map.addAction(a);
+                Action.add(a);
+                if(pd.actionOverflow()) {
+                    RankSetter.terminal.run("", String.valueOf(pd.id), "griefer");
+                    Timer.schedule(() -> queue.post(() -> Action.execute(pd.id, config.actionUndoTime + 2000)), 2f);
+                }
+            }
 
             return true;
         });
@@ -127,30 +137,3 @@ public class Limiter {
         }
     }
 }
-
-/*
-Get chills = mat zimnicu
-Diphtheria = zaskrt
--Pertussis = cierny kasel
--Intestines = creva
--Lukewarm = vlazny
-Polio = decka obrna
-Procrastination = odkladanie
-Ointment = nasticka
-Medical Record = lekarska sprava
-Blisters = pluzgiere
-Outweigh = prevazovat
-Above = nad
-Rubella = ruzienka
--Soothe = upokojit
-Compresses = obklady
--Splint = dlaha
-Subside = ustupit
-Swell = nafukat
--Tonsils = mandle
-Well-being = zdravie
- */
-
-/*
-drama -> dejstva -> vystupy -> dialogy -> repliky
- */

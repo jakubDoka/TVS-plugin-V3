@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import static twp.Global.config;
 import static twp.Main.*;
 
 // PD stores data about player that is accessed often and also handles communication with player
@@ -33,7 +34,8 @@ public class PD{
 
     public boolean afk, paralyzed;
 
-    public long id;
+    public long id, elapsed, lastInteraction;
+    public int counter;
 
     public long lastAction;
     public long lastMessage;
@@ -159,7 +161,7 @@ public class PD{
 
     public boolean canParticipate() {
         Account account = getAccount();
-        return !cannotInteract() && account.getStat(Stat.missedVotesCombo) < Global.config.consideredPassive && !afk;
+        return !cannotInteract() && account.getStat(Stat.missedVotesCombo) < config.consideredPassive && !afk;
     }
 
     public synchronized boolean hasThisPerm(Perm perm) {
@@ -244,5 +246,19 @@ public class PD{
 
     public synchronized Rank getSpacialRank() {
         return sRank;
+    }
+
+    public boolean actionOverflow() {
+        elapsed += Time.timeSinceMillis(lastInteraction);
+        lastInteraction = Time.millis();
+
+        if(elapsed > config.actionLimitFrame) {
+            elapsed = 0;
+            counter = 0;
+        }
+
+        counter++;
+
+        return counter > config.actionLimit;
     }
 }

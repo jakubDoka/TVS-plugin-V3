@@ -1,19 +1,16 @@
 package twp.commands;
 
-import arc.Core;
 import arc.files.Fi;
 import twp.database.maps.MapData;
 import twp.database.maps.MapHandler;
 import mindustry.Vars;
 import mindustry.io.MapIO;
 import mindustry.maps.Map;
-import twp.Main;
+import static twp.Main.*;
 import twp.tools.*;
 
 import java.io.File;
 import java.io.IOException;
-
-import static twp.Main.db;
 
 public class MapManager extends Command {
     public MapManager() {
@@ -81,7 +78,7 @@ public class MapManager extends Command {
                 }
                 try {
                     db.maps.withdrawMap(mid, MapHandler.mapFolder);
-                    if ( !Main.testMode) Core.app.post(()-> Vars.maps.reload()); // just in case
+                    if ( !testMode) queue.post(()-> Vars.maps.reload()); // just in case
                     break;
                 } catch (IOException e) {
                     result = Result.enableFail;
@@ -96,7 +93,7 @@ public class MapManager extends Command {
             case "remove":
                 try {
                     db.maps.hideMap(mid);
-                    if ( !Main.testMode) Core.app.post(()-> Vars.maps.reload());
+                    if ( !testMode) queue.post(()-> Vars.maps.reload());
                 } catch (IOException e) {
                     if (args[0].equals("disable")) Logging.log(e);
                 }

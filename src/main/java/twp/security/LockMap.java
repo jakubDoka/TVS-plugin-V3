@@ -1,5 +1,6 @@
 package twp.security;
 
+import arc.util.Log;
 import mindustry.gen.*;
 import mindustry.net.*;
 import mindustry.net.Administration.*;
@@ -37,13 +38,14 @@ public class LockMap {
         Call.label(p.con, map[t.y][t.x].format(), 10, t.worldx(), t.worldy());
     }
 
-    public void addAction(Tile t, long id, ActionType type){
-        map[t.y][t.x].addAction(id, type);
+    public void addAction(Action action){
+        map[action.t.y][action.t.x].addAction(action);
     }
 
     static class TileInf {
         int lock;
         ArrayList<ActionInf> actions = new ArrayList<>();
+        Action.ActionTile actionTile = new Action.ActionTile();
 
         String format() {
             StringBuilder sb = new StringBuilder();
@@ -54,14 +56,20 @@ public class LockMap {
             return sb.substring(0, sb.length()-1);
         }
 
-        public void addAction(long id, ActionType type){
-            if(actions.size() != 0 && actions.get(0).type == type && actions.get(0).id == id) {
-                return;
+        public void addAction(Action action){
+            actionTile.insert(action.type, action);
+            switch (action.type) {
+                case breakBlock:
+                case placeBlock:
+                    if(actions.size() != 0 && actions.get(0).type == action.type && actions.get(0).id == action.id) {
+                        return;
+                    }
             }
-            actions.add(0, new ActionInf(id, type));
+            actions.add(0, new ActionInf(action.id, action.type));
             if (actions.size() > Global.config.actionMemorySize) {
                 actions.remove(actions.size()-1);
             }
+            return;
         }
     }
 

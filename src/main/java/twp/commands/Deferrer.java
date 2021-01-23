@@ -5,7 +5,7 @@ import twp.database.*;
 import twp.democracy.*;
 import twp.tools.*;
 
-import static arc.Core.app;
+
 import static twp.Main.*;
 
 // sorry but no
@@ -47,7 +47,7 @@ public class Deferrer extends Command {
                 return;
         }
 
-        app.post(() -> hud.sendMessage("deferrer-closing", new Object[0], 30, "grey", "red"));
+        queue.post(() -> hud.sendMessage("deferrer-closing", new Object[0], 30, "grey", "red"));
     }
 
     public static Deferrer terminal = new Deferrer();

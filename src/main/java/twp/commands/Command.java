@@ -11,7 +11,7 @@ import twp.tools.Logging;
 
 import java.util.concurrent.locks.ReentrantLock;
 
-import static arc.Core.app;
+
 import static twp.Main.*;
 
 // Command is base class of any command and contains utility for making commands bit more cleaner and organised
@@ -65,7 +65,7 @@ public abstract class Command {
             try {
                 result = Result.success;
                 run("", args);
-                app.post(() -> {
+                queue.post(() -> {
                     if (runner != null) {
                         runner.run(this);
                     } else {
@@ -112,7 +112,7 @@ public abstract class Command {
                 result = Result.success;
                 run(player.uuid(), args);
 
-                app.post(() -> {
+                queue.post(() -> {
                     if (runner != null) {
                         runner.run(this, pd);
                     } else {

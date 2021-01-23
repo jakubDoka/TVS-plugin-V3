@@ -40,6 +40,10 @@ public class Global {
         public int maxNameLength = 25;
         public long testPenalty = 15 * 60 * 1000;
 
+        public int actionLimit = 50;
+        public long actionLimitFrame = 1000 * 2;
+        public long actionUndoTime = 1000 * 10;
+
 
         public Config() {}
 
@@ -60,7 +64,10 @@ public class Global {
                 @JsonProperty("actionMemorySize") int actionMemorySize,
                 @JsonProperty("doubleClickSpacing") long doubleClickSpacing,
                 @JsonProperty("maxNameLength") int maxNameLength,
-                @JsonProperty("testPenalty") long testPenalty
+                @JsonProperty("testPenalty") long testPenalty,
+                @JsonProperty("actionLimitFrame") long actionLimitFrame,
+                @JsonProperty("actionLimit") int actionLimit,
+                @JsonProperty("actionUndoTime") long actionUndoTime
         ){
             if(symbol != null) this.symbol = symbol;
             if(dbAddress != null) this.dbAddress = dbAddress;
@@ -72,6 +79,9 @@ public class Global {
             if(actionMemorySize != 0) this.actionMemorySize = actionMemorySize;
             if(doubleClickSpacing != 0) this.doubleClickSpacing = doubleClickSpacing;
             if(maxNameLength != 0) this.maxNameLength = maxNameLength;
+            if(actionLimitFrame != 0) this.actionLimitFrame = actionLimitFrame;
+            if(actionLimit != 0) this.actionLimit = actionLimit;
+            if(actionUndoTime != 0) this.actionUndoTime = actionUndoTime;
 
             this.consideredPassive = consideredPassive;
             this.rules = rules;

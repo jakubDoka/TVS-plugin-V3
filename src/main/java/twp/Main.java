@@ -3,6 +3,7 @@ package twp;
 
 import arc.Core;
 import arc.Events;
+import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Log;
 import arc.util.Timer;
@@ -18,7 +19,7 @@ import mindustry.game.EventType;
 import mindustry.mod.Plugin;
 import twp.tools.*;
 
-import static arc.Core.app;
+
 import static arc.util.Log.info;
 import static mindustry.Vars.net;
 
@@ -31,6 +32,7 @@ public class Main extends Plugin {
     public static boolean testMode;
     public static CommandHandler serverHandler;
     public static Bot bot;
+    public static Queue queue;
 
     public Main() {
         Global.loadConfig();
@@ -41,12 +43,17 @@ public class Main extends Plugin {
             lim = new Limiter();
             bundle = new Bundle();
             bot = new Bot();
+            queue = new Queue();
 
             // this has to be last init
             hud = new Hud();
             if(!testMode) {
-                Timer.schedule(() -> app.post(() -> Events.fire(new TickEvent())), 0, 1);
+                Timer.schedule(() -> queue.post(() -> Events.fire(new TickEvent())), 0, 1);
             }
+        });
+
+        Logging.run(EventType.Trigger.update, () -> {
+            queue.run();
         });
 
     }
@@ -101,6 +108,8 @@ public class Main extends Plugin {
                     break;
                 case "config":
                     Global.loadConfig();
+
+                    break;
                 default:
                     Log.info("wrong option");
                     return;
@@ -135,6 +144,8 @@ public class Main extends Plugin {
 
         MapManager.game.registerGm(handler, null);
 
+        Undoer.game.registerGm(handler, null);
+
         AccountManager.game.registerGm(handler, (self, pd) -> {
             switch (self.result){
                 case loginSuccess:
@@ -156,4 +167,16 @@ public class Main extends Plugin {
     }
 
     public static class TickEvent {}
+
+    public static class Queue {
+        Seq<Runnable> q = new Seq<>();
+        public synchronized void post(Runnable r) {
+            q.add(r);
+        }
+
+        public synchronized void run() {
+            q.forEach(Runnable::run);
+            q.clear();
+        }
+    }
 }
