@@ -134,20 +134,33 @@ public abstract class Action {
     }
 
     public static class ActionTile extends HashMap<ActionType, ActionStack> {
-        public void insert(ActionType key, Action value) {
+        public boolean insert(ActionType key, Action value) {
             ActionStack a = computeIfAbsent(key, k -> new ActionStack());
-            if (!a.isEmpty() && a.first().id != value.id) {
-                // When block changes or is removed all other action records are invalidated
-                switch (value.type) {
-                    case breakBlock:
-                    case placeBlock:
-                        forEach((at, ac) -> {
-                            ac.forEach(Action::remove);
-                            ac.clear();
-                        });
+            if (!a.isEmpty() ) {
+                if (a.first().id != value.id) {
+                    // When block changes or is removed all other action records are invalidated
+                    switch (value.type) {
+                        case breakBlock:
+                        case placeBlock:
+                            erase();
+                    }
+                } else if (a.first().type == value.type) {
+                    switch (value.type) {
+                        case breakBlock:
+                        case placeBlock:
+                            return false;
+                    }
                 }
             }
             a.add(value);
+            return true;
+        }
+
+        public void erase() {
+            forEach((at, ac) -> {
+                ac.forEach(Action::remove);
+                ac.clear();
+            });
         }
     }
 

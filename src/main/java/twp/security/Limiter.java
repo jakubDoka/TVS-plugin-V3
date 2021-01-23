@@ -39,7 +39,7 @@ public class Limiter {
 
         Logging.on(EventType.BlockBuildEndEvent.class, e -> {
             if(e.breaking){
-                map.setLock(e.tile, 0);
+                map.remove(e.tile);
             }
         });
 
@@ -111,8 +111,7 @@ public class Limiter {
             }
 
             Action a = Action.resolve(act, pd.id);
-            if(a != null) {
-                map.addAction(a);
+            if(a != null && map.addAction(a)) {
                 Action.add(a);
                 if(pd.actionOverflow()) {
                     RankSetter.terminal.run("", String.valueOf(pd.id), "griefer");

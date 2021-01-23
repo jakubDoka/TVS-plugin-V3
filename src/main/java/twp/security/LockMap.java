@@ -38,8 +38,13 @@ public class LockMap {
         Call.label(p.con, map[t.y][t.x].format(), 10, t.worldx(), t.worldy());
     }
 
-    public void addAction(Action action){
-        map[action.t.y][action.t.x].addAction(action);
+    public boolean addAction(Action action){
+        return map[action.t.y][action.t.x].addAction(action);
+    }
+
+    public void remove(Tile t) {
+        setLock(t, 0);
+        map[t.y][t.x].actionTile.erase();
     }
 
     static class TileInf {
@@ -56,20 +61,20 @@ public class LockMap {
             return sb.substring(0, sb.length()-1);
         }
 
-        public void addAction(Action action){
-            actionTile.insert(action.type, action);
+        public boolean addAction(Action action){
+            boolean res = actionTile.insert(action.type, action);
             switch (action.type) {
                 case breakBlock:
                 case placeBlock:
                     if(actions.size() != 0 && actions.get(0).type == action.type && actions.get(0).id == action.id) {
-                        return;
+                        return res;
                     }
             }
             actions.add(0, new ActionInf(action.id, action.type));
             if (actions.size() > Global.config.actionMemorySize) {
                 actions.remove(actions.size()-1);
             }
-            return;
+            return res;
         }
     }
 
