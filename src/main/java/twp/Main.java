@@ -33,6 +33,7 @@ public class Main extends Plugin {
     public static CommandHandler serverHandler;
     public static Bot bot;
     public static Queue queue;
+    public static CommandHandler handler;
 
     public Main() {
         Logging.on(EventType.ServerLoadEvent.class, e -> {
@@ -58,6 +59,7 @@ public class Main extends Plugin {
 
     @Override
     public void registerServerCommands(CommandHandler handler) {
+        Main.handler = handler;
         RankSetter.terminal.registerCmp(handler, null);
 
         Searcher.terminal.registerCmp(handler, null);

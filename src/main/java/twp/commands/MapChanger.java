@@ -1,6 +1,7 @@
 package twp.commands;
 
 import arc.math.Mathf;
+import arc.util.Log;
 import mindustry.game.Gamemode;
 import mindustry.gen.Call;
 import mindustry.maps.Map;
@@ -120,18 +121,8 @@ public class MapChanger extends Command {
             return;
         }
 
-        WorldReloader reloader = new WorldReloader();
-
-        reloader.begin();
-
-        Gamemode mode = map.rules().mode();
-
-        world.loadMap(map, map.applyRules(mode));
-
-        state.rules = state.map.applyRules(mode);
-        logic.play();
-
-        reloader.end();
+        Log.info(handler.handleMessage("nextmap " + map.name()));
+        Log.info(handler.handleMessage("gameover"));
     }
 
     public static MapChanger game = new MapChanger();
