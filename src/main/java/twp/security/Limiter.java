@@ -3,7 +3,7 @@ package twp.security;
 import arc.Core;
 import arc.util.*;
 import arc.util.Timer;
-import mindustry.net.Administration;
+import static mindustry.net.Administration.*;
 import mindustry.world.Tile;
 import twp.*;
 import twp.commands.RankSetter;
@@ -70,6 +70,7 @@ public class Limiter {
 
         if(!Main.testMode) {
             registerActionFilter();
+            Config.antiSpam.set(false);
         }
     }
 
@@ -106,16 +107,18 @@ public class Limiter {
             if (lock > top) {
                 pd.sendServerMessage("admins-permissionTooLow", top, lock);
                 return false;
-            } else if (act.type != Administration.ActionType.breakBlock && pd.hasPermLevel(Perm.high.value)) {
+            } else if (act.type != ActionType.breakBlock && pd.hasPermLevel(Perm.high.value)) {
                 map.setLock(act.tile, Perm.high.value);
             }
 
             Action a = Action.resolve(act, pd.id);
             if(a != null && map.addAction(a)) {
                 Action.add(a);
-                if(pd.actionOverflow()) {
-                    RankSetter.terminal.run("", String.valueOf(pd.id), "griefer");
-                    Timer.schedule(() -> queue.post(() -> Action.execute(pd.id, config.actionUndoTime + 2000)), 2f);
+                if(act.type != ActionType.breakBlock && act.type != ActionType.placeBlock) {
+                    if(pd.actionOverflow()) {
+                        RankSetter.terminal.run("", String.valueOf(pd.id), "griefer");
+                        Timer.schedule(() -> queue.post(() -> Action.execute(pd.id, config.actionUndoTime + 2000)), 2f);
+                    }
                 }
             }
 

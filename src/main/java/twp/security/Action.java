@@ -141,26 +141,34 @@ public abstract class Action {
     }
 
     public static class ActionTile extends HashMap<ActionType, ActionStack> {
+        long id;
+
         public boolean insert(Action value) {
             ActionStack a = computeIfAbsent(value.type, k -> new ActionStack());
-            if (!a.isEmpty() ) {
-                if (a.first().id != value.id) {
-                    // When block changes or is removed all other action records are invalidated
-                    switch (value.type) {
-                        case breakBlock:
-                        case placeBlock:
-                            erase();
+
+            switch (value.type) {
+                case breakBlock:
+                case placeBlock:
+                    if (value.b.name.startsWith("build") || value.b.name.startsWith("core")) {
+                        return false;
                     }
-                } else if (a.first().type == value.type) {
-                    switch (value.type) {
-                        case breakBlock:
-                        case placeBlock:
-                            if (value.b.name.startsWith("build") || value.b == a.first().b) {
-                                return false;
-                            }
-                    }
+            }
+
+            if(id != value.id) {
+                erase();
+            } else if (!a.isEmpty() && a.first().type == value.type) {
+                switch (value.type) {
+                    case breakBlock:
+                    case placeBlock:
+                        if (value.b == a.first().b) {
+                            return false;
+                        }
                 }
             }
+
+
+
+            id = value.id;
             a.insert(0, value);
             return true;
         }
@@ -179,6 +187,7 @@ public abstract class Action {
             for(int i = 0; i < amount && iter.hasNext(); i++) {
                 Action a = iter.next();
                 if (!a.outdated) a.undo();
+                else i--;
                 iter.remove();
             }
         }
