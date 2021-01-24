@@ -4,6 +4,7 @@ import twp.database.Account;
 import twp.security.Action;
 
 import static twp.Main.db;
+import static twp.Main.queue;
 
 public class Undoer extends Command {
     public Undoer() {
@@ -29,7 +30,7 @@ public class Undoer extends Command {
             return;
         }
 
-        Action.execute(data.getId(), Integer.parseInt(args[0]));
+        queue.post(() -> Action.execute(data.getId(), Integer.parseInt(args[0])));
     }
 
     public static Undoer game = new Undoer(){{verifier = this::isPlayerAdmin;}};

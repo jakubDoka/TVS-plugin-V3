@@ -62,7 +62,7 @@ public class LockMap {
         }
 
         public boolean addAction(Action action){
-            boolean res = actionTile.insert(action.type, action);
+            boolean res = actionTile.insert(action);
             switch (action.type) {
                 case breakBlock:
                 case placeBlock:

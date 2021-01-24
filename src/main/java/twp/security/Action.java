@@ -1,14 +1,23 @@
 package twp.security;
 
 import arc.struct.Seq;
+import arc.util.Log;
 import arc.util.Time;
+import arc.util.Timer;
+import mindustry.content.Blocks;
+import mindustry.content.UnitTypes;
+import mindustry.entities.units.BuildPlan;
 import mindustry.game.Team;
 import mindustry.gen.Call;
+import mindustry.gen.Unit;
 import mindustry.net.Administration.ActionType;
 import mindustry.net.Administration.PlayerAction;
 import mindustry.world.Block;
+import mindustry.world.Build;
 import mindustry.world.Tile;
+import mindustry.world.blocks.ConstructBlock;
 import twp.Global;
+import twp.Main;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,7 +54,7 @@ public abstract class Action {
             case rotate:
                 return new Rotation(act.tile.build.rotation(), a);
             case breakBlock:
-                return new Break(act.tile.build.block, act.tile.build.config(), act.tile.build.rotation(), act.player.team(), a);
+                return new Break(act.tile.block(), act.tile.build.config(), act.tile.build.rotation(), act.player.team(), a);
             case placeBlock:
                 return new Place(act.block, act.player.team(), a);
         }
@@ -127,15 +136,13 @@ public abstract class Action {
         @Override
         public void undo() {
             if (team.core() == null) return;
-
-            team.core().items.remove(b.requirements);
-            Call.constructFinish(t, b, null, (byte)rotation, team, config);
+            ConstructBlock.constructed(t, b, null, (byte)rotation, team, config);
         }
     }
 
     public static class ActionTile extends HashMap<ActionType, ActionStack> {
-        public boolean insert(ActionType key, Action value) {
-            ActionStack a = computeIfAbsent(key, k -> new ActionStack());
+        public boolean insert(Action value) {
+            ActionStack a = computeIfAbsent(value.type, k -> new ActionStack());
             if (!a.isEmpty() ) {
                 if (a.first().id != value.id) {
                     // When block changes or is removed all other action records are invalidated
@@ -148,11 +155,13 @@ public abstract class Action {
                     switch (value.type) {
                         case breakBlock:
                         case placeBlock:
-                            return false;
+                            if (value.b.name.startsWith("build") || value.b == a.first().b) {
+                                return false;
+                            }
                     }
                 }
             }
-            a.add(value);
+            a.insert(0, value);
             return true;
         }
 

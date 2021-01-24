@@ -39,7 +39,7 @@ public class Limiter {
 
         Logging.on(EventType.BlockBuildEndEvent.class, e -> {
             if(e.breaking){
-                map.remove(e.tile);
+                map.setLock(e.tile, 0);
             }
         });
 

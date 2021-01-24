@@ -35,8 +35,6 @@ public class Main extends Plugin {
     public static Queue queue;
 
     public Main() {
-        Global.loadConfig();
-
         Logging.on(EventType.ServerLoadEvent.class, e -> {
             ranks = new Ranks();
             db = new Database();
@@ -107,8 +105,7 @@ public class Main extends Plugin {
                     bot = new Bot();
                     break;
                 case "config":
-                    Global.loadConfig();
-
+                    Global.config = Global.loadConfig();
                     break;
                 default:
                     Log.info("wrong option");
