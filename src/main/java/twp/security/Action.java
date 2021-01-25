@@ -25,6 +25,11 @@ import java.util.Iterator;
 
 public abstract class Action {
     static HashMap<Long, ActionStack> actions = new HashMap<>();
+    static ResolveResult rr = new ResolveResult();
+    static Action ac = new Action(null, 0, null) {
+        @Override
+        public void undo() { }
+    };
 
     ActionType type;
     Tile t;
@@ -42,24 +47,44 @@ public abstract class Action {
         this.t = t;
     }
 
-    public static Action resolve(PlayerAction act, long id) {
-        Action a = new Action(act.type, id, act.tile) {
-            @Override
-            public void undo() {}
-        };
+    public static ResolveResult resolve(PlayerAction act, long id) {
+        ac.type = act.type;
+        ac.id = id;
+        ac.t = act.tile;
+
+        rr.optional = null;
+        rr.main = null;
 
         switch (act.type) {
             case configure:
-                return new Config(act.tile.build.config(), a);
+                rr.main = new Config(act.tile.build.config(), ac);
+                break;
             case rotate:
-                return new Rotation(act.tile.build.rotation(), a);
-            case breakBlock:
-                return new Break(act.tile.block(), act.tile.build.config(), act.tile.build.rotation(), act.player.team(), a);
+                rr.main = new Rotation(act.tile.build.rotation(), ac);
+                break;
             case placeBlock:
-                return new Place(act.block, act.player.team(), a);
+                rr.main = new Place(act.block, act.player.team(), ac);
+            case breakBlock:
+                Block b = act.tile.block();
+                if (b.name.startsWith("build") || b.name.startsWith("core") ||
+                        act.block.name.startsWith("build") || act.block.name.startsWith("core")) {
+                    return null;
+                }
+
+                if(b == Blocks.air) {
+                    break;
+                }
+
+                Action action = new Break(b, act.tile.build.config(), act.tile.build.rotation(), act.player.team(), ac);
+
+                if (rr.main == null) {
+                    rr.main = action;
+                } else {
+                    rr.optional = action;
+                }
         }
 
-        return null;
+        return rr;
     }
 
     public static void add(Action action) {
@@ -84,6 +109,10 @@ public abstract class Action {
     }
 
     public abstract void undo();
+
+    public static class ResolveResult {
+        Action main, optional;
+    }
 
     public static class Config extends Action {
         public Config(Object config, Action a) {
@@ -143,33 +172,27 @@ public abstract class Action {
     public static class ActionTile extends HashMap<ActionType, ActionStack> {
         long id;
 
-        public boolean insert(Action value) {
-            ActionStack a = computeIfAbsent(value.type, k -> new ActionStack());
+        public boolean insert(ResolveResult rr) {
+            ActionStack as = computeIfAbsent(rr.main.type, k -> new ActionStack());
 
-            switch (value.type) {
-                case breakBlock:
-                case placeBlock:
-                    if (value.b.name.startsWith("build") || value.b.name.startsWith("core")) {
-                        return false;
-                    }
-            }
-
-            if(id != value.id) {
+            if(id != rr.main.id) {
                 erase();
-            } else if (!a.isEmpty() && a.first().type == value.type) {
-                switch (value.type) {
+            } else if (!as.isEmpty() && as.first().type == rr.main.type) {
+                switch (rr.main.type) {
                     case breakBlock:
                     case placeBlock:
-                        if (value.b == a.first().b) {
+                        if (rr.main.b == as.first().b) {
                             return false;
                         }
                 }
             }
 
-
-
-            id = value.id;
-            a.insert(0, value);
+            id = rr.main.id;
+            if(rr.optional != null) {
+                ActionStack as1 = computeIfAbsent(rr.optional.type, k -> new ActionStack());
+                as1.insert(0, rr.optional);
+            }
+            as.insert(0, rr.main);
             return true;
         }
 

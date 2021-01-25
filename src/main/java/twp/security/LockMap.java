@@ -38,8 +38,8 @@ public class LockMap {
         Call.label(p.con, map[t.y][t.x].format(), 10, t.worldx(), t.worldy());
     }
 
-    public boolean addAction(Action action){
-        return map[action.t.y][action.t.x].addAction(action);
+    public boolean addAction(Action.ResolveResult rr){
+        return map[rr.main.t.y][rr.main.t.x].addAction(rr);
     }
 
     public void remove(Tile t) {
@@ -61,16 +61,17 @@ public class LockMap {
             return sb.substring(0, sb.length()-1);
         }
 
-        public boolean addAction(Action action){
-            boolean res = actionTile.insert(action);
-            switch (action.type) {
+        public boolean addAction(Action.ResolveResult rr){
+            boolean res = actionTile.insert(rr);
+            switch (rr.main.type) {
                 case breakBlock:
                 case placeBlock:
-                    if(actions.size() != 0 && actions.get(0).type == action.type && actions.get(0).id == action.id) {
+                    if(actions.size() != 0 && actions.get(0).type == rr.main.type && actions.get(0).id == rr.main.id) {
                         return res;
                     }
             }
-            actions.add(0, new ActionInf(action.id, action.type));
+
+            actions.add(0, new ActionInf(rr.main.id, rr.main.type));
             if (actions.size() > Global.config.actionMemorySize) {
                 actions.remove(actions.size()-1);
             }

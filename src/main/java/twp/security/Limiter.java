@@ -111,9 +111,10 @@ public class Limiter {
                 map.setLock(act.tile, Perm.high.value);
             }
 
-            Action a = Action.resolve(act, pd.id);
-            if(a != null && map.addAction(a)) {
-                Action.add(a);
+            Action.ResolveResult rr = Action.resolve(act, pd.id);
+            if(rr != null && map.addAction(rr)) {
+                if(rr.optional != null) Action.add(rr.optional);
+                Action.add(rr.main);
                 if(act.type != ActionType.breakBlock && act.type != ActionType.placeBlock) {
                     if(pd.actionOverflow()) {
                         RankSetter.terminal.run("", String.valueOf(pd.id), "griefer");
