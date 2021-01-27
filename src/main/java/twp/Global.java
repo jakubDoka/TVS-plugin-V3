@@ -12,7 +12,6 @@ public class Global {
     public static final String config_dir = dir + "/config";
     public static final String save_dir = config_dir + "/saves";
     public static final String config_file = config_dir + "/config.json";
-    public static Config config = loadConfig();
 
     public static Config loadConfig() {
         Config config = Json.loadJackson(config_file, Config.class);
@@ -21,75 +20,50 @@ public class Global {
     }
 
     public static class Config {
-        public String symbol = "[green]<Survival>[]";
-        public String alertPrefix = "!!";
-        public String dbName = "mindustryServer";
-        public String playerCollection = "PlayerData";
-        public String mapCollection = "MapData";
-        public String dbAddress = "mongodb://127.0.0.1:27017";
         public String salt = "TWS";
+
         public HashMap<String, String > rules;
         public HashMap<String, String > guide;
         public HashMap<String, String > welcomeMessage;
-        public int consideredPassive = 10;
 
-        public int vpnTimeout;
-        public String vpnApi;
-        public int actionMemorySize = 5;
-        public long doubleClickSpacing = 300;
-        public int maxNameLength = 25;
-        public long testPenalty = 15 * 60 * 1000;
+        public int consideredPassive = 10; // after how many missed votes is player considered passive
+        public int shipLimit = 3; // maximum amount of ships players acn have
+        public long doubleClickSpacing = 300; // double click sensitivity
+        public int maxNameLength = 25; // if name is longer then this amount it is truncated
+        public long testPenalty = 15 * 60 * 1000; // how often can players take test
 
-        public int actionLimit = 50;
-        public long actionLimitFrame = 1000 * 2;
-        public long actionUndoTime = 1000 * 10;
 
+        public Security sec = new Security();
+        public VPN vpn = new VPN();
+        public Database db = new Database();
+        public Loadout loadout = new Loadout();
 
         public Config() {}
+    }
 
-        @JsonCreator
-        public Config(
-                @JsonProperty("mapCollection") String mapCollection,
-                @JsonProperty("consideredPassive") int consideredPassive,
-                @JsonProperty("symbol") String symbol,
-                @JsonProperty("playerCollection") String playerCollection,
-                @JsonProperty("dbAddress") String dbAddress,
-                @JsonProperty("alertPrefix") String alertPrefix,
-                @JsonProperty("dbName") String dbName,
-                @JsonProperty("rules") HashMap<String, String> rules,
-                @JsonProperty("guide") HashMap<String, String> guide,
-                @JsonProperty("welcomeMessage") HashMap<String, String> welcomeMessage,
-                @JsonProperty("vpnApi") String vpnApi,
-                @JsonProperty("vpnTimeout") int vpnTimeout,
-                @JsonProperty("actionMemorySize") int actionMemorySize,
-                @JsonProperty("doubleClickSpacing") long doubleClickSpacing,
-                @JsonProperty("maxNameLength") int maxNameLength,
-                @JsonProperty("testPenalty") long testPenalty,
-                @JsonProperty("actionLimitFrame") long actionLimitFrame,
-                @JsonProperty("actionLimit") int actionLimit,
-                @JsonProperty("actionUndoTime") long actionUndoTime
-        ){
-            if(symbol != null) this.symbol = symbol;
-            if(dbAddress != null) this.dbAddress = dbAddress;
-            if(playerCollection != null) this.playerCollection = playerCollection;
-            if(alertPrefix != null) this.alertPrefix = alertPrefix;
-            if(dbName != null) this.dbName = dbName;
-            if(mapCollection != null) this.mapCollection = mapCollection;
+    public static class Database {
+        public String name = "mindustryServer"; // database name
+        public String players = "PlayerData"; // player collection name
+        public String maps = "MapData"; // map collection name
+        public String address = "mongodb://127.0.0.1:27017"; // database host
 
-            if(actionMemorySize != 0) this.actionMemorySize = actionMemorySize;
-            if(doubleClickSpacing != 0) this.doubleClickSpacing = doubleClickSpacing;
-            if(maxNameLength != 0) this.maxNameLength = maxNameLength;
-            if(actionLimitFrame != 0) this.actionLimitFrame = actionLimitFrame;
-            if(actionLimit != 0) this.actionLimit = actionLimit;
-            if(actionUndoTime != 0) this.actionUndoTime = actionUndoTime;
+    }
 
-            this.consideredPassive = consideredPassive;
-            this.rules = rules;
-            this.guide = guide;
-            this.welcomeMessage = welcomeMessage;
-            this.vpnApi = vpnApi;
-            this.vpnTimeout = vpnTimeout;
-            this.testPenalty = testPenalty;
-        }
+    public static class Loadout {
+        public String name = "Loadout"; // loadout collection
+        public int shipTravelTime = 60 * 3;
+        public int shipCapacity = 3000;
+    }
+
+    public static class Security {
+        public int actionLimit = 50; // how many actions triggers protection
+        public long actionLimitFrame = 1000 * 2; // how frequently is action counter reset
+        public long actionUndoTime = 1000 * 10; // how old actions will be reverted after protection trigger
+        public int actionMemorySize = 5; // how many actions will be saved in tile for inspection
+    }
+
+    public static class VPN {
+        public String api;
+        public int timeout;
     }
 }

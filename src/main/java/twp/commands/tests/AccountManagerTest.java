@@ -13,7 +13,6 @@ import static twp.Main.ranks;
 
 class AccountManagerTest extends Test {
     public static void main(String[] args) {
-        Log.info(Global.config.actionMemorySize);
         init();
 
         db.online.put("", db.handler.loadData(new DBPlayer(){}));

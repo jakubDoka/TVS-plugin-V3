@@ -4,6 +4,7 @@ import arc.math.Mathf;
 import twp.commands.Command;
 import twp.database.*;
 import twp.database.enums.Perm;
+import twp.database.enums.Stat;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,6 +20,7 @@ public class Voting {
     public Command parent;
     public String name;
     public Perm protection;
+    public Stat increase;
 
     public Voting(Command parent, String name, int maxVotes, int minVotes) {
         this.name = name;
@@ -68,7 +70,11 @@ public class Voting {
     }
 
     public void revolve(Session session) {
+        // session is always special at the end
         if(session.spacial && session.yes > session.no) {
+            if(increase != null) {
+                db.handler.inc(session.owner, increase, 1);
+            }
             session.runner.run(session);
             hud.sendMessage(getMessage(Messages.success), session.args, 10, "green", "gray");
         } else {

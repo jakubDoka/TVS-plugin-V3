@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import static twp.Main.db;
+import static twp.Main.docks;
 
 // Hud manages updating of ingame hud, it also removes disconnected players from online list
 public class Hud {
@@ -18,6 +19,7 @@ public class Hud {
 
     public Hud() {
         displayable.add(Voting.processor);
+        displayable.add(docks);
         Logging.on(Main.TickEvent.class, e -> update());
     }
 

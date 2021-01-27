@@ -1,13 +1,29 @@
 package twp.tools;
 
 import arc.math.Mathf;
+import mindustry.Vars;
+import mindustry.content.Items;
+import mindustry.core.ContentLoader;
+import mindustry.type.Item;
+import twp.game.Loadout;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static java.lang.Math.min;
 
 // Text formatting utility
 public class Text {
+    static int[] itemIcons = new int[]{
+            63536, 63544, 63543,
+            63541, 63539, 63538,
+            63537, 63535, 63534,
+            63533, 63532, 63531,
+            63540, 63530, 63529,
+            63542
+    };
+
     public static String clean(String string, String  begin, String  end){
         int fromBegin = 0,fromEnd = 0;
         while (string.contains(begin)){
@@ -70,4 +86,40 @@ public class Text {
 
         return b.toString();
     }
+
+    public static String secToTime(int sec){
+        return String.format("%02d:%02d",sec/60,sec%60);
+    }
+
+    public static String itemIcon(Item i) {
+        int idx = 0;
+        for(Field f : Items.class.getFields()) {
+            try {
+                System.out.println(f.get(null));
+                System.out.println(i);
+                if (f.get(null).equals(i)) {
+                    return String.valueOf((char)itemIcons[idx]);
+                }
+            } catch (Exception ignore) {}
+            idx++;
+        }
+
+        return null;
+    }
+
+    public static void main(String[] args) throws IllegalAccessException {
+        Vars.content = new ContentLoader();
+        new Items().load();
+        int idx = 0;
+        Loadout l = new Loadout(null);
+        System.out.println(l.itemsList());
+        for(Field f : Items.class.getFields()) {
+            System.out.println(String.format("put(\"%s\", Items.%s);", ((Item)f.get(null)).name, f.getName()));
+            idx++;
+        }
+    }
+
+    /*
+
+     */
 }

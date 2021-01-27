@@ -47,14 +47,14 @@ public class Searcher extends Command {
         }
 
         FindIterable<Document> found;
-        int count = 0;
+        long count = 0;
         if (args[0].endsWith("none"))  {
             found = db.handler.all();
-            count = db.getDatabaseSize();
+            count = db.getSize();
         } else {
             found = db.handler.startsWith("name", args[0]);
             for(Document ignored : found) {
-                count++; // fucking iterators
+                count++;
             }
         }
 
@@ -91,13 +91,13 @@ public class Searcher extends Command {
         Slice slice;
         if(args.length > 2) {
             try {
-                slice = new Slice(args[2], count);
+                slice = new Slice(args[2], (int) count);
             } catch (IOException e) {
                 result = Result.invalidSlice;
                 return;
             }
         } else {
-            slice = new Slice(0, showLimit, count);
+            slice = new Slice(0, showLimit, (int) count);
         }
 
         if(slice.empty()) {

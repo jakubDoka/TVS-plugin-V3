@@ -72,7 +72,7 @@ public class LockMap {
             }
 
             actions.add(0, new ActionInf(rr.main.id, rr.main.type));
-            if (actions.size() > Global.config.actionMemorySize) {
+            if (actions.size() > config.sec.actionMemorySize) {
                 actions.remove(actions.size()-1);
             }
             return res;

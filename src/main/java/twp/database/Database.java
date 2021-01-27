@@ -16,17 +16,16 @@ import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import org.bson.Document;
+import twp.game.Loadout;
 import twp.tools.Logging;
 import twp.tools.Text;
 
 import java.util.*;
 
-import static twp.Main.bundle;
-import static twp.Main.ranks;
+import static twp.Main.*;
 
 // Main database interface
 public class Database {
-    public final String playerCollection = "PlayerData";
     public static final String AFK = "[gray]<AFK>[]";
     public static final String counter = "counter";
     public static final String mapCounter = "mapCounter";
@@ -52,21 +51,21 @@ public class Database {
     };
 
     // mongo stuff
-    public MongoClient client = MongoClients.create(Global.config.dbAddress);
-    public MongoDatabase database = client.getDatabase(Global.config.dbName);
-    MongoCollection<Document> rawData = database.getCollection(Global.config.playerCollection);
-    MongoCollection<Document> rawMapData = database.getCollection(Global.config.mapCollection);
+    public MongoClient client;
+    public MongoDatabase database;
+    MongoCollection<Document> rawData;
+    MongoCollection<Document> rawMapData;
 
     // handler has works directly with database
-    public AccountHandler handler = new AccountHandler(rawData, database.getCollection(counter));
-    public MapHandler maps = new MapHandler(rawMapData, database.getCollection(mapCounter));
+    public AccountHandler handler;
+    public MapHandler maps;
+    public Loadout loadout;
 
     // online player are here by their ids
     public SyncMap<String, PD> online = new SyncMap<>();
 
     public Database(){
         Logging.on(EventType.PlayerConnect.class, e-> {
-
             validateName(e.player);
 
             PD pd = handler.loadData(new DBPlayer(e.player));
@@ -81,20 +80,71 @@ public class Database {
 
         Logging.on(EventType.WithdrawEvent.class, e-> {
             PD pd = online.get(e.player.uuid());
-            if (pd == null) {
-                return;
+            if(pd != null) {
+                handler.inc(pd.id, Stat.itemsTransported, e.amount);
             }
-            handler.inc(pd.id, Stat.itemsTransported, e.amount);
         });
 
         Logging.on(EventType.DepositEvent.class, e-> {
             PD pd = online.get(e.player.uuid());
-            if (pd == null) {
-                return;
+            if(pd != null) {
+                handler.inc(pd.id, Stat.itemsTransported, e.amount);
             }
-            handler.inc(pd.id, Stat.itemsTransported, e.amount);
         });
 
+        Logging.on(EventType.BlockBuildEndEvent.class, e -> {
+            if(!e.unit.isPlayer() || e.tile.block().buildCost/60<1) return;
+
+            PD pd = online.get(e.unit.getPlayer().uuid());
+            if(pd != null) {
+                if (e.breaking) {
+                    handler.inc(pd.id, Stat.buildingsBroken, 1);
+                } else {
+                    handler.inc(pd.id, Stat.buildingsBuilt, 1);
+                }
+            }
+        });
+
+        Logging.on(EventType.UnitDestroyEvent.class, e -> {
+            if(e.unit.isPlayer()) {
+                PD pd = online.get(e.unit.getPlayer().uuid());
+                if(pd != null) {
+                    handler.inc(pd.id, Stat.deaths, 1);
+                }
+            }
+
+            for(Player p : Groups.player) {
+                if(p.team() != e.unit.team()) {
+                    PD pd = online.get(p.uuid());
+                    if(pd != null) {
+                        handler.inc(pd.id, Stat.enemiesKilled, 1);
+                    }
+                }
+            }
+        });
+
+        Logging.on(EventType.GameOverEvent.class, e-> {
+            for(Player p : Groups.player) {
+                PD pd = online.get(p.uuid());
+                if (pd == null) continue;
+                if(p.team() == e.winner) {
+                    handler.inc(pd.id, Stat.gamesWon, 1);
+                }
+                handler.inc(pd.id, Stat.gamesPlayed, 1);
+            }
+        });
+
+        reconnect();
+    }
+
+    public void reconnect() {
+        client = MongoClients.create(config.db.address);
+        database = client.getDatabase(config.db.name);
+        rawData = database.getCollection(config.db.players);
+        rawMapData = database.getCollection(config.db.maps);
+        handler = new AccountHandler(rawData, database.getCollection(counter));
+        maps = new MapHandler(rawMapData, database.getCollection(mapCounter));
+        loadout = new Loadout(database.getCollection(config.loadout.name));
     }
 
     // function checks whether player can obtain any rank ON THREAD and gives him that
@@ -118,6 +168,10 @@ public class Database {
         }).start();
     }
 
+    public long getSize() {
+        return rawData.estimatedDocumentCount();
+    }
+
     public boolean hasDisabled(long id, Perm perm) {
         return handler.contains(id, "settings", perm.name());
     }
@@ -128,19 +182,6 @@ public class Database {
 
     public boolean hasMuted(long id, String other){
         return handler.contains(id, "mutes", other);
-    }
-
-    //just for testing purposes
-    public void clear(){
-        rawData.drop();
-        reconnect();
-    }
-
-    public void reconnect() {
-        client = MongoClients.create(Global.config.dbAddress);
-        database = client.getDatabase(Global.config.dbName);
-        rawData = database.getCollection(playerCollection);
-        handler = new AccountHandler(rawData, database.getCollection(counter));
     }
 
     public Account findAccount(String target) {
@@ -160,11 +201,6 @@ public class Database {
         }
 
         return null;
-    }
-
-
-    public int getDatabaseSize(){
-        return (int) database.runCommand(new Document("collStats", playerCollection)).get("count");
     }
 
     public void disconnectAccount(PD pd){
@@ -187,7 +223,7 @@ public class Database {
     public void validateName(Player player) {
         String originalName = player.name;
         player.name = Text.cleanName(player.name);
-        if (!originalName.equals(player.name) || player.name.length() > Global.config.maxNameLength) {
+        if (!originalName.equals(player.name) || player.name.length() > config.maxNameLength) {
             //name cannot be blank so then replace it with some random name
             if (player.name.replace(" ", "").isEmpty()) {
                 player.name = pickFreeName();

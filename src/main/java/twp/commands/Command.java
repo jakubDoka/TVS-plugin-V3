@@ -310,7 +310,7 @@ public abstract class Command {
         voteSuccess(true),
         alreadyVoted(true),
 
-        none, rateSuccess, info, stats;
+        none, rateSuccess, info, stats, fail;
 
         boolean general;
 

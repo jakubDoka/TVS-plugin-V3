@@ -1,0 +1,27 @@
+{
+  "salt":"TWS",
+  "rules":null,
+  "guide":null,
+  "welcomeMessage":null,
+  "consideredPassive":10,
+  "shipLimit":3,
+  "doubleClickSpacing":300,
+  "maxNameLength":25,
+  "testPenalty":900000,
+  "sec":{
+    "actionLimit":50,
+    "actionLimitFrame":2000,
+    "actionUndoTime":10000,
+    "actionMemorySize":5
+  },
+  "vpn": {
+    "api":null,
+    "timeout":0
+  },
+  "db":{
+    "name":"mindustryServer",
+    "players":"PlayerData",
+    "maps":"MapData","address":"mongodb://127.0.0.1:27017",
+    "loadout":"Loadout"
+  }
+}

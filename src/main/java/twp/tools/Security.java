@@ -3,11 +3,13 @@ package twp.tools;
 import twp.Global;
 import org.apache.commons.codec.digest.DigestUtils;
 
+import static twp.Main.config;
+
 // some hash functions
 public class Security {
     // ignore this big mistake pls
     public static long hash(String password) {
-        password += Global.config.salt;
+        password += config.salt;
         long res = 0;
         for(int i = 0; i < password.length(); i++) {
             res = res + (long)Math.pow(password.charAt(i), 2);
@@ -16,7 +18,7 @@ public class Security {
     }
 
     public static String hash2(String password) {
-        return DigestUtils.sha256Hex(password + Global.config.salt);
+        return DigestUtils.sha256Hex(password + config.salt);
     }
 
 }

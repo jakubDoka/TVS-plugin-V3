@@ -1,24 +1,23 @@
 package twp.security;
 
-import arc.Core;
-import arc.util.*;
+import arc.util.Time;
 import arc.util.Timer;
-import static mindustry.net.Administration.*;
-import mindustry.world.Tile;
-import twp.*;
-import twp.commands.RankSetter;
-import twp.database.PD;
-import twp.database.enums.Perm;
 import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.gen.Player;
+import mindustry.world.Tile;
+import twp.Main;
+import twp.commands.RankSetter;
+import twp.database.PD;
+import twp.database.enums.Perm;
 import twp.tools.Logging;
 
-import java.util.*;
+import java.util.HashMap;
 
-import static twp.Main.*;
-import static twp.Global.config;
 import static mindustry.Vars.netServer;
+import static mindustry.net.Administration.ActionType;
+import static mindustry.net.Administration.Config;
+import static twp.Main.*;
 
 // Limiter restricts player actions and manages instance of LockMap
 public class Limiter {
@@ -118,7 +117,7 @@ public class Limiter {
                 if(act.type != ActionType.breakBlock && act.type != ActionType.placeBlock) {
                     if(pd.actionOverflow()) {
                         RankSetter.terminal.run("", String.valueOf(pd.id), "griefer");
-                        Timer.schedule(() -> queue.post(() -> Action.execute(pd.id, config.actionUndoTime + 2000)), 2f);
+                        Timer.schedule(() -> queue.post(() -> Action.execute(pd.id, config.sec.actionUndoTime + 2000)), 2f);
                     }
                 }
             }

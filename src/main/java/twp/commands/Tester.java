@@ -29,8 +29,8 @@ public class Tester extends Command{
         }
 
         long since = Time.timeSinceMillis(recent.getOrDefault(id, 0L));
-        if(since < Global.config.testPenalty){
-            setArg(Text.milsToTime(Global.config.testPenalty - since));
+        if(since < config.testPenalty){
+            setArg(Text.milsToTime(config.testPenalty - since));
             result = Result.penalty;
             return;
         }

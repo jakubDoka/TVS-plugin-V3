@@ -3,6 +3,7 @@ package twp.commands;
 import twp.database.Account;
 import twp.database.PD;
 import twp.database.enums.Perm;
+import twp.database.enums.Stat;
 import twp.democracy.Voting;
 
 import static twp.Main.db;
@@ -11,6 +12,7 @@ public class VoteKick extends Command {
     Voting main = new Voting(this, "main", 5, 2) {
         {
             protection = Perm.antiGrief;
+            increase = Stat.mkgfVotes;
         }
     };
 

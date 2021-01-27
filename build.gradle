@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies{
-    //implementation name: 'Mindustry'
+    implementation name: 'Mindustry'
     implementation 'junit:junit:4.12'
     implementation 'org.junit.jupiter:junit-jupiter:5.4.2'
     compileOnly "com.github.Anuken.Arc:arc-core:$mindustryVersion"

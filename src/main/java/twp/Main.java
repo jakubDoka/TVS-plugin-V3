@@ -10,6 +10,7 @@ import arc.util.Timer;
 import twp.bundle.Bundle;
 import twp.democracy.Hud;
 import twp.discord.Bot;
+import twp.game.Docks;
 import twp.security.Limiter;
 import mindustry.Vars;
 import mindustry.gen.Call;
@@ -34,6 +35,8 @@ public class Main extends Plugin {
     public static Bot bot;
     public static Queue queue;
     public static CommandHandler handler;
+    public static Global.Config config = Global.loadConfig();
+    public static Docks docks;
 
     public Main() {
         Logging.on(EventType.ServerLoadEvent.class, e -> {
@@ -43,6 +46,7 @@ public class Main extends Plugin {
             bundle = new Bundle();
             bot = new Bot();
             queue = new Queue();
+            docks = new Docks();
 
             // this has to be last init
             hud = new Hud();
@@ -107,7 +111,7 @@ public class Main extends Plugin {
                     bot = new Bot();
                     break;
                 case "config":
-                    Global.config = Global.loadConfig();
+                    config = Global.loadConfig();
                     break;
                 default:
                     Log.info("wrong option");
@@ -144,6 +148,8 @@ public class Main extends Plugin {
         MapManager.game.registerGm(handler, null);
 
         Undoer.game.registerGm(handler, null);
+
+        LoadoutManager.game.registerGm(handler, null);
 
         AccountManager.game.registerGm(handler, (self, pd) -> {
             switch (self.result){
