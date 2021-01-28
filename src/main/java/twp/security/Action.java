@@ -82,6 +82,9 @@ public abstract class Action {
                 } else {
                     rr.optional = action;
                 }
+                break;
+            default:
+                return null;
         }
 
         return rr;

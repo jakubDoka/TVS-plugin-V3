@@ -46,6 +46,14 @@ public class Logging {
         });
     }
 
+    public static void log(Runnable run) {
+        try {
+            run.run();
+        } catch (Exception e) {
+            log(e);
+        }
+    }
+
     public static void log(Throwable t) {
         String ex = ExceptionUtils.readStackTrace(t);
         SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH-mm-ss-SSS z");

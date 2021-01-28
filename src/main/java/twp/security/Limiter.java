@@ -75,51 +75,55 @@ public class Limiter {
 
     void registerActionFilter() {
         netServer.admins.addActionFilter( act -> {
-            Player player = act.player;
-            if(player == null) {
-                return true; // Dont forget this true is important
-            }
+            try {
+                Player player = act.player;
+                if(player == null) {
+                    return true; // Dont forget this true is important
+                }
 
-            PD pd = db.online.get(player.uuid());
-            if (pd == null) {
-                Logging.log("player data is missing ewen though player is attempting actions");
-                return true;
-            }
+                PD pd = db.online.get(player.uuid());
+                if (pd == null) {
+                    Logging.log("player data is missing ewen though player is attempting actions");
+                    return true;
+                }
 
-            if (pd.rank == ranks.griefer) {
-                pd.sendServerMessage("admins-grieferCannotBuild");
-                return false;
-            }
+                if (pd.rank == ranks.griefer) {
+                    pd.sendServerMessage("admins-grieferCannotBuild");
+                    return false;
+                }
 
-            if (pd.paralyzed) {
-                pd.sendServerMessage("admins-paralyzedCannotBuild");
-                return false;
-            }
+                if (pd.paralyzed) {
+                    pd.sendServerMessage("admins-paralyzedCannotBuild");
+                    return false;
+                }
 
-            if (act.tile == null) {
-                return true;
-            }
+                if (act.tile == null) {
+                    return true;
+                }
 
-            int top = pd.getHighestPermissionLevel();
-            int lock = map.getLock(act.tile);
+                int top = pd.getHighestPermissionLevel();
+                int lock = map.getLock(act.tile);
 
-            if (lock > top) {
-                pd.sendServerMessage("admins-permissionTooLow", top, lock);
-                return false;
-            } else if (act.type != ActionType.breakBlock && pd.hasPermLevel(Perm.high.value)) {
-                map.setLock(act.tile, Perm.high.value);
-            }
+                if (lock > top) {
+                    pd.sendServerMessage("admins-permissionTooLow", top, lock);
+                    return false;
+                } else if (act.type != ActionType.breakBlock && pd.hasPermLevel(Perm.high.value)) {
+                    map.setLock(act.tile, Perm.high.value);
+                }
 
-            Action.ResolveResult rr = Action.resolve(act, pd.id);
-            if(rr != null && map.addAction(rr)) {
-                if(rr.optional != null) Action.add(rr.optional);
-                Action.add(rr.main);
-                if(act.type != ActionType.breakBlock && act.type != ActionType.placeBlock) {
-                    if(pd.actionOverflow()) {
-                        RankSetter.terminal.run("", String.valueOf(pd.id), "griefer");
-                        Timer.schedule(() -> queue.post(() -> Action.execute(pd.id, config.sec.actionUndoTime + 2000)), 2f);
+                Action.ResolveResult rr = Action.resolve(act, pd.id);
+                if(rr != null && map.addAction(rr)) {
+                    if(rr.optional != null) Action.add(rr.optional);
+                    Action.add(rr.main);
+                    if(act.type != ActionType.breakBlock && act.type != ActionType.placeBlock) {
+                        if(pd.actionOverflow()) {
+                            RankSetter.terminal.run("", String.valueOf(pd.id), "griefer");
+                            Timer.schedule(() -> queue.post(() -> Action.execute(pd.id, config.sec.actionUndoTime + 2000)), 2f);
+                        }
                     }
                 }
+            } catch (Exception e) {
+                Logging.log(e);
             }
 
             return true;
