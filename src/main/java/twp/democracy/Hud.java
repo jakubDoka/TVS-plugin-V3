@@ -24,11 +24,10 @@ public class Hud {
     }
 
     public void sendMessage(String message, Object[] args, int seconds, String ...colors) {
-
         Message.messages.add(new Message(message, args, seconds, colors));
     }
 
-    void update() {
+    public void update() {
         for (Message value : Message.messages) {
             value.tick();
         }

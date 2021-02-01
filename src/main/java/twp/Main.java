@@ -29,7 +29,7 @@ public class Main extends Plugin {
     public static Database db;
     public static Limiter lim;
     public static Hud hud;
-    public static Bundle bundle;
+    public static Bundle bundle = new Bundle();
     public static boolean testMode;
     public static CommandHandler serverHandler;
     public static Bot bot;
@@ -43,7 +43,6 @@ public class Main extends Plugin {
             ranks = new Ranks();
             db = new Database();
             lim = new Limiter();
-            bundle = new Bundle();
             bot = new Bot();
             queue = new Queue();
             docks = new Docks();

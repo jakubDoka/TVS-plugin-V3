@@ -227,7 +227,6 @@ public abstract class Action {
                 }
                 if (!a.outdated) a.undo();
                 iter.remove();
-
             }
         }
     }

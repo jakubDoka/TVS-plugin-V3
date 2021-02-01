@@ -20,7 +20,7 @@ import static twp.Main.*;
 
 public class LoadoutManager extends Command {
 
-    public Voting main = new Voting(this, "main", 2, 3){{
+    public Voting main = new Voting(this, "main", 2, 4){{
         protection = Perm.loadout;
         increase = Stat.loadoutVotes;
     }};
@@ -54,6 +54,10 @@ public class LoadoutManager extends Command {
         switch (args[0]) {
             case "get":
                 Item i = items.first();
+                if(db.loadout.amount(i) == 0) {
+                    result = Result.redundant;
+                    return;
+                }
                 result = main.pushSession(caller, session -> {
                     int amount = a;
                     while (amount != 0) {
@@ -73,14 +77,14 @@ public class LoadoutManager extends Command {
                         int finalRAmount = rAmount;
                         db.loadout.inc(i, -rAmount);
 
-                        docks.ships.add( new Docks.Ship(stack+Docks.Ship.itemsToCore, () -> {
+                        docks.use( new Docks.Ship(stack+Docks.Ship.itemsToCore, () -> {
                             CoreBlock.CoreBuild core = Loadout.core();
                             if(core == null) {
                                 hud.sendMessage("l-shipIsLost", new Object[]{stack}, 10, "red", "gray");
                                 return;
                             }
                             core.items.add(i, finalRAmount);
-                            docks.ships.add(new Docks.Ship("returning", () -> {}, config.loadout.shipTravelTime));
+                            docks.use(new Docks.Ship("returning", () -> {}, config.loadout.shipTravelTime));
                         }, config.loadout.shipTravelTime));
                     }
                 }, db.loadout.stackToString(i, Math.max((config.shipLimit-docks.ships.size) * config.loadout.shipCapacity, a)));
@@ -100,7 +104,7 @@ public class LoadoutManager extends Command {
                 result = main.pushSession(caller, session -> {
                     StringBuilder sb = new StringBuilder();
                     for(Item item : items) {
-                        int am = Math.max(a, core.items.get(item));
+                        int am = Math.min(a, core.items.get(item));
                         sb.append(db.loadout.stackToString(item, am)).append(" ");
                         core.items.remove(item, am);
                         db.loadout.inc(item, am);
@@ -124,7 +128,7 @@ public class LoadoutManager extends Command {
             }
         }
 
-        for(String s : raw.split("-")) {
+        for(String s : raw.split("/")) {
             try {
                 Field f = Items.class.getField(s);
                 items.add((Item) f.get(null));

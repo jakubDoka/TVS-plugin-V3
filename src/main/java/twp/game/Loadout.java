@@ -13,6 +13,8 @@ import twp.tools.Logging;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
+import static twp.Main.testMode;
+
 public class Loadout {
 
     public HashMap<String, String> itemIcons = new HashMap<String, String>(){{
@@ -70,6 +72,8 @@ public class Loadout {
     }
 
     public static CoreBlock.CoreBuild core() {
+        if(testMode) return null;
+
         return Vars.state.teams.get(Team.sharded).core();
     }
 
@@ -83,11 +87,15 @@ public class Loadout {
         return res;
     }
 
+    public void set(Item i, long amount) {
+        data.updateOne(new Document(), Updates.set(i.name, amount));
+    }
+
     public boolean hes(Item i, long amount) {
         return amount(i) >= amount;
     }
 
     public void inc(Item i, long amount) {
-        data.updateOne(null, Updates.inc(i.name, amount));
+        data.updateOne(new Document(), Updates.inc(i.name, amount));
     }
 }

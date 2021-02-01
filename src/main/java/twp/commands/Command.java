@@ -153,6 +153,7 @@ public abstract class Command {
                 lock1.lock();
 
                 try {
+                    result = Result.success;
                     Command.this.run("", ctx.args);
                     if (run != null) {
                         run.run(ctx, Command.this);

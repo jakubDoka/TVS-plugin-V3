@@ -1,14 +1,20 @@
 package twp.game;
 
 import arc.struct.Seq;
+import arc.util.Log;
 import twp.database.PD;
 import twp.democracy.Hud;
 
-import static twp.Main.config;
+import static twp.Main.*;
 import static twp.tools.Text.secToTime;
 
 public class Docks implements Hud.Displayable {
     public Seq<Ship> ships = new Seq<>();
+
+    public void use(Ship ship) {
+        queue.post(() -> ships.add(ship));
+        if(testMode) queue.run();
+    }
 
     public boolean canUse() {
        return ships.size < config.shipLimit;
@@ -17,13 +23,13 @@ public class Docks implements Hud.Displayable {
     @Override
     public String getMessage(PD pd) {
         StringBuilder sb = new StringBuilder();
-        ships.forEach(s -> {
-            sb.append(s.string());
-        });
+        ships.forEach(s -> sb.append(s.string()));
 
         if(sb.length() == 0) {
-            return null;
+            return "";
         }
+
+        sb.append("\n");
 
         return sb.toString();
     }
@@ -34,9 +40,9 @@ public class Docks implements Hud.Displayable {
             s.time--;
             if(s.time <= 0) {
                 s.onDelivery.run();
-                return false;
+                return true;
             }
-            return true;
+            return false;
         });
     }
 

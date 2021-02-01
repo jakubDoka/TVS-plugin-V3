@@ -10,8 +10,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static twp.Main.db;
-import static twp.Main.hud;
+import static twp.Main.*;
 
 // Voting handles all of the vote sessions
 public class Voting {
@@ -22,7 +21,7 @@ public class Voting {
     public Perm protection;
     public Stat increase;
 
-    public Voting(Command parent, String name, int maxVotes, int minVotes) {
+    public Voting(Command parent, String name, int minVotes , int maxVotes) {
         this.name = name;
         this.parent = parent;
         this.maxVotes = maxVotes;
@@ -168,7 +167,7 @@ public class Voting {
 
             int major = s.voting.getMajority();
 
-            if(s.yes >= major || s.no >= major) {
+            if(s.yes >= major || s.no >= major || testMode) {
                 s.spacial = true;
                 s.run();
                 sessions.remove(s);

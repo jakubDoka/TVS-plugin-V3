@@ -3,6 +3,9 @@ package twp.commands.tests;
 import arc.Events;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Updates;
+import mindustry.Vars;
+import mindustry.content.Items;
+import mindustry.core.ContentLoader;
 import mindustry.game.EventType;
 import org.bson.Document;
 import twp.Main;
@@ -13,6 +16,9 @@ import static twp.Main.db;
 
 public class Test {
     public static void init() {
+        Vars.content = new ContentLoader();
+        new Items().load();
+
         new Main();
         Main.testMode = true;
         Events.fire(new EventType.ServerLoadEvent());
