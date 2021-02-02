@@ -61,7 +61,7 @@ public abstract class Command {
     }
 
     // for registration of commandline commands
-    public void registerCmp(CommandHandler handler, TerminalCommandRunner runner) {
+    public void registerTm(CommandHandler handler, TerminalCommandRunner runner) {
         freeAccess = true;
         Cons<String[]> func = (args) -> new Thread(() -> {
             lock1.lock();

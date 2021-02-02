@@ -63,17 +63,17 @@ public class Main extends Plugin {
     @Override
     public void registerServerCommands(CommandHandler handler) {
         Main.handler = handler;
-        RankSetter.terminal.registerCmp(handler, null);
+        RankSetter.terminal.registerTm(handler, null);
 
-        Searcher.terminal.registerCmp(handler, null);
+        Searcher.terminal.registerTm(handler, null);
 
-        DBSetter.terminal.registerCmp(handler, null);
+        DBSetter.terminal.registerTm(handler, null);
 
-        MapManager.terminal.registerCmp(handler, null);
+        MapManager.terminal.registerTm(handler, null);
 
-        MapChanger.terminal.registerCmp(handler, null);
+        MapChanger.terminal.registerTm(handler, null);
 
-        Informer.general.registerCmp(handler, null);
+        Informer.general.registerTm(handler, null);
 
         handler.removeCommand("exit");
         handler.register("exit", "Exit the server application.", arg -> {
@@ -119,7 +119,7 @@ public class Main extends Plugin {
             Log.info("reloaded");
         });
 
-        Deferrer.terminal.registerCmp(handler, null);
+        Deferrer.terminal.registerTm(handler, null);
 
         serverHandler = handler;
     }
