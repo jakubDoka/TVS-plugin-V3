@@ -3,8 +3,8 @@
 ## Contribution
 
 I would really welcome some lively contributor that would push plugin forward because I am burn-out. 
-You can improve anything you want as long as your code is maintainable and straight forward. As my motto is 
-`newer write things twice` the code is from some aspects decently complicated so lets go over it.
+You can improve anything you want as long as your code is maintainable and straight forward. My motto is 
+`newer write things twice` so be ready for obscure java abstraction.
 
 ## Command structure
 
