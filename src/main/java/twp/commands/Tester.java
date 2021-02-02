@@ -36,7 +36,7 @@ public class Tester extends Command{
         }
 
         if(args.length > 0 && !tests.containsKey(id)){
-            result = Result.wrongOption;
+            result = Result.notFound;
             return;
         }
 

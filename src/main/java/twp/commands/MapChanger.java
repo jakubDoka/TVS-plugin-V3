@@ -26,12 +26,14 @@ public class MapChanger extends Command {
 
     public MapChanger() {
         name = "map";
-        argStruct = "<change/list> [id/page]";
+        argStruct = "<change/list/rate> [id/page]";
         description = "allows changing and rating maps, also can show list of maps";
     }
 
     @Override
     public void run(String id, String... args) {
+        if (wrongOption(0, args, "change list rate"))
+
         switch (args[0]) {
             case "list":
                 int page = 1;
@@ -111,8 +113,6 @@ public class MapChanger extends Command {
                 setArg(rating);
                 result = Result.rateSuccess;
                 return;
-            default:
-                result = Result.wrongOption;
         }
     }
 

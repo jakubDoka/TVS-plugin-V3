@@ -31,6 +31,8 @@ public class Deferrer extends Command {
 
     @Override
     public void run(String id, String... args){
+        if(wrongOption(0, args, "recover stop exit")) return;
+
         switch (args[0]) {
             case "recover":
                 deferredCall = null;
@@ -42,9 +44,6 @@ public class Deferrer extends Command {
                     serverHandler.handleMessage(args[0]);
                 };
                 break;
-            default:
-                result = Result.wrongOption;
-                return;
         }
 
         queue.post(() -> hud.sendMessage("deferrer-closing", new Object[0], 30, "grey", "red"));

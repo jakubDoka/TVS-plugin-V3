@@ -63,7 +63,7 @@ public class VoteKick extends Command {
             result = main.pushSession(pd, s -> {
                 RankSetter.terminal.run("", args[0], "griefer");
             }, account.getName(), account.getId(), "[red]griefer[]");
-        } else if(args[1].equals("unmark")) {
+        } else if(!wrongOption(1, args, "unmark")) {
             if (!account.isGriefer()) {
                 return;
             }
@@ -71,8 +71,6 @@ public class VoteKick extends Command {
             result = main.pushSession(pd, s -> {
                 RankSetter.terminal.run("", args[0], "newcomer");
             }, account.getName(), account.getId(), "[green]newcomer[]");
-        } else {
-            result = Result.wrongOption;
         }
     }
 

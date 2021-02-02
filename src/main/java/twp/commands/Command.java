@@ -9,6 +9,10 @@ import mindustry.gen.Player;
 import twp.discord.Handler;
 import twp.tools.Logging;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
 
@@ -226,6 +230,33 @@ public abstract class Command {
         return false;
     }
 
+    public boolean wrongOption(int idx, String[] args, String options) {
+        return wrongOption(idx, args, Arrays.asList(options.split(" ")), null);
+    }
+
+    public boolean wrongOption(int idx, String[] args, List<String> options) {
+        return wrongOption(idx, args, options, null);
+    }
+
+    public boolean wrongOption(int idx, String[] args, List<String> options, String raw) {
+        if(options == null) {
+            result = Result.wrongOption;
+            setArg(idx, raw);
+            return false;
+        } else if(!options.contains(args[idx])) {
+            result = Result.wrongOption;
+            if(raw == null) {
+                StringBuilder sb = new StringBuilder();
+                options.forEach(e -> sb.append(e).append(" "));
+                raw = sb.toString();
+            }
+            setArg(idx, raw);
+            return true;
+        }
+
+        return false;
+    }
+
     // Used for testing commands
     public void assertResult(Result supposed) {
         try{
@@ -267,7 +298,6 @@ public abstract class Command {
         noPerm,
         wrongRank,
         wrongAccess,
-        wrongOption,
         unprotectSuccess,
         alreadyProtected,
         confirm,
@@ -310,8 +340,9 @@ public abstract class Command {
         invalidVoteSession(true),
         voteSuccess(true),
         alreadyVoted(true),
+        wrongOption(true),
 
-        none, rateSuccess, info, stats, fail;
+        none, rateSuccess, info, stats, fail, invalidSearch;
 
         boolean general;
 

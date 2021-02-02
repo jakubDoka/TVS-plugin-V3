@@ -26,6 +26,8 @@ public class MapManager extends Command {
             return;
         }
 
+        if (wrongOption(0, args, "enable disable add remove update")) return;
+
         if (args[0].equals("add") || args[0].equals("update")) {
             if (!new File(args[1]).exists()) {
                 result = Result.notExist;
@@ -102,9 +104,6 @@ public class MapManager extends Command {
                     db.maps.deleteMap(mid);
                 }
                 break;
-            default:
-                result = Result.wrongOption;
-                return;
         }
     }
 

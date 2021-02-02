@@ -63,13 +63,13 @@ public class Searcher extends Command {
             RankType rankType = ranks.rankType(args[1]);
             if (rankType == null) {
                 if(!Enums.contains(Stat.class, args[1])) {
-                    setArg(
+                    setArg(1 ,
                             Enums.list(Stat.class),
                             ranks.rankList(RankType.rank),
                             ranks.rankList(RankType.specialRank),
                             ranks.rankList(RankType.donationRank)
                     );
-                    result = Result.wrongOption;
+                    result = Result.invalidSearch; // ok
                     return;
                 }
                 stat = Stat.valueOf(args[1]);

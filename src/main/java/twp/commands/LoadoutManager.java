@@ -1,6 +1,7 @@
 package twp.commands;
 
 import arc.struct.Seq;
+import arc.util.Log;
 import mindustry.Vars;
 import mindustry.content.Items;
 import mindustry.game.Team;
@@ -27,12 +28,33 @@ public class LoadoutManager extends Command {
 
     public LoadoutManager() {
         name = "l";
-        argStruct = "<get/store> <item> <amount>";
+        argStruct = "<get/store/info> [item] [amount]";
         description = "When your core is overflowing with resources you can store them in loadout for later withdrawal.";
     }
 
     @Override
     public void run(String id, String... args) {
+        if(wrongOption(0, args, "info get store")) return;
+
+        if (args.length == 1 && args[0].equals("info")) {
+            StringBuilder sb = new StringBuilder();
+            if(testMode || caller == null) {
+                for(Item i : db.loadout.items.values()) {
+                    sb.append(i.name).append(": ").append(db.loadout.amount(i)).append("\n");
+                }
+                Log.info(sb.toString());
+            } else {
+                for(Item i : db.loadout.items.values()) {
+                    sb.append(db.loadout.amount(i)).append(db.loadout.itemIcons.get(i.name)).append("\n");
+                }
+                caller.sendInfoMessage("l-info", sb.toString());
+            }
+            result = Result.none;
+            return;
+        } else if(checkArgCount(args.length, 3)) {
+            return;
+        }
+
         if(isNotInteger(args, 2)) {
             return;
         }
@@ -110,10 +132,8 @@ public class LoadoutManager extends Command {
                         db.loadout.inc(item, am);
                     }
                     hud.sendMessage("l-itemSend", new Object[]{sb.toString()}, 10, "white");
-                }, a, s.toString());
+                }, a + s.toString());
                 break;
-            default:
-                result = Result.wrongOption;
         }
     }
 

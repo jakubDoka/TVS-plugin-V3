@@ -63,8 +63,8 @@ public class DBSetter extends Command {
         Object field = db.handler.get(i, args[1]);
 
         if(field == null) {
-            setArg(doc.fieldList());
-            result = Result.wrongOption;
+            setArg(1, doc.fieldList());
+            result = Result.wrongOption; // ok
             return;
         }
 

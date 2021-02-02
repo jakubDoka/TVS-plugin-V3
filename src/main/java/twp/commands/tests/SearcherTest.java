@@ -65,6 +65,6 @@ class SearcherTest extends Test {
         Searcher.terminal.assertResult(Command.Result.invalidSlice);
 
         Searcher.terminal.run("", "none", "sjhsd");
-        Searcher.terminal.assertResult(Command.Result.wrongOption);
+        Searcher.terminal.assertResult(Command.Result.invalidSearch);
     }
 }
