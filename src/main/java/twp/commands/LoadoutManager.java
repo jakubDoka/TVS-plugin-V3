@@ -1,27 +1,25 @@
 package twp.commands;
 
-import arc.struct.Seq;
-import arc.util.Log;
-import mindustry.Vars;
-import mindustry.content.Items;
-import mindustry.game.Team;
-import mindustry.game.Teams;
-import mindustry.type.Item;
-import mindustry.type.ItemStack;
-import mindustry.world.blocks.storage.CoreBlock;
-import twp.database.enums.Perm;
-import twp.database.enums.Stat;
-import twp.democracy.Voting;
-import twp.game.Docks;
-import twp.game.Loadout;
+import arc.struct.*;
+import arc.util.*;
+import mindustry.content.*;
+import mindustry.type.*;
+import mindustry.world.blocks.storage.*;
+import twp.database.enums.*;
+import twp.democracy.*;
+import twp.game.*;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.*;
 
 import static twp.Main.*;
 
 public class LoadoutManager extends Command {
 
-    public Voting main = new Voting(this, "main", 2, 4){{
+    public Voting store = new Voting(this, "store", 2, 4){{
+        protection = Perm.loadout;
+        increase = Stat.loadoutVotes;
+    }};
+    public Voting get = new Voting(this, "get", 2, 3) {{
         protection = Perm.loadout;
         increase = Stat.loadoutVotes;
     }};
@@ -80,7 +78,7 @@ public class LoadoutManager extends Command {
                     result = Result.redundant;
                     return;
                 }
-                result = main.pushSession(caller, session -> {
+                result = get.pushSession(caller, session -> {
                     int amount = a;
                     while (amount != 0) {
                         if(!docks.canUse()) {
@@ -109,7 +107,7 @@ public class LoadoutManager extends Command {
                             docks.use(new Docks.Ship("returning", () -> {}, config.loadout.shipTravelTime));
                         }, config.loadout.shipTravelTime));
                     }
-                }, db.loadout.stackToString(i, Math.max((config.shipLimit-docks.ships.size) * config.loadout.shipCapacity, a)));
+                }, db.loadout.stackToString(i, Math.min((config.shipLimit-docks.ships.size) * config.loadout.shipCapacity, a)));
                 break;
             case "store":
                 CoreBlock.CoreBuild core = Loadout.core();
@@ -123,7 +121,7 @@ public class LoadoutManager extends Command {
                     s.append(db.loadout.itemIcons.get(item.name));
                 }
 
-                result = main.pushSession(caller, session -> {
+                result = store.pushSession(caller, session -> {
                     StringBuilder sb = new StringBuilder();
                     for(Item item : items) {
                         int am = Math.min(a, core.items.get(item));

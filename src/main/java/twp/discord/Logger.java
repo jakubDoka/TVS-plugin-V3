@@ -8,7 +8,8 @@ import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.MessageAuthor;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
-import twp.database.PD;
+import twp.database.*;
+import twp.database.enums.*;
 import twp.tools.Logging;
 
 import static twp.Main.bot;
@@ -16,9 +17,6 @@ import static twp.Main.db;
 import static twp.discord.Bot.Channels.*;
 
 public class Logger implements MessageCreateListener {
-    TextChannel chn;
-    Channel curr;
-
     public Logger(Bot bot) {
         TextChannel chn1 = bot.Channel(commandLog);
         if (chn1 != null) {
@@ -47,14 +45,25 @@ public class Logger implements MessageCreateListener {
         if(at.isBotUser()) {
             return;
         }
-        curr = event.getChannel();
-        chn = bot.Channel(liveChat);
-        if (is()) {
+        Channel curr = event.getChannel();
+        TextChannel chn = bot.Channel(liveChat);
+        if (chn != null && chn.getId() == curr.getId()) {
             db.online.forEachValue(iter -> iter.next().sendDiscordMessage(event.getMessageContent(), at.getName()));
         }
     }
 
-    boolean is() {
-        return chn != null && chn.getId() == curr.getId();
+    public void logRankChange(long id, Rank rank, String comment) {
+        TextChannel chn = bot.Channel(rankLog);
+        Account ac = db.handler.getAccount(id);
+        if (chn != null && ac != null){
+            chn.sendMessage(String.format(
+                "player:**%s**(id:%d)\nchange: %s -> %s\nreason: %s",
+                ac.getName(),
+                id,
+                ac.getRank(RankType.rank).getSuffix(),
+                rank.getSuffix(),
+                comment
+            ));
+        }
     }
 }

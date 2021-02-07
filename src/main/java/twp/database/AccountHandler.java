@@ -16,7 +16,7 @@ import org.bson.conversions.Bson;
 
 
 import static com.mongodb.client.model.Filters.and;
-import static twp.Main.ranks;
+import static twp.Main.*;
 
 // Manages data about players, mainly modifies the accounts
 public class AccountHandler extends Handler {
@@ -105,6 +105,13 @@ public class AccountHandler extends Handler {
     }
 
     public void setRank(long id, Rank rank, RankType type) {
+        setRank(id, rank, type, null);
+    }
+
+    public void setRank(long id, Rank rank, RankType type, String comment) {
+        if (type == RankType.rank && comment != null) {
+            bot.log.logRankChange(id, rank, comment);
+        }
         data.updateOne(idFilter(id), Updates.set(type.name(), rank.name));
     }
 
@@ -176,7 +183,7 @@ public class AccountHandler extends Handler {
         }
         setUuid(id, uuid);
         setIp(id, ip);
-        setRank(id, ranks.newcomer, RankType.rank);
+        setRank(id, ranks.newcomer, RankType.rank, null);
         setStat(id, Stat.age, Time.millis());
 
         return getAccount(id);

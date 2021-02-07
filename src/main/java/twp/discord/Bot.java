@@ -82,6 +82,7 @@ public class Bot {
     enum Channels {
         liveChat,
         commandLog,
-        commands
+        commands,
+        rankLog,
     }
 }
