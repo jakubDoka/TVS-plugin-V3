@@ -179,7 +179,12 @@ public class Main extends Plugin {
         }
 
         public synchronized void run() {
-            q.forEach(Runnable::run);
+            try{
+                q.forEach(Runnable::run);
+            } catch(Exception e) {
+                Logging.log(e);
+            }
+
             q.clear();
         }
     }
