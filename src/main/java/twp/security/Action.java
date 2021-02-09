@@ -71,7 +71,7 @@ public abstract class Action {
                     return null;
                 }
 
-                if(b == Blocks.air) {
+                if(b == Blocks.air || act.tile.build == null) {
                     break;
                 }
 

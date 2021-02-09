@@ -21,8 +21,6 @@ import static twp.Main.*;
 // Command is base class of any command and contains utility for making commands bit more cleaner and organised
 // One good advice, dont write your game in java... newer.
 public abstract class Command {
-    private static final ReentrantLock lock1 = new ReentrantLock();
-
     public boolean freeAccess;
     Verifier verifier = (id) -> true;
     // constant
@@ -63,22 +61,17 @@ public abstract class Command {
     // for registration of commandline commands
     public void registerTm(CommandHandler handler, TerminalCommandRunner runner) {
         freeAccess = true;
-        Cons<String[]> func = (args) -> new Thread(() -> {
-            lock1.lock();
-
+        Cons<String[]> func = (args) -> {
             try {
                 result = Result.success;
                 run("", args);
-                queue.post(() -> {
-                    if (runner != null) {
-                        runner.run(this);
-                    } else {
-                        notifyCaller();
-                    }
-                });
+                if (runner != null) {
+                    runner.run(this);
+                } else {
+                    notifyCaller();
+                }
             } catch (Exception ex) {
                 result = Result.bug;
-                // fucking java and deadlocks
                 try {
                     notifyCaller();
                 } catch (Exception e) {
@@ -86,9 +79,7 @@ public abstract class Command {
                 }
                 Logging.log(ex);
             }
-
-            lock1.unlock();
-        }).start();
+        };
 
         if (argStruct == null) {
             handler.register(name, description, func);
@@ -99,7 +90,7 @@ public abstract class Command {
 
     // For registration of in-game commands
     public void registerGm(CommandHandler handler, PlayerCommandRunner runner) {
-        CommandHandler.CommandRunner<Player> run = (args, player) -> new Thread(() -> {
+        CommandHandler.CommandRunner<Player> run = (args, player) -> {
             PD pd = db.online.get(player.uuid());
 
             if(pd == null) {
@@ -109,20 +100,16 @@ public abstract class Command {
                 return;
             }
 
-            lock1.lock();
             caller = pd;
 
             try {
                 result = Result.success;
                 run(player.uuid(), args);
-
-                queue.post(() -> {
-                    if (runner != null) {
-                        runner.run(this, pd);
-                    } else {
-                        notifyCaller();
-                    }
-                });
+                if (runner != null) {
+                    runner.run(this, pd);
+                } else {
+                    notifyCaller();
+                }
             } catch (Exception ex) {
                 result = Result.bug;
                 // fucking java and deadlocks
@@ -133,11 +120,7 @@ public abstract class Command {
                 }
                 Logging.log(ex);
             }
-
-
-
-            lock1.unlock();
-        }).start();
+        };
 
         if (argStruct == null) {
             handler.register(name, description, run);
@@ -154,22 +137,19 @@ public abstract class Command {
             }
             @Override
             public void run(Handler.Context ctx) {
-                lock1.lock();
-
-                try {
-                    result = Result.success;
-                    Command.this.run("", ctx.args);
-                    if (run != null) {
-                        run.run(ctx, Command.this);
-                    } else {
-                        ctx.reply(getMessage(), Command.this.arg);
+                queue.post(() -> {
+                    try {
+                        result = Result.success;
+                        Command.this.run("", ctx.args);
+                        if (run != null) {
+                            run.run(ctx, Command.this);
+                        } else {
+                            ctx.reply(getMessage(), Command.this.arg);
+                        }
+                    } catch (Exception e) {
+                        ctx.reply("discord-internalError", ExceptionUtils.readStackTrace(e));
                     }
-                } catch (Exception e) {
-                    lock1.unlock(); // fuck deadlocks
-                    ctx.reply("discord-internalError", ExceptionUtils.readStackTrace(e));
-                    return;
-                }
-                lock1.unlock();
+                });
             }
         });
     }
@@ -206,9 +186,11 @@ public abstract class Command {
     // creates string of information about online players
     public String listPlayers() {
         StringBuilder sb = new StringBuilder();
-        db.online.forEachValue(iter -> {
-            sb.append(iter.next().summarize()).append("\n");
-        });
+
+        for(PD pd : db.online.values()) {
+            sb.append(pd.summarize()).append("\n");
+        }
+
         return sb.substring(0, sb.length() -1);
     }
 

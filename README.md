@@ -20,7 +20,7 @@ read the remaining part.
 When you override abstract function `run` keep in mind that all logic is on a separate thread. When 
 you are manipulating with game state you have to use `Main.queue` to push it to main thread. Interaction with 
 database ,anything under `Main.db`, can be executed concurrently as mongo db is ok with that and there is a lot 
-of synchronized staff too. If you have suspicions that code can cause data-races fix or report it immediately as i 
+of  staff too. If you have suspicions that code can cause data-races fix or report it immediately as i 
 could forget about something (java is messy). 
 
 ### resolving

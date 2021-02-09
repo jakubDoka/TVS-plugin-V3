@@ -7,6 +7,7 @@ import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.Message;
 import org.junit.platform.commons.util.*;
 import twp.*;
+import twp.database.*;
 
 import java.io.*;
 import java.sql.*;
@@ -41,9 +42,9 @@ public class Logging {
     }
 
     public static void sendMessage(String key, Object ...args) {
-        db.online.forEachValue(pd -> {
-            pd.next().sendServerMessage(key, args);
-        });
+        for(PD pd : db.online.values()) {
+            pd.sendServerMessage(key, args);
+        }
     }
 
     public static void log(Runnable run) {

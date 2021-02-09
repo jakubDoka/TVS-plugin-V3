@@ -50,7 +50,7 @@ public class RankSetter extends Command {
         // setting arguments to show change
         setArg(data.getRank(RankType.rank).getSuffix(), rank.getSuffix());
 
-        db.handler.setRank(data.getId(), rank, RankType.rank, args[2]);
+        db.handler.setRank(data.getId(), rank, RankType.rank, (args.length > 2) ? args[2] : "reason not provided");
 
         // if player is online kick him. I do not want to deal with bag prone code to change his rank manually.
         PD pd = db.online.get(data.getUuid());

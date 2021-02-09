@@ -74,13 +74,12 @@ public class MapChanger extends Command {
                     return;
                 }
 
-                queue.post(() -> {
-                    if (caller != null) {
-                        main.pushSession(caller, s -> changeMap(map), map.name());
-                    } else {
-                        changeMap(map);
-                    }
-                });
+
+                if (caller != null) {
+                    main.pushSession(caller, s -> changeMap(map), map.name());
+                } else {
+                    changeMap(map);
+                }
 
                 result = Result.none;
                 return;
@@ -112,7 +111,6 @@ public class MapChanger extends Command {
 
                 setArg(rating);
                 result = Result.rateSuccess;
-                return;
         }
     }
 

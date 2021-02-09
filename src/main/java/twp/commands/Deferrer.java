@@ -22,7 +22,9 @@ public class Deferrer extends Command {
             initialized = true;
             Logging.on(EventType.GameOverEvent.class, e -> {
                 if (deferredCall != null) {
-                    db.online.forEachValue(pd -> pd.next().kick("kick-custom", 0, reason));
+                    for(PD pd : db.online.values()) {
+                        pd.kick("kick-custom", 0, reason);
+                    }
                     deferredCall.run();
                 }
             });
@@ -46,7 +48,7 @@ public class Deferrer extends Command {
                 break;
         }
 
-        queue.post(() -> hud.sendMessage("deferrer-closing", new Object[0], 30, "grey", "red"));
+        hud.sendMessage("deferrer-closing", new Object[0], 30, "grey", "red");
     }
 
     public static Deferrer terminal = new Deferrer();

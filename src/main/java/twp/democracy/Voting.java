@@ -21,7 +21,7 @@ public class Voting {
     public Perm protection;
     public Stat increase;
 
-    public Voting(Command parent, String name, int minVotes , int maxVotes) {
+    public Voting(Command parent, String name, int minVotes, int maxVotes) {
         this.name = name;
         this.parent = parent;
         this.maxVotes = maxVotes;
@@ -30,11 +30,11 @@ public class Voting {
 
     int getMajority() {
         AtomicInteger counter = new AtomicInteger();
-        db.online.forEachValue(iter -> {
-            if(iter.next().canParticipate()) {
+        for(PD pd : db.online.values()) {
+            if(pd.canParticipate()) {
                 counter.getAndIncrement();
             }
-        });
+        }
 
         int count = counter.get();
 
@@ -69,7 +69,7 @@ public class Voting {
     }
 
     public void revolve(Session session) {
-        // session is always special at the end
+        // session is always special at the end unless time runs out
         if(session.spacial && session.yes > session.no) {
             if(increase != null) {
                 db.handler.inc(session.owner, increase, 1);
@@ -122,7 +122,7 @@ public class Voting {
     public static class Processor implements Hud.Displayable {
         ArrayList<Session> sessions = new ArrayList<>();
 
-        public synchronized int query(Query con) {
+        public int query(Query con) {
             int i = 0;
             for(Session s : sessions) {
                 if(con.get(s)) {
@@ -133,7 +133,7 @@ public class Voting {
             return -1;
         }
 
-        public synchronized boolean isVoting(long id) {
+        public boolean isVoting(long id) {
             for(Session s : sessions) {
                 if(s.owner == id) {
                     return true;
@@ -142,11 +142,11 @@ public class Voting {
             return false;
         }
 
-        public synchronized void addSession(Session session) {
+        public void addSession(Session session) {
             sessions.add(session);
         }
 
-        public synchronized Command.Result addVote(int idx, long id, String vote) {
+        public Command.Result addVote(int idx, long id, String vote) {
             if(sessions.size() <= idx) {
                 return Command.Result.invalidVoteSession;
             }
@@ -176,12 +176,12 @@ public class Voting {
             return Command.Result.voteSuccess;
         }
 
-        synchronized void addVote(long id) {
+         void addVote(long id) {
             addVote(sessions.size() - 1, id, "y");
         }
 
         @Override
-        public synchronized String getMessage(PD pd) {
+        public  String getMessage(PD pd) {
             StringBuilder sb = new StringBuilder();
             int i = 0;
 

@@ -35,9 +35,8 @@ public class Hud {
             displayable.tick();
         }
 
-        db.online.forEachValue(iter -> {
+        for(Iterator<PD> iter = db.online.values().iterator(); iter.hasNext(); ){
             PD pd = iter.next();
-
             if(pd.isInvalid()) {
                 return;
             }
@@ -71,7 +70,7 @@ public class Hud {
                 Call.setHudText(pd.player.p.con, "[#cbcbcb]" + sb.substring(0, sb.length() - 1));
             }
 
-        });
+        }
 
     }
 

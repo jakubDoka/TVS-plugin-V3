@@ -7,6 +7,7 @@ import arc.struct.Seq;
 import arc.util.CommandHandler;
 import arc.util.Log;
 import arc.util.Timer;
+import com.sun.tools.javac.util.*;
 import twp.bundle.Bundle;
 import twp.democracy.Hud;
 import twp.discord.Bot;
@@ -20,6 +21,9 @@ import mindustry.game.EventType;
 import mindustry.mod.Plugin;
 import twp.tools.*;
 
+
+import java.io.*;
+import java.util.*;
 
 import static arc.util.Log.info;
 import static mindustry.Vars.net;
@@ -174,11 +178,11 @@ public class Main extends Plugin {
 
     public static class Queue {
         Seq<Runnable> q = new Seq<>();
-        public synchronized void post(Runnable r) {
+        public  void post(Runnable r) {
             q.add(r);
         }
 
-        public synchronized void run() {
+        public  void run() {
             try{
                 q.forEach(Runnable::run);
             } catch(Exception e) {
@@ -186,6 +190,36 @@ public class Main extends Plugin {
             }
 
             q.clear();
+        }
+    }
+
+    public static class Network extends HashMap<String, HashSet<String>> {
+        public Network(String filename) throws IOException {
+                BufferedReader reader = new BufferedReader(new FileReader(filename));
+                while(true) {
+                    String line = reader.readLine();
+                    if(line == null) return;
+                    String[] nds = line.split(" ");
+                    HashSet<String> list = computeIfAbsent(nds[0], k -> new HashSet<>());
+                    list.add(nds[1]);
+                }
+        }
+
+        public int getInteractionCountFor(String nodeName) throws NoSuchElementException {
+            HashSet<String> set = get(nodeName);
+            if (set == null) {
+                throw new NoSuchElementException("the network does not contain " + nodeName);
+            }
+            return  set.size();
+        }
+    }
+
+    public static void main(String[] args){
+        try{
+            Network n = new Network("C:\\Users\\jakub\\Documents\\programming\\java\\mindustry_plugins\\TheWorstV3\\test.txt");
+            System.out.println(n.getInteractionCountFor("node1"));
+        } catch(IOException ex) {
+            ex.printStackTrace();
         }
     }
 }

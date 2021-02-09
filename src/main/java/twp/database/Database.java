@@ -62,7 +62,7 @@ public class Database {
     public Loadout loadout;
 
     // online player are here by their ids
-    public SyncMap<String, PD> online = new SyncMap<>();
+    public HashMap<String, PD> online = new HashMap<>();
 
     public Database(){
         Logging.on(EventType.PlayerConnect.class, e-> {
@@ -184,19 +184,19 @@ public class Database {
         return handler.contains(id, "mutes", other);
     }
 
-    public Account findAccount(String target) {
-        PD p = online.find(pd -> {
-            if(pd.isInvalid()) {
-                return false;
+    public Account findAccount(String target){
+        PD p = null;
+        for(PD pd : online.values()){
+            if(!pd.isInvalid() && (pd.player.name.equals(target) || pd.player.p.name.equalsIgnoreCase(target))){
+                p = pd;
             }
-            return pd.player.name.equals(target) || pd.player.p.name.equalsIgnoreCase(target);
-        });
+        }
 
-        if(p != null) {
+        if(p != null){
             return p.getAccount();
         }
 
-        if(Strings.canParsePositiveInt(target)) {
+        if(Strings.canParsePositiveInt(target)){
             return handler.getAccount(Long.parseLong(target));
         }
 
@@ -239,57 +239,5 @@ public class Database {
         }
 
         return String.valueOf(Time.millis());
-    }
-
-
-    public static class SyncMap<K, V> {
-        private final Map<K, V> map = Collections.synchronizedMap(new HashMap<K, V>());
-
-        public synchronized void put(K key, V value) {
-            map.put(key, value);
-        }
-
-        public synchronized V get(K key) {
-            return map.get(key);
-        }
-
-        public synchronized V remove(K key) {
-            return map.remove(key);
-        }
-
-        public synchronized boolean isEmpty() {
-            return map.isEmpty();
-        }
-
-        public synchronized boolean containsKey(K key) {
-            return map.containsKey(key);
-        }
-
-        public synchronized void forEachKey(Cons<Iterator<K>> con) {
-            Iterator<K> iter = map.keySet().iterator();
-            while (iter.hasNext()) {
-                con.get(iter);
-            }
-        }
-
-        public synchronized void forEachValue(Cons<Iterator<V>> con) {
-            Iterator<V> iter = map.values().iterator();
-            while (iter.hasNext()) {
-                con.get(iter);
-            }
-        }
-
-        public synchronized V find(Filter<V> con) {
-            for(V val : map.values()) {
-                if(con.run(val)) {
-                    return val;
-                }
-            }
-            return null;
-        }
-
-        interface Filter<T> {
-            boolean run(T val);
-        }
     }
 }

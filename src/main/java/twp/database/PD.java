@@ -86,19 +86,19 @@ public class PD{
         }
     }
 
-    public synchronized boolean disconnected() {
+    public  boolean disconnected() {
         if(isInvalid()) {
             return false;
         }
         return !player.p.con.isConnected();
     }
 
-    public synchronized void setBundle(ResourceBundle bundle) {
+    public  void setBundle(ResourceBundle bundle) {
         db.handler.set(id, "country", bundle.getLocale().getDisplayCountry());
         this.bundle = bundle;
     }
 
-    public synchronized String translate(String key, Object ...args) {
+    public  String translate(String key, Object ...args) {
         if(bundle != null && bundle.containsKey(key)) {
             return Text.format(bundle.getString(key), args);
         }
@@ -106,7 +106,7 @@ public class PD{
 
     }
 
-    public synchronized void sendServerMessage(String message, Object ... args) {
+    public  void sendServerMessage(String message, Object ... args) {
         if(testMode) {
             Logging.info(message, args);
             return;
@@ -117,7 +117,7 @@ public class PD{
         player.p.sendMessage(prefix + translate(message, args));
     }
 
-    public synchronized void sendDiscordMessage(String message, String sender) {
+    public  void sendDiscordMessage(String message, String sender) {
         if(testMode) {
             Logging.info(message);
             return;
@@ -161,15 +161,15 @@ public class PD{
         return !cannotInteract() && account.getStat(Stat.missedVotesCombo) < config.consideredPassive && !afk;
     }
 
-    public synchronized boolean hasThisPerm(Perm perm) {
+    public  boolean hasThisPerm(Perm perm) {
         return !(paralyzed || !perms.contains(perm));
     }
 
-    public synchronized boolean hasPermLevel(Perm perm) {
+    public  boolean hasPermLevel(Perm perm) {
         return hasPermLevel(perm.value);
     }
 
-    public synchronized boolean hasPermLevel(int level) {
+    public  boolean hasPermLevel(int level) {
         if(paralyzed) return false;
         for(Perm p : perms) {
             if (p.value >= level) return true;
@@ -200,7 +200,7 @@ public class PD{
         return false;
     }
 
-    public synchronized int getHighestPermissionLevel() {
+    public  int getHighestPermissionLevel() {
         int highest = -1;
         for( Perm p : perms) {
             if(p.value > highest) highest = p.value;
@@ -210,38 +210,38 @@ public class PD{
 
 
 
-    public synchronized long getPlayTime() {
+    public  long getPlayTime() {
         return db.handler.getStat(id,Stat.playTime.name()) + Time.timeSinceMillis(joined);
     }
 
-    public synchronized void addRank(Rank rank) {
+    public  void addRank(Rank rank) {
         obtained.add(rank);
         addPerms(rank);
     }
 
-    public synchronized void addPerms(Rank rank) {
+    public  void addPerms(Rank rank) {
         if(rank.permissions == null) return;
         for(String p : rank.permissions) {
             perms.add(Perm.valueOf(p));
         }
     }
 
-    public synchronized void removeRank(Rank rank) {
+    public  void removeRank(Rank rank) {
         obtained.remove(rank);
         for (String s : rank.permissions) {
             perms.remove(Perm.valueOf(s));
         }
     }
 
-    public synchronized boolean hasObtained(Rank r) {
+    public  boolean hasObtained(Rank r) {
         return obtained.contains(r);
     }
 
-    public synchronized void setSpecialRank(Rank r) {
+    public  void setSpecialRank(Rank r) {
         sRank = r;
     }
 
-    public synchronized Rank getSpacialRank() {
+    public  Rank getSpacialRank() {
         return sRank;
     }
 

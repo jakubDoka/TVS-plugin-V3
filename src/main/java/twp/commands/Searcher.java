@@ -6,7 +6,7 @@ import arc.util.Strings;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Sorts;
-import twp.database.Account;
+import twp.database.*;
 import twp.database.enums.RankType;
 import twp.database.enums.Stat;
 import org.bson.Document;
@@ -39,7 +39,9 @@ public class Searcher extends Command {
                 return;
             }
 
-            db.online.forEachValue(iter -> sb.append(iter.next().getAccount().summarize(Stat.playTime)).append("\n"));
+            for(PD pd : db.online.values()) {
+                sb.append(pd.getAccount().summarize(Stat.playTime)).append("\n");
+            }
 
             setArg(sb.toString());
             result = Result.successOnline;

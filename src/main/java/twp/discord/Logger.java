@@ -48,7 +48,9 @@ public class Logger implements MessageCreateListener {
         Channel curr = event.getChannel();
         TextChannel chn = bot.Channel(liveChat);
         if (chn != null && chn.getId() == curr.getId()) {
-            db.online.forEachValue(iter -> iter.next().sendDiscordMessage(event.getMessageContent(), at.getName()));
+            for(PD pd : db.online.values()) {
+                pd.sendDiscordMessage(event.getMessageContent(), at.getName());
+            }
         }
     }
 

@@ -43,15 +43,16 @@ public class Limiter {
         });
 
         // This mostly prevents griefers from shooting
-        Logging.run(EventType.Trigger.update, () -> db.online.forEachValue((iter) -> {
-            PD pd = iter.next();
-            if(pd.isInvalid()){
-                return;
+        Logging.run(EventType.Trigger.update, () -> {
+            for(PD pd : db.online.values()){
+                if(pd.isInvalid()){
+                    return;
+                }
+                if(pd.cannotInteract() && pd.player.p.shooting){
+                    pd.player.p.unit().kill();
+                }
             }
-            if(pd.cannotInteract() && pd.player.p.shooting){
-                pd.player.p.unit().kill();
-            }
-        }));
+        });
 
         Logging.on(EventType.TapEvent.class, e -> {
             DoubleClickData dcd = doubleClicks.get(e.player.uuid());
