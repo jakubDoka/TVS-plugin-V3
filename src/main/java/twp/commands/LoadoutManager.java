@@ -147,10 +147,9 @@ public class LoadoutManager extends Command {
         }
 
         for(String s : raw.split("/")) {
-            try {
-                Field f = Items.class.getField(s);
-                items.add((Item) f.get(null));
-            } catch (Exception ignored) {
+            Item i = db.loadout.items.get(s);
+            if (i != null) {
+                items.add(i);
             }
         }
 
