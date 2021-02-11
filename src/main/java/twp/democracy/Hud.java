@@ -33,7 +33,6 @@ public class Hud {
         for(Displayable displayable : displayable) {
             displayable.tick();
         }
-        Call.sendMessage(shooter.garbage.toString());
         for(Iterator<PD> iter = db.online.values().iterator(); iter.hasNext(); ){
             PD pd = iter.next();
             if(pd.isInvalid()) {
