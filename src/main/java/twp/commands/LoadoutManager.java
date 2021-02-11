@@ -34,9 +34,11 @@ public class LoadoutManager extends Command {
     public void run(String id, String... args) {
         if(wrongOption(0, args, "info get store")) return;
 
+        // handle info
         if (args.length == 1 && args[0].equals("info")) {
+            // format page
             StringBuilder sb = new StringBuilder();
-            if(testMode || caller == null) {
+            if(testMode || caller == null) { // testing stuff
                 for(Item i : db.loadout.items.values()) {
                     sb.append(i.name).append(": ").append(db.loadout.amount(i)).append("\n");
                 }
@@ -66,25 +68,28 @@ public class LoadoutManager extends Command {
             return;
         }
 
-        if(!docks.canUse()) {
-            result = Result.penalty;
-            return;
-        }
-
         switch (args[0]) {
             case "get":
+                if(!docks.canUse()) { // no free ships
+                    result = Result.penalty;
+                    return;
+                }
+
                 Item i = items.first();
-                if(db.loadout.amount(i) == 0) {
+                if(db.loadout.amount(i) == 0) { // useless, nothing to transport
                     result = Result.redundant;
                     return;
                 }
+
                 result = get.pushSession(caller, session -> {
-                    int amount = a;
+                    // to prevent negative values
+                    int amount = Math.min(a, (int)db.loadout.amount(i));
                     while (amount != 0) {
                         if(!docks.canUse()) {
                             break;
                         }
 
+                        // take until possible and avoid negative values
                         int rAmount = amount;
                         if(amount < config.loadout.shipCapacity) {
                             amount = 0;
@@ -93,16 +98,19 @@ public class LoadoutManager extends Command {
                             amount -= rAmount;
                         }
 
+                        // do transaction and formatting
                         String stack = db.loadout.stackToString(i, rAmount);
                         int finalRAmount = rAmount;
                         db.loadout.inc(i, -rAmount);
 
                         docks.use( new Docks.Ship(stack+Docks.Ship.itemsToCore, () -> {
                             CoreBlock.CoreBuild core = Loadout.core();
-                            if(core == null) {
+                            if(core == null) { // all cores gon, ship go bay bay
                                 hud.sendMessage("l-shipIsLost", new Object[]{stack}, 10, "red", "gray");
                                 return;
                             }
+
+                            // do transaction and return
                             core.items.add(i, finalRAmount);
                             docks.use(new Docks.Ship("returning", () -> {}, config.loadout.shipTravelTime));
                         }, config.loadout.shipTravelTime));
@@ -111,17 +119,19 @@ public class LoadoutManager extends Command {
                 break;
             case "store":
                 CoreBlock.CoreBuild core = Loadout.core();
-                if(core == null) {
+                if(core == null) { // no core no resorces
                     result = Result.fail;
                     return;
                 }
 
+                // create icon list
                 StringBuilder s = new StringBuilder();
                 for(Item item : items) {
                     s.append(db.loadout.itemIcons.get(item.name));
                 }
 
                 result = store.pushSession(caller, session -> {
+                    // summarize transport results, do transaction
                     StringBuilder sb = new StringBuilder();
                     for(Item item : items) {
                         int am = Math.min(a, core.items.get(item));
@@ -138,12 +148,10 @@ public class LoadoutManager extends Command {
     public Seq<Item> parseItem(String raw) {
         Seq<Item> items = new Seq<>();
         if(raw.equals("all")) {
-            for (Field f : Items.class.getFields()) {
-                try {
-                    items.add((Item) f.get(null));
-                } catch (Exception ignored) {
-                }
+            for (Item i : db.loadout.items.values()) {
+                items.add(i);
             }
+            return items;
         }
 
         for(String s : raw.split("/")) {

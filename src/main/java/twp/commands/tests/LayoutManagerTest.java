@@ -15,21 +15,21 @@ public class LayoutManagerTest extends Test {
 
         db.online.put("", db.handler.loadData(new DBPlayer()));
         game.caller = db.handler.loadData(new DBPlayer());
-        game.run("", "", "itm", "10");
+        game.run("", "get", "itm", "10");
         game.assertResult(invalidRequest);
 
-        game.run("", "", "copper", "h");
+        game.run("", "get", "copper", "h");
         game.assertResult(notInteger);
 
         docks.ships.size = 3;
-        game.run("", "", "copper", "10");
+        game.run("", "get", "copper", "10");
         game.assertResult(penalty);
 
         docks.ships.size = 0;
         game.run("", "", "copper", "10");
         game.assertResult(wrongOption);
 
-        game.run("", "get", "copper", "10");
+        game.run("", "get", "spore-pod", "10");
         game.assertResult(redundant);
 
         db.loadout.set(Items.coal, 10000);
@@ -37,12 +37,5 @@ public class LayoutManagerTest extends Test {
         game.assertResult(voteStartSuccess);
 
         assertEquals(3, docks.ships.size);
-
-        hud.update();
-        hud.update();
-        hud.update();
-        hud.update();
-
-        assertEquals(0, docks.ships.size);
     }
 }

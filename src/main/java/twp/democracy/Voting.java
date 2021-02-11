@@ -75,8 +75,10 @@ public class Voting {
                 db.handler.inc(session.owner, increase, 1);
             }
             session.runner.run(session);
+            if(testMode) return;
             hud.sendMessage(getMessage(Messages.success), session.args, 10, "green", "gray");
         } else {
+            if(testMode) return;
             hud.sendMessage(getMessage(Messages.fail), session.args, 10, "red", "gray");
         }
     }
