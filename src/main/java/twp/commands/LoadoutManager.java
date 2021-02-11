@@ -10,6 +10,7 @@ import twp.democracy.*;
 import twp.game.*;
 
 import java.lang.reflect.*;
+import java.util.*;
 
 import static twp.Main.*;
 
@@ -165,4 +166,25 @@ public class LoadoutManager extends Command {
     }
 
     public static LoadoutManager game = new LoadoutManager();
+
+    public static void main(String[] args){
+        System.out.println(hasRepetition("aagdjoaskdka", 3));
+    }
+
+    static class IntPtr {
+        int value;
+    }
+
+    static boolean hasRepetition(String s, int amount) {
+        HashMap<Character, IntPtr> map = new HashMap<>();
+        for(int i = 0; i < s.length(); i++) {
+            IntPtr ip = map.computeIfAbsent(s.charAt(i), k -> new IntPtr());
+            ip.value++;
+            if(ip.value >= amount) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

@@ -33,14 +33,15 @@ public class Hud {
         for(Displayable displayable : displayable) {
             displayable.tick();
         }
-        for(Iterator<PD> iter = db.online.values().iterator(); iter.hasNext(); ){
-            PD pd = iter.next();
+        for(String uuid : db.online.keySet()){
+            PD pd = db.online.get(uuid);
             if(pd.isInvalid()) {
                 return;
             }
 
             if(pd.disconnected()) {
-                iter.remove();
+                db.handler.free(pd);
+                db.online.remove(uuid);
             }
 
             if(!db.hasEnabled(pd.id, Setting.hud)) {
