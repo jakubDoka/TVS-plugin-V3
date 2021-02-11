@@ -12,6 +12,8 @@ public class Global {
     public static final String config_dir = dir + "/config";
     public static final String save_dir = config_dir + "/saves";
     public static final String config_file = config_dir + "/config.json";
+    public static final String weapons = config_dir + "/weapons.json";
+    public static final String weaponLinking = config_dir + "/weapon_linking.json";
 
     public static Config loadConfig() {
         Config config = Json.loadJackson(config_file, Config.class);

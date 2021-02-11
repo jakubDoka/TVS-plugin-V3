@@ -21,7 +21,7 @@ public class Handler implements MessageCreateListener {
     TextChannel cur;
     HashMap<String, Command> commands = new HashMap<>();
 
-    public Handler(Bot bot, Loader ...loader) {
+    public Handler(Bot bot, Loader... loader) {
         for(Loader l : loader) {
             l.load(this);
         }

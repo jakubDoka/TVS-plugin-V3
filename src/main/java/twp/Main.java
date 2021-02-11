@@ -8,10 +8,11 @@ import arc.util.CommandHandler;
 import arc.util.Log;
 import arc.util.Timer;
 import com.sun.tools.javac.util.*;
+import mindustry.content.*;
 import twp.bundle.Bundle;
 import twp.democracy.Hud;
 import twp.discord.Bot;
-import twp.game.Docks;
+import twp.game.*;
 import twp.security.Limiter;
 import mindustry.Vars;
 import mindustry.gen.Call;
@@ -41,15 +42,17 @@ public class Main extends Plugin {
     public static CommandHandler handler;
     public static Global.Config config = Global.loadConfig();
     public static Docks docks;
+    public static Shooter shooter;
 
     public Main() {
         Logging.on(EventType.ServerLoadEvent.class, e -> {
             ranks = new Ranks();
             db = new Database();
             lim = new Limiter();
-            bot = new Bot();
+            bot = new Bot(false);
             queue = new Queue();
             docks = new Docks();
+            shooter = new Shooter();
 
             // this has to be last init
             hud = new Hud();
@@ -105,22 +108,41 @@ public class Main extends Plugin {
             }
         });
 
-        handler.register("reload", "<bot/config>", "reloads stuff", (args) -> {
+        handler.register("reload", "<bot/config/weapons>", "reloads stuff", (args) -> {
             switch (args[0]) {
                 case "bot":
                     if (bot != null && bot.api != null) {
                         bot.api.disconnect();
                     }
-                    bot = new Bot();
+                    bot = new Bot(true);
                     break;
                 case "config":
                     config = Global.loadConfig();
+                    break;
+                case "weapons":
+                    shooter.load();
                     break;
                 default:
                     Log.info("wrong option");
                     return;
             }
             Log.info("reloaded");
+        });
+
+        handler.register("content", "<units/bullets/items>", "shows all posible options for game content relevant to plugin config", (args) -> {
+           switch(args[0]) {
+               case "units":
+                   Log.info(Text.listFields(UnitTypes.class));
+                   break;
+               case "bullets":
+                   Log.info(Text.listFields(Bullets.class));
+                   break;
+               case "items":
+                   Log.info(Text.listFields(Items.class));
+                   break;
+               default:
+                   Log.info("wrong option");
+;           }
         });
 
         Deferrer.terminal.registerTm(handler, null);

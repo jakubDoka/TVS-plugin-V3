@@ -82,7 +82,7 @@ public class Logging {
         });
     }
 
-    public static <T> void run(Object event, Runnable listener) {
+    public static void run(Object event, Runnable listener) {
         Events.run(event, () -> {
             try{
                 listener.run();

@@ -1,5 +1,6 @@
 package twp.tools;
 
+import arc.files.*;
 import arc.math.Mathf;
 import mindustry.Vars;
 import mindustry.content.Items;
@@ -117,6 +118,18 @@ public class Text {
             System.out.println(String.format("put(\"%s\", Items.%s);", ((Item)f.get(null)).name, f.getName()));
             idx++;
         }
+    }
+
+    public static NoSuchFieldException formatInvalidField(String what, String name, String command) {
+        return new NoSuchFieldException(String.format("%s with name %s does not exist, use 'content %s' to view options", what, name, command));
+    }
+
+    public static <T> String listFields(Class<T> c) {
+        StringBuilder sb = new StringBuilder();
+        for (Field f : c.getFields()) {
+            sb.append(f.getName()).append(" ");
+        }
+        return  sb.toString();
     }
 
     /*

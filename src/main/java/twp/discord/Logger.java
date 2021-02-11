@@ -1,42 +1,39 @@
 package twp.discord;
 
-import arc.util.Log;
-import mindustry.game.EventType;
-import org.javacord.api.entity.channel.Channel;
-import org.javacord.api.entity.channel.ServerTextChannel;
-import org.javacord.api.entity.channel.TextChannel;
-import org.javacord.api.entity.message.MessageAuthor;
-import org.javacord.api.event.message.MessageCreateEvent;
-import org.javacord.api.listener.message.MessageCreateListener;
+import mindustry.game.*;
+import org.javacord.api.entity.channel.*;
+import org.javacord.api.entity.message.*;
+import org.javacord.api.event.message.*;
+import org.javacord.api.listener.message.*;
 import twp.database.*;
 import twp.database.enums.*;
-import twp.tools.Logging;
+import twp.tools.*;
 
-import static twp.Main.bot;
-import static twp.Main.db;
+import static twp.Main.*;
 import static twp.discord.Bot.Channels.*;
 
 public class Logger implements MessageCreateListener {
-    public Logger(Bot bot) {
-        TextChannel chn1 = bot.Channel(commandLog);
-        if (chn1 != null) {
-            Logging.on(EventType.PlayerChatEvent.class, e -> {
-                if (e.message.startsWith("/") && !e.message.startsWith("/account")) {
-                    PD pd = db.online.get(e.player.uuid());
-                    chn1.sendMessage(Logging.translate("discord-commandLog", pd.player.name, pd.id, pd.rank.name, e.message));
-                }
-            });
-        }
+    public Logger(boolean initialized){
+        if(initialized) return;
+        Logging.on(EventType.PlayerChatEvent.class, e -> {
+            if(bot == null) return;
+            TextChannel chn = bot.Channel(commandLog);
+            if(chn == null) return;
+            if(e.message.startsWith("/") && !e.message.startsWith("/account")){
+                PD pd = db.online.get(e.player.uuid());
+                chn.sendMessage(Logging.translate("discord-commandLog", pd.player.name, pd.id, pd.rank.name, e.message));
+            }
+        });
 
-        TextChannel chn2 = bot.Channel(liveChat);
-        if(chn2 != null) {
-            Logging.on(EventType.PlayerChatEvent.class, e -> {
-                if (!e.message.startsWith("/")) {
-                    PD pd = db.online.get(e.player.uuid());
-                    chn2.sendMessage(Logging.translate("discord-serverMessage",pd.player.name, pd.id, e.message));
-                }
-            });
-        }
+        Logging.on(EventType.PlayerChatEvent.class, e -> {
+            if(bot == null) return;
+            TextChannel chn = bot.Channel(liveChat);
+            if(chn == null) return;
+            if(!e.message.startsWith("/")){
+                PD pd = db.online.get(e.player.uuid());
+                chn.sendMessage(Logging.translate("discord-serverMessage", pd.player.name, pd.id, e.message));
+            }
+        });
     }
 
     @Override

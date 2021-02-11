@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 // Json loading ans saving logic
 public class Json {
+    // loadHashMap loads a hashmap with given key and also saves optional hashmap parameter
     public static <V> HashMap<String, V> loadHashmap(String filename, Class<V> val, HashMap<String, V> def) {
         ObjectMapper mapper = new ObjectMapper();
         JavaType jt = mapper.getTypeFactory().constructMapLikeType(HashMap.class, String.class, val);

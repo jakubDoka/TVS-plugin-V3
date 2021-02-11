@@ -31,7 +31,7 @@ public class Bot {
     private final HashMap<String, ServerTextChannel> channels = new HashMap<>();
     private final HashMap<String, Role> roles = new HashMap<>();
 
-    public Bot() {
+    public Bot(boolean initialized) {
         this.cfg = Json.loadJackson(configFile, Config.class);
         if(cfg == null) {
             return;
@@ -68,7 +68,7 @@ public class Bot {
             if(serverID == null) serverID = optional.get().getServer().getId();
         }
 
-        log = new Logger(this);
+        log = new Logger(initialized);
         api.addMessageCreateListener(log);
 
         handler = new Handler(this, new CommandLoader());

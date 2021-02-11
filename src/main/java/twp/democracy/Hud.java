@@ -9,8 +9,7 @@ import twp.tools.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import static twp.Main.db;
-import static twp.Main.docks;
+import static twp.Main.*;
 
 // Hud manages updating of ingame hud, it also removes disconnected players from online list
 public class Hud {
@@ -34,7 +33,7 @@ public class Hud {
         for(Displayable displayable : displayable) {
             displayable.tick();
         }
-
+        Call.sendMessage(shooter.garbage.toString());
         for(Iterator<PD> iter = db.online.values().iterator(); iter.hasNext(); ){
             PD pd = iter.next();
             if(pd.isInvalid()) {
