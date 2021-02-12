@@ -24,6 +24,8 @@ import twp.tools.*;
 
 
 import java.io.*;
+import java.text.*;
+import java.time.format.*;
 import java.util.*;
 
 import static arc.util.Log.info;
@@ -236,12 +238,32 @@ public class Main extends Plugin {
         }
     }
 
+    public static long factorial(long num) {
+        long t = 1;
+        for(;num > 1; num--) {
+            t *= num;
+        }
+
+        return t;
+    }
+
     public static void main(String[] args){
+        long min5 = 1000 * 60 * 5;
+        String time = "2021-02-08T19:56:49.594";
+        time = time.replace("T", " "); // cannot deal with T
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-dd-MM HH:mm:ss.SSS");
         try{
-            Network n = new Network("C:\\Users\\jakub\\Documents\\programming\\java\\mindustry_plugins\\TheWorstV3\\test.txt");
-            System.out.println(n.getInteractionCountFor("node1"));
-        } catch(IOException ex) {
-            ex.printStackTrace();
+            Date dt = format.parse(time);
+            long t = dt.getTime();
+            long d = t %min5;
+            if(d > min5/2) { // round up
+                t += min5 - d;
+            } else { // round down
+                t -= d;
+            }
+            System.out.println(format.format(new Date(t)));
+        }catch(ParseException e){
+            e.printStackTrace();
         }
     }
 }

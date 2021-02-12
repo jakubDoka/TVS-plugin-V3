@@ -32,7 +32,7 @@ public class MapChanger extends Command {
 
     @Override
     public void run(String id, String... args) {
-        if (wrongOption(0, args, "change list rate"))
+        if (wrongOption(0, args, "change list rate")) return;
 
         switch (args[0]) {
             case "list":
