@@ -2,3 +2,8 @@ build
 .idea
 .gradle
 config
+bin/main/*
+.settings/*
+.project
+.classpath
+build.bat

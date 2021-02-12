@@ -21,6 +21,7 @@ import twp.tools.Logging;
 import twp.tools.Text;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 import static twp.Main.*;
 
@@ -76,6 +77,10 @@ public class Database {
             bundle.resolveBundle(pd);
 
             if (!pd.cannotInteract()) checkAchievements(pd, handler.getAccount(pd.id));
+        });
+
+        Logging.on(EventType.PlayerLeave.class, e-> {
+            cleanupOnlineList();
         });
 
         Logging.on(EventType.WithdrawEvent.class, e-> {
@@ -239,5 +244,21 @@ public class Database {
         }
 
         return String.valueOf(Time.millis());
+    }
+
+    public void cleanupOnlineList() {
+        for(Iterator<Entry<String, PD>> iter = db.online.entrySet().iterator(); iter.hasNext(); ){
+            PD pd = iter.next().getValue();
+            if(pd.isInvalid()) {
+                iter.remove();
+                continue;
+            }
+            
+            if(pd.disconnected()) {
+                db.handler.free(pd);
+                iter.remove();
+                continue;
+            }
+        }
     }
 }
