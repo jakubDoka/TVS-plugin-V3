@@ -8,18 +8,19 @@ import twp.tools.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map.*;
+
+import java.util.Map.Entry;
 
 import static twp.Main.*;
 
 // Hud manages updating of ingame hud, it also removes disconnected players from online list
 public class Hud {
 
-    ArrayList<Displayable> displayable = new ArrayList<>();
+    ArrayList<Displayable> displayables = new ArrayList<>();
 
     public Hud() {
-        displayable.add(Voting.processor);
-        displayable.add(docks);
+        displayables.add(Voting.processor);
+        displayables.add(docks);
         Logging.on(Main.TickEvent.class, e -> update());
     }
 
@@ -28,50 +29,52 @@ public class Hud {
     }
 
     public void update() {
-        for (Message value : Message.messages) {
-            value.tick();
+
+        for (Iterator<Message> iter = Message.messages.iterator(); iter.hasNext();) {
+            Message message = iter.next();
+            message.tick();
+
+            if (message.counter < 1) {
+                iter.remove();
+            }
         }
-        for(Displayable displayable : displayable) {
+        
+        for(Displayable displayable : displayables) {
             displayable.tick();
         }
-        for(Iterator<Entry<String, PD>> iter = db.online.entrySet().iterator(); iter.hasNext();) {
+
+        for(Iterator<Entry<String, PD>> iter = db.online.entrySet().iterator(); iter.hasNext(); ){
             PD pd = iter.next().getValue();
             if(pd.isInvalid()) {
-                return;
+                iter.remove();
+                continue;
             }
 
             if(pd.disconnected()) {
                 db.handler.free(pd);
                 iter.remove();
+                continue;
             }
 
             if(!db.hasEnabled(pd.id, Setting.hud)) {
                 Call.hideHudText(pd.player.p.con);
-                return;
+                continue;
             }
-            StringBuilder sb = new StringBuilder();
 
-            for(Displayable displayable : displayable) {
+            StringBuilder sb = new StringBuilder();
+            for(Displayable displayable : displayables) {
                 sb.append(displayable.getMessage(pd));
             }
 
-            Iterator<Message> it = Message.messages.iterator();
-            while (it.hasNext()){
-                Message message = it.next();
+            for(Message message : Message.messages) {
                 sb.append(message.getMessage(pd)).append("\n");
-                if (message.counter < 1) {
-                    it.remove();
-                }
             }
-
             if(sb.length() == 0) {
                 Call.hideHudText(pd.player.p.con);
             } else {
                 Call.setHudText(pd.player.p.con, "[#cbcbcb]" + sb.substring(0, sb.length() - 1));
             }
-
         }
-
     }
 
     public interface Displayable {
