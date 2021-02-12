@@ -19,6 +19,8 @@ import static twp.Main.*;
 // Serializing errors and sending messages to cmd is performed from here
 public class Logging {
     static final String outDir = Global.dir + "/errors/";
+    static SimpleDateFormat formatterDate= new SimpleDateFormat("yyyy-MM-dd z");
+    static SimpleDateFormat formatterTime= new SimpleDateFormat("[HH-mm-ss-SSS]");
 
     public static void main(String[] args){
         log("hello");
@@ -57,15 +59,14 @@ public class Logging {
 
     public static void log(Throwable t) {
         String ex = ExceptionUtils.readStackTrace(t);
-        SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH-mm-ss-SSS z");
         Date date = new Date(System.currentTimeMillis());
-        File f = new File(outDir+formatter.format(date));
+        File f = new File(outDir+formatterDate.format(date));
         t.printStackTrace();
         try {
             Json.makeFullPath(f.getAbsolutePath());
             f.createNewFile();
             PrintWriter out = new PrintWriter(f.getAbsolutePath());
-
+            out.println(formatterTime.format(date));
             out.println(ex);
             out.close();
         } catch(IOException e) { e.printStackTrace();}
