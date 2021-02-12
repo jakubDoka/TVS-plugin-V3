@@ -8,6 +8,7 @@ import twp.tools.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map.*;
 
 import static twp.Main.*;
 
@@ -33,15 +34,15 @@ public class Hud {
         for(Displayable displayable : displayable) {
             displayable.tick();
         }
-        for(String uuid : db.online.keySet()){
-            PD pd = db.online.get(uuid);
+        for(Iterator<Entry<String, PD>> iter = db.online.entrySet().iterator(); iter.hasNext();) {
+            PD pd = iter.next().getValue();
             if(pd.isInvalid()) {
                 return;
             }
 
             if(pd.disconnected()) {
                 db.handler.free(pd);
-                db.online.remove(uuid);
+                iter.remove();
             }
 
             if(!db.hasEnabled(pd.id, Setting.hud)) {
