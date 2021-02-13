@@ -64,8 +64,10 @@ public class Logging {
         t.printStackTrace();
         try {
             Json.makeFullPath(f.getAbsolutePath());
-            f.createNewFile();
-            PrintWriter out = new PrintWriter(f.getAbsolutePath());
+            if(!f.exists()) {
+                f.createNewFile();
+            }
+            PrintWriter out = new PrintWriter(new FileOutputStream(f, true));
             out.println(formatterTime.format(date));
             out.println(ex);
             out.close();
