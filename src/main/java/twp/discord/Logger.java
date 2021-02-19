@@ -11,6 +11,7 @@ import twp.tools.*;
 
 import static twp.Main.*;
 import static twp.discord.Bot.Channels.*;
+import static mindustry.Vars.*;
 
 public class Logger implements MessageCreateListener {
     public Logger(boolean initialized){
@@ -33,6 +34,44 @@ public class Logger implements MessageCreateListener {
                 PD pd = db.online.get(e.player.uuid());
                 chn.sendMessage(Logging.translate("discord-serverMessage", pd.player.name, pd.id, e.message));
             }
+        });
+
+        Logging.on(EventType.PlayerJoin.class, e -> {
+            if(bot == null) return;
+            TextChannel chn = bot.Channel(liveChat);
+            if(chn == null) return;
+            if(player == null)  return;
+            PD pd = db.online.get(e.player.uuid());
+            chn.sendMessage(Logging.translate("discord-PlayerJoin", pd.player.name, pd.id));
+        });
+
+        Logging.on(EventType.PlayerLeave.class, e -> {
+            if(bot == null) return;
+            TextChannel chn = bot.Channel(liveChat);
+            if(chn == null) return;
+            if(player == null)  return;
+            PD pd = db.online.get(e.player.uuid());
+            chn.sendMessage(Logging.translate("discord-PlayerLeave", pd.player.name, pd.id));
+        });
+
+        Logging.on(EventType.GameOverEvent.class, e -> {
+            if(bot == null) return;
+            TextChannel chn = bot.Channel(liveChat);
+            if(chn == null) return;
+            if(state == null || state.map == null)  return;
+            String mapname = state.map.name();
+            
+            chn.sendMessage(Logging.translate("discord-GameOverEvent", mapname));
+        });
+
+        Logging.on(EventType.WorldLoadEvent.class, e -> {
+            if(bot == null) return;
+            TextChannel chn = bot.Channel(liveChat);
+            if(chn == null) return;
+            if(state == null || state.map == null)  return;
+            String mapname = state.map.name();
+            
+            chn.sendMessage(Logging.translate("discord-WorldLoadEvent", mapname));
         });
     }
 
