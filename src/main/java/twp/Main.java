@@ -31,7 +31,7 @@ import java.util.*;
 import static arc.util.Log.info;
 import static mindustry.Vars.net;
 
-public class Main extends Plugin {
+public class Main extends Plugin{
     public static Ranks ranks;
     public static Database db;
     public static Limiter lim;
@@ -45,7 +45,7 @@ public class Main extends Plugin {
     public static Global.Config config = Global.loadConfig();
     public static Docks docks;
 
-    public Main() {
+    public Main(){
         Logging.on(EventType.ServerLoadEvent.class, e -> {
             ranks = new Ranks();
             db = new Database();
@@ -56,7 +56,7 @@ public class Main extends Plugin {
 
             // this has to be last init
             hud = new Hud();
-            if(!testMode) {
+            if(!testMode){
                 Timer.schedule(() -> queue.post(() -> Events.fire(new TickEvent())), 0, 1);
             }
         });
@@ -67,7 +67,7 @@ public class Main extends Plugin {
     }
 
     @Override
-    public void registerServerCommands(CommandHandler handler) {
+    public void registerServerCommands(CommandHandler handler){
         Main.handler = handler;
         RankSetter.terminal.registerTm(handler, null);
 
@@ -84,7 +84,7 @@ public class Main extends Plugin {
         handler.removeCommand("exit");
         handler.register("exit", "Exit the server application.", arg -> {
             info("Shutting down server.");
-            if(bot != null && bot.api != null) {
+            if(bot != null && bot.api != null){
                 bot.api.disconnect();
             }
             net.dispose();
@@ -95,7 +95,7 @@ public class Main extends Plugin {
         handler.register("reloadmaps", "Reload all maps from disk.", arg -> {
             int beforeMaps = Vars.maps.all().size;
             Vars.maps.reload();
-            if(db.maps.invalidMaps()) {
+            if(db.maps.invalidMaps()){
                 Logging.info("maps-notValid");
                 Deferrer.terminal.run("", "close");
                 return;
@@ -108,9 +108,9 @@ public class Main extends Plugin {
         });
 
         handler.register("reload", "<bot/config/weapons>", "reloads stuff", (args) -> {
-            switch (args[0]) {
+            switch(args[0]){
                 case "bot":
-                    if (bot != null && bot.api != null) {
+                    if(bot != null && bot.api != null){
                         bot.api.disconnect();
                     }
                     bot = new Bot(true);
@@ -126,7 +126,6 @@ public class Main extends Plugin {
         });
 
 
-
         Deferrer.terminal.registerTm(handler, null);
 
         serverHandler = handler;
@@ -134,7 +133,7 @@ public class Main extends Plugin {
 
     //register commands that player can invoke in-game
     @Override
-    public void registerClientCommands(CommandHandler handler) {
+    public void registerClientCommands(CommandHandler handler){
         handler.removeCommand("vote");
         handler.removeCommand("votekick");
 
@@ -159,7 +158,7 @@ public class Main extends Plugin {
         LoadoutManager.game.registerGm(handler, null);
 
         AccountManager.game.registerGm(handler, (self, pd) -> {
-            switch (self.result){
+            switch(self.result){
                 case loginSuccess:
                 case success:
                     self.kickCaller(0);
@@ -172,78 +171,31 @@ public class Main extends Plugin {
             pd.sendInfoMessage(self.getMessage(), self.arg);
         });
 
-        handler.register("a", "test", (args, player)-> {
+        handler.register("a", "test", (args, player) -> {
             Call.infoPopup("hello", 10, 100, 100, 100, 100, 100);
             Call.infoPopup("hello2", 10, 200, 200, 200, 200, 200);
         });
     }
 
-    public static class TickEvent {}
+    public static class TickEvent{
+    }
 
-    public static class Queue {
+    public static class Queue{
         Seq<Runnable> q = new Seq<>();
-        public  void post(Runnable r) {
+
+        public void post(Runnable r){
             q.add(r);
         }
 
-        public  void run() {
+        public void run(){
             try{
                 q.forEach(Runnable::run);
-            } catch(Exception e) {
+            }catch(Exception e){
                 Logging.log(e);
             }
 
             q.clear();
         }
     }
-
-    public static class Network extends HashMap<String, HashSet<String>> {
-        public Network(String filename) throws IOException {
-                BufferedReader reader = new BufferedReader(new FileReader(filename));
-                while(true) {
-                    String line = reader.readLine();
-                    if(line == null) return;
-                    String[] nds = line.split(" ");
-                    HashSet<String> list = computeIfAbsent(nds[0], k -> new HashSet<>());
-                    list.add(nds[1]);
-                }
-        }
-
-        public int getInteractionCountFor(String nodeName) throws NoSuchElementException {
-            HashSet<String> set = get(nodeName);
-            if (set == null) {
-                throw new NoSuchElementException("the network does not contain " + nodeName);
-            }
-            return  set.size();
-        }
-    }
-
-    public static long factorial(long num) {
-        long t = 1;
-        for(;num > 1; num--) {
-            t *= num;
-        }
-
-        return t;
-    }
-
-    public static void main(String[] args){
-        long min5 = 1000 * 60 * 5;
-        String time = "2021-02-08T19:56:49.594";
-        time = time.replace("T", " "); // cannot deal with T
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-dd-MM HH:mm:ss.SSS");
-        try{
-            Date dt = format.parse(time);
-            long t = dt.getTime();
-            long d = t %min5;
-            if(d > min5/2) { // round up
-                t += min5 - d;
-            } else { // round down
-                t -= d;
-            }
-            System.out.println(format.format(new Date(t)));
-        }catch(ParseException e){
-            e.printStackTrace();
-        }
-    }
 }
+
