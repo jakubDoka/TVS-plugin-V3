@@ -72,7 +72,7 @@ public abstract class Action {
                 }
 
                 if(b == Blocks.air || act.tile.build == null) {
-                    break;
+                    return null;
                 }
 
                 Action action = new Break(b, act.tile.build.config(), act.tile.build.rotation(), act.player.team(), ac);

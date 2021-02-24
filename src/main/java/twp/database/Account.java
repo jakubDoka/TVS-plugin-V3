@@ -65,7 +65,7 @@ public class Account extends Raw {
 
     public Rank getRank(RankType type) {
         String rankName = (String) data.get(type.name());
-        if (rankName == null) {
+        if (rankName == null && type == RankType.rank) {
             // there is some corruption going on so this is needed
             db.handler.setRank(getId(), ranks.newcomer, RankType.rank);
             return ranks.newcomer;

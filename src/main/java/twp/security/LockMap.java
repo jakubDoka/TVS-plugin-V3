@@ -1,17 +1,14 @@
 package twp.security;
 
-import arc.util.Log;
 import mindustry.gen.*;
 import mindustry.net.*;
-import mindustry.net.Administration.*;
 import mindustry.world.*;
-import twp.*;
 import twp.database.*;
 import twp.database.enums.*;
 
-import static twp.Main.*;
-
 import java.util.*;
+
+import static twp.Main.*;
 
 // LockMap saves data about player actions, It is rebuild on start of each game to fit the map
 public class LockMap {

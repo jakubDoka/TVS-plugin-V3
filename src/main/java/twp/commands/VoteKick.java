@@ -9,7 +9,7 @@ import twp.democracy.Voting;
 import static twp.Main.db;
 
 public class VoteKick extends Command {
-    Voting main = new Voting(this, "main", 5, 2) {
+    Voting main = new Voting(this, "main", 2, 5) {
         {
             protection = Perm.antiGrief;
             increase = Stat.mkgfVotes;

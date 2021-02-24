@@ -18,7 +18,7 @@ import static twp.Main.*;
 
 public class MapChanger extends Command {
 
-    Voting main = new Voting(this, "main", 5, 1) {
+    Voting main = new Voting(this, "main", 1, 5) {
         {
             protection = Perm.change;
         }
