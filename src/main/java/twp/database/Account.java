@@ -104,7 +104,7 @@ public class Account extends Raw {
 
         for(int i = 1; i < RankType.values().length; i++) {
             Rank s = getRank(RankType.values()[i]);
-            if (s != ranks.newcomer) {
+            if (s != ranks.error) {
                 os[i+2] = s.getSuffix();
             } else {
                 os[i+2] = "none";
