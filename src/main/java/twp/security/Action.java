@@ -64,19 +64,27 @@ public abstract class Action {
                 break;
             case placeBlock:
                 rr.main = new Place(act.block, act.player.team(), ac);
+                // there is no break in case of replacement
             case breakBlock:
                 Block b = act.tile.block();
-                if (b.name.startsWith("build") || b.name.startsWith("core") ||
-                        act.block.name.startsWith("build") || act.block.name.startsWith("core")) {
-                    return null;
-                }
 
+                // this happens in case of boulders (as they are heavy) and if placeBlock happens on
+                // empty tile
                 if(b == Blocks.air || act.tile.build == null) {
                     if(rr.main != null) {
                         break;
                     }
                     return null;
                 }
+
+                // we cannot destroy core nor build block witch name starts with "block", if we do so
+                // client will crash of game will end
+                if (b.name.startsWith("build") || b.name.startsWith("core") ||
+                        act.block.name.startsWith("build") || act.block.name.startsWith("core")) {
+                    return null;
+                }
+
+
 
                 Action action = new Break(b, act.tile.build.config(), act.tile.build.rotation(), act.player.team(), ac);
 
