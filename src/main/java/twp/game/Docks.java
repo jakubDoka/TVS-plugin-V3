@@ -1,12 +1,12 @@
-package twp.game;
+package main.java.twp.game;
 
 import arc.struct.Seq;
 import arc.util.Log;
-import twp.database.PD;
-import twp.democracy.Hud;
+import main.java.twp.database.PD;
+import main.java.twp.democracy.Hud;
 
-import static twp.Main.*;
-import static twp.tools.Text.secToTime;
+import static main.java.twp.Main.*;
+import static main.java.twp.tools.Text.secToTime;
 
 public class Docks implements Hud.Displayable {
     public Seq<Ship> ships = new Seq<>();
@@ -36,7 +36,7 @@ public class Docks implements Hud.Displayable {
 
     @Override
     public void tick() {
-        ships.eachFilter(s -> {
+        ships.filter(s -> {
             s.time--;
             if(s.time <= 0) {
                 s.onDelivery.run();

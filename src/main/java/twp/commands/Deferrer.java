@@ -1,12 +1,12 @@
-package twp.commands;
+package main.java.twp.commands;
 
 import mindustry.game.*;
-import twp.database.*;
-import twp.democracy.*;
-import twp.tools.*;
+import main.java.twp.database.*;
+import main.java.twp.democracy.*;
+import main.java.twp.tools.*;
 
 
-import static twp.Main.*;
+import static main.java.twp.Main.*;
 
 // sorry but no
 public class Deferrer extends Command {

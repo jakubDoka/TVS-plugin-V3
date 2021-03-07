@@ -1,4 +1,4 @@
-package twp.database.enums;
+package main.java.twp.database.enums;
 
 // player permission enumeration
 public enum Perm {

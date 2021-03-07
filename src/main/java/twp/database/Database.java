@@ -1,4 +1,4 @@
-package twp.database;
+package main.java.twp.database;
 
 import arc.func.Cons;
 import arc.util.*;
@@ -6,24 +6,24 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoClients;
-import twp.database.enums.Perm;
-import twp.database.enums.RankType;
-import twp.database.enums.Setting;
-import twp.database.enums.Stat;
-import twp.database.maps.MapHandler;
-import twp.Global;
+import main.java.twp.database.enums.Perm;
+import main.java.twp.database.enums.RankType;
+import main.java.twp.database.enums.Setting;
+import main.java.twp.database.enums.Stat;
+import main.java.twp.database.maps.MapHandler;
+import main.java.twp.Global;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import org.bson.Document;
-import twp.game.Loadout;
-import twp.tools.Logging;
-import twp.tools.Text;
+import main.java.twp.game.Loadout;
+import main.java.twp.tools.Logging;
+import main.java.twp.tools.Text;
 
 import java.util.*;
 import java.util.Map.Entry;
 
-import static twp.Main.*;
+import static main.java.twp.Main.*;
 
 // Main database interface
 public class Database {

@@ -1,4 +1,4 @@
-package twp.tools;
+package main.java.twp.tools;
 
 import arc.files.*;
 import arc.math.Mathf;
@@ -6,7 +6,7 @@ import mindustry.Vars;
 import mindustry.content.Items;
 import mindustry.core.ContentLoader;
 import mindustry.type.Item;
-import twp.game.Loadout;
+import main.java.twp.game.Loadout;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

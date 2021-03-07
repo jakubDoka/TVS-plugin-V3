@@ -1,16 +1,16 @@
-package twp.democracy;
+package main.java.twp.democracy;
 
 import arc.math.Mathf;
-import twp.commands.Command;
-import twp.database.*;
-import twp.database.enums.Perm;
-import twp.database.enums.Stat;
+import main.java.twp.commands.Command;
+import main.java.twp.database.*;
+import main.java.twp.database.enums.Perm;
+import main.java.twp.database.enums.Stat;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static twp.Main.*;
+import static main.java.twp.Main.*;
 
 // Voting handles all of the vote sessions
 public class Voting {

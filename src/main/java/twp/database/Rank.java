@@ -1,17 +1,17 @@
-package twp.database;
+package main.java.twp.database;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import twp.database.enums.Stat;
+import main.java.twp.database.enums.Stat;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import static twp.Main.db;
-import static twp.Main.ranks;
+import static main.java.twp.Main.db;
+import static main.java.twp.Main.ranks;
 
 // Rank is what ppl has behind their names
 public class Rank implements Serializable {

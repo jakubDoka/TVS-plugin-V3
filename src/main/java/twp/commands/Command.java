@@ -1,13 +1,13 @@
-package twp.commands;
+package main.java.twp.commands;
 
 import arc.func.Cons;
 import arc.util.CommandHandler;
 import arc.util.Strings;
 import org.junit.platform.commons.util.ExceptionUtils;
-import twp.database.PD;
+import main.java.twp.database.PD;
 import mindustry.gen.Player;
-import twp.discord.Handler;
-import twp.tools.Logging;
+import main.java.twp.discord.Handler;
+import main.java.twp.tools.Logging;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
 
-import static twp.Main.*;
+import static main.java.twp.Main.*;
 
 // Command is base class of any command and contains utility for making commands bit more cleaner and organised
 // One good advice, dont write your game in java... newer.

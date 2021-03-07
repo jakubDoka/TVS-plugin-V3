@@ -1,12 +1,12 @@
-package twp.commands;
+package main.java.twp.commands;
 
-import twp.database.Account;
-import twp.database.PD;
-import twp.database.enums.Perm;
-import twp.database.enums.Stat;
-import twp.democracy.Voting;
+import main.java.twp.database.Account;
+import main.java.twp.database.PD;
+import main.java.twp.database.enums.Perm;
+import main.java.twp.database.enums.Stat;
+import main.java.twp.democracy.Voting;
 
-import static twp.Main.db;
+import static main.java.twp.Main.db;
 
 public class VoteKick extends Command {
     Voting main = new Voting(this, "main", 2, 5) {

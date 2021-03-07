@@ -1,4 +1,4 @@
-package twp.security;
+package main.java.twp.security;
 
 import arc.util.Time;
 import arc.util.Timer;
@@ -6,18 +6,18 @@ import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.gen.Player;
 import mindustry.world.Tile;
-import twp.Main;
-import twp.commands.RankSetter;
-import twp.database.PD;
-import twp.database.enums.Perm;
-import twp.tools.Logging;
+import main.java.twp.Main;
+import main.java.twp.commands.RankSetter;
+import main.java.twp.database.PD;
+import main.java.twp.database.enums.Perm;
+import main.java.twp.tools.Logging;
 
 import java.util.HashMap;
 
 import static mindustry.Vars.netServer;
 import static mindustry.net.Administration.ActionType;
 import static mindustry.net.Administration.Config;
-import static twp.Main.*;
+import static main.java.twp.Main.*;
 
 // Limiter restricts player actions and manages instance of LockMap
 public class Limiter {

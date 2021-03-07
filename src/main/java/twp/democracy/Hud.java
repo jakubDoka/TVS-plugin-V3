@@ -1,17 +1,17 @@
-package twp.democracy;
+package main.java.twp.democracy;
 
 import mindustry.gen.Call;
-import twp.Main;
-import twp.database.PD;
-import twp.database.enums.Setting;
-import twp.tools.*;
+import main.java.twp.Main;
+import main.java.twp.database.PD;
+import main.java.twp.database.enums.Setting;
+import main.java.twp.tools.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
 import java.util.Map.Entry;
 
-import static twp.Main.*;
+import static main.java.twp.Main.*;
 
 // Hud manages updating of ingame hud, it also removes disconnected players from online list
 public class Hud {

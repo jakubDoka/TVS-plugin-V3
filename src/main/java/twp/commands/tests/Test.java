@@ -1,4 +1,4 @@
-package twp.commands.tests;
+package main.java.twp.commands.tests;
 
 import arc.Events;
 import com.mongodb.client.MongoCollection;
@@ -8,11 +8,11 @@ import mindustry.content.Items;
 import mindustry.core.ContentLoader;
 import mindustry.game.EventType;
 import org.bson.Document;
-import twp.Main;
+import main.java.twp.Main;
 
 import java.io.IOException;
 
-import static twp.Main.db;
+import static main.java.twp.Main.db;
 
 public class Test {
     public static void init() {

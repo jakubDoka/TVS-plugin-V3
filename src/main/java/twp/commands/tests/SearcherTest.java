@@ -1,12 +1,12 @@
-package twp.commands.tests;
+package main.java.twp.commands.tests;
 
-import twp.database.DBPlayer;
-import twp.database.enums.RankType;
-import twp.commands.Command;
-import twp.commands.Searcher;
+import main.java.twp.database.DBPlayer;
+import main.java.twp.database.enums.RankType;
+import main.java.twp.commands.Command;
+import main.java.twp.commands.Searcher;
 
-import static twp.Main.db;
-import static twp.Main.ranks;
+import static main.java.twp.Main.db;
+import static main.java.twp.Main.ranks;
 
 class SearcherTest extends Test {
     public static void main(String[] args) {

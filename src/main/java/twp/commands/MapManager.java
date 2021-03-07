@@ -1,13 +1,13 @@
-package twp.commands;
+package main.java.twp.commands;
 
 import arc.files.Fi;
-import twp.database.maps.MapData;
-import twp.database.maps.MapHandler;
+import main.java.twp.database.maps.MapData;
+import main.java.twp.database.maps.MapHandler;
 import mindustry.Vars;
 import mindustry.io.MapIO;
 import mindustry.maps.Map;
-import static twp.Main.*;
-import twp.tools.*;
+import static main.java.twp.Main.*;
+import main.java.twp.tools.*;
 
 import java.io.File;
 import java.io.IOException;

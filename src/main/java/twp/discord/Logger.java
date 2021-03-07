@@ -1,16 +1,16 @@
-package twp.discord;
+package main.java.twp.discord;
 
 import mindustry.game.*;
 import org.javacord.api.entity.channel.*;
 import org.javacord.api.entity.message.*;
 import org.javacord.api.event.message.*;
 import org.javacord.api.listener.message.*;
-import twp.database.*;
-import twp.database.enums.*;
-import twp.tools.*;
+import main.java.twp.database.*;
+import main.java.twp.database.enums.*;
+import main.java.twp.tools.*;
 
-import static twp.Main.*;
-import static twp.discord.Bot.Channels.*;
+import static main.java.twp.Main.*;
+import static main.java.twp.discord.Bot.Channels.*;
 
 public class Logger implements MessageCreateListener {
     public Logger(boolean initialized){

@@ -1,11 +1,11 @@
-package twp.commands.tests;
+package main.java.twp.commands.tests;
 
-import twp.commands.*;
-import twp.commands.Command.*;
-import twp.database.*;
-import twp.tools.*;
+import main.java.twp.commands.*;
+import main.java.twp.commands.Command.*;
+import main.java.twp.database.*;
+import main.java.twp.tools.*;
 
-import static twp.Main.db;
+import static main.java.twp.Main.db;
 
 public class TesterTest extends Test {
     public static void main(String[] args){

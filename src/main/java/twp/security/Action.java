@@ -1,4 +1,4 @@
-package twp.security;
+package main.java.twp.security;
 
 import arc.struct.Seq;
 import arc.util.Log;
@@ -16,8 +16,8 @@ import mindustry.world.Block;
 import mindustry.world.Build;
 import mindustry.world.Tile;
 import mindustry.world.blocks.ConstructBlock;
-import twp.Global;
-import twp.Main;
+import main.java.twp.Global;
+import main.java.twp.Main;
 
 import java.util.ArrayList;
 import java.util.HashMap;

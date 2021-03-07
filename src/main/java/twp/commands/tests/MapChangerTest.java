@@ -1,10 +1,10 @@
-package twp.commands.tests;
+package main.java.twp.commands.tests;
 
-import twp.database.DBPlayer;
+import main.java.twp.database.DBPlayer;
 
-import static twp.Main.db;
-import static twp.commands.MapChanger.*;
-import static twp.commands.Command.Result.*;
+import static main.java.twp.Main.db;
+import static main.java.twp.commands.MapChanger.*;
+import static main.java.twp.commands.Command.Result.*;
 
 public class MapChangerTest extends Test {
     // TODO test rate and change in game

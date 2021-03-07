@@ -11,7 +11,7 @@ You can improve anything you want as long as your code is maintainable and strai
 My approach to implementing commands is little different to usual, witch is the most basic use of 
 command handler in a gigantic init function. I have a decent amount of experience with writing plugins and this
 approach is not manageable on TWS scale. When creating command you have to make it its own class that extends 
-`twp.command.Command`. There is no other way you should do this unless the command is used only from terminal
+`main.java.twp.command.Command`. There is no other way you should do this unless the command is used only from terminal
 and is very short. Now you can dive deep into disgusting code located in command class or just leave it be and 
 read the remaining part. 
 

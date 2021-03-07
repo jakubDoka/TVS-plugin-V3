@@ -1,4 +1,4 @@
-package twp.discord;
+package main.java.twp.discord;
 
 import arc.util.Log;
 import org.apache.commons.codec.binary.StringUtils;
@@ -10,11 +10,11 @@ import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
 import org.jsoup.internal.StringUtil;
-import twp.tools.Logging;
+import main.java.twp.tools.Logging;
 
 import java.util.*;
 
-import static twp.Main.bot;
+import static main.java.twp.Main.bot;
 
 public class Handler implements MessageCreateListener {
     ServerTextChannel com;

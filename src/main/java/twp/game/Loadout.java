@@ -1,4 +1,4 @@
-package twp.game;
+package main.java.twp.game;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Updates;
@@ -8,12 +8,12 @@ import mindustry.game.Team;
 import mindustry.type.Item;
 import mindustry.world.blocks.storage.CoreBlock;
 import org.bson.Document;
-import twp.tools.Logging;
+import main.java.twp.tools.Logging;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
-import static twp.Main.testMode;
+import static main.java.twp.Main.testMode;
 
 public class Loadout {
 

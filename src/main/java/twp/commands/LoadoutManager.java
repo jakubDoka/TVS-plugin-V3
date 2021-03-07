@@ -1,18 +1,18 @@
-package twp.commands;
+package main.java.twp.commands;
 
 import arc.struct.*;
 import arc.util.*;
 import mindustry.content.*;
 import mindustry.type.*;
 import mindustry.world.blocks.storage.*;
-import twp.database.enums.*;
-import twp.democracy.*;
-import twp.game.*;
+import main.java.twp.database.enums.*;
+import main.java.twp.democracy.*;
+import main.java.twp.game.*;
 
 import java.lang.reflect.*;
 import java.util.*;
 
-import static twp.Main.*;
+import static main.java.twp.Main.*;
 
 public class LoadoutManager extends Command {
 

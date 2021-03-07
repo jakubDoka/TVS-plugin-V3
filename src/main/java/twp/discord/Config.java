@@ -1,11 +1,11 @@
-package twp.discord;
+package main.java.twp.discord;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.HashMap;
 
-import static twp.discord.Bot.Channels.*;
+import static main.java.twp.discord.Bot.Channels.*;
 
 public class Config {
     public String prefix = "!";

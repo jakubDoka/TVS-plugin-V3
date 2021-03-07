@@ -1,4 +1,4 @@
-package twp.database.enums;
+package main.java.twp.database.enums;
 
 // settings that can be altered by player
 public enum Setting {

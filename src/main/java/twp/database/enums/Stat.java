@@ -1,4 +1,4 @@
-package twp.database.enums;
+package main.java.twp.database.enums;
 
 // all the stats that user profile stores
 public enum Stat {

@@ -1,14 +1,14 @@
-package twp.security;
+package main.java.twp.security;
 
 import mindustry.gen.*;
 import mindustry.net.*;
 import mindustry.world.*;
-import twp.database.*;
-import twp.database.enums.*;
+import main.java.twp.database.*;
+import main.java.twp.database.enums.*;
 
 import java.util.*;
 
-import static twp.Main.*;
+import static main.java.twp.Main.*;
 
 // LockMap saves data about player actions, It is rebuild on start of each game to fit the map
 public class LockMap {

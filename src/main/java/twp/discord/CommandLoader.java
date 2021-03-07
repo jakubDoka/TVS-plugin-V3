@@ -1,10 +1,10 @@
-package twp.discord;
+package main.java.twp.discord;
 
 import org.javacord.api.entity.message.embed.EmbedBuilder;
-import twp.commands.Informer;
-import twp.commands.RankSetter;
-import twp.commands.Searcher;
-import twp.tools.Logging;
+import main.java.twp.commands.Informer;
+import main.java.twp.commands.RankSetter;
+import main.java.twp.commands.Searcher;
+import main.java.twp.tools.Logging;
 
 import java.awt.*;
 

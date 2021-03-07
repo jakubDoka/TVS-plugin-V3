@@ -1,11 +1,11 @@
-package twp.commands.tests;
+package main.java.twp.commands.tests;
 
-import twp.database.maps.MapHandler;
-import twp.commands.Command;
-import twp.commands.MapManager;
+import main.java.twp.database.maps.MapHandler;
+import main.java.twp.commands.Command;
+import main.java.twp.commands.MapManager;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static twp.Main.db;
+import static main.java.twp.Main.db;
 
 class MapManagerTest extends Test {
     public static void main(String[] args) {

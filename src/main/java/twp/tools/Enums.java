@@ -1,7 +1,7 @@
-package twp.tools;
+package main.java.twp.tools;
 
 import arc.util.Log;
-import twp.database.enums.Perm;
+import main.java.twp.database.enums.Perm;
 import mindustry.gen.Player;
 
 // Enum utility functions

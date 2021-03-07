@@ -1,13 +1,13 @@
-package twp.commands;
+package main.java.twp.commands;
 
-import twp.database.Account;
-import twp.database.PD;
-import twp.tools.Security;
+import main.java.twp.database.Account;
+import main.java.twp.database.PD;
+import main.java.twp.tools.Security;
 
 import java.util.HashMap;
 
-import static twp.Main.db;
-import static twp.Main.ranks;
+import static main.java.twp.Main.db;
+import static main.java.twp.Main.ranks;
 
 // AccountManager lets players to manage their account
 // create new, abandon it and protect it.

@@ -1,9 +1,9 @@
-package twp.tools;
+package main.java.twp.tools;
 
-import twp.Global;
+import main.java.twp.Global;
 import org.apache.commons.codec.digest.DigestUtils;
 
-import static twp.Main.config;
+import static main.java.twp.Main.config;
 
 // some hash functions
 public class Security {

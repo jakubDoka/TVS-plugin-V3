@@ -1,6 +1,6 @@
-package twp.database.core;
+package main.java.twp.database.core;
 
-import twp.database.enums.Stat;
+import main.java.twp.database.enums.Stat;
 import org.bson.Document;
 
 // common behavior of database document

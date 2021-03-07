@@ -1,8 +1,8 @@
-package twp.commands;
+package main.java.twp.commands;
 
-import twp.democracy.Voting;
+import main.java.twp.democracy.Voting;
 
-import static twp.Main.db;
+import static main.java.twp.Main.db;
 
 public class Voter extends Command {
 
