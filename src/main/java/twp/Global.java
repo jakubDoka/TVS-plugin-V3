@@ -1,8 +1,8 @@
-package main.java.twp;
+package twp;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import main.java.twp.tools.Json;
+import twp.tools.Json;
 
 import java.util.*;
 

@@ -1,12 +1,12 @@
-package main.java.twp.commands;
+package twp.commands;
 
 import arc.Core;
-import main.java.twp.database.Account;
-import main.java.twp.database.PD;
-import main.java.twp.database.Rank;
-import main.java.twp.database.enums.RankType;
+import twp.database.Account;
+import twp.database.PD;
+import twp.database.Rank;
+import twp.database.enums.RankType;
 
-import static main.java.twp.Main.*;
+import static twp.Main.*;
 
 // Rank setter lets admins to change build-in ranks of players
 // Its designed for use on multiple places (terminal, game, discord)

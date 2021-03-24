@@ -1,11 +1,11 @@
-package main.java.twp.database;
+package twp.database;
 
 import arc.graphics.Color;
-import main.java.twp.database.enums.Perm;
-import main.java.twp.database.enums.RankType;
-import main.java.twp.database.enums.Stat;
-import main.java.twp.Global;
-import main.java.twp.tools.*;
+import twp.database.enums.Perm;
+import twp.database.enums.RankType;
+import twp.database.enums.Stat;
+import twp.Global;
+import twp.tools.*;
 
 import java.util.ArrayList;
 import java.util.Collections;

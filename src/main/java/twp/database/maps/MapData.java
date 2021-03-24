@@ -1,10 +1,10 @@
-package main.java.twp.database.maps;
+package twp.database.maps;
 
 import mindustry.maps.Map;
 import org.bson.Document;
 import org.bson.types.Binary;
-import main.java.twp.database.core.Raw;
-import main.java.twp.tools.Logging;
+import twp.database.core.Raw;
+import twp.tools.Logging;
 
 import java.io.File;
 import java.nio.file.Paths;

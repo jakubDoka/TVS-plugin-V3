@@ -1,20 +1,20 @@
-package main.java.twp.database;
+package twp.database;
 
 import arc.util.Log;
 import arc.util.Time;
 import mindustry.gen.Call;
 import mindustry.gen.Player;
-import main.java.twp.Main;
-import main.java.twp.database.enums.Perm;
-import main.java.twp.database.enums.RankType;
-import main.java.twp.database.enums.Stat;
-import main.java.twp.tools.Logging;
-import main.java.twp.tools.Text;
+import twp.Main;
+import twp.database.enums.Perm;
+import twp.database.enums.RankType;
+import twp.database.enums.Stat;
+import twp.tools.Logging;
+import twp.tools.Text;
 
 import java.util.HashSet;
 import java.util.ResourceBundle;
 
-import static main.java.twp.Main.*;
+import static twp.Main.*;
 
 // PD stores data about player that is accessed often and also handles communication with player
 public class PD{

@@ -1,7 +1,7 @@
-package main.java.twp.commands.tests;
+package twp.commands.tests;
 
-import main.java.twp.commands.*;
-import main.java.twp.commands.Command.*;
+import twp.commands.*;
+import twp.commands.Command.*;
 
 public class DeferrerTest extends Test {
     public static void main(String[] args){

@@ -1,4 +1,4 @@
-package main.java.twp;
+package twp;
 
 
 import arc.Core;
@@ -9,18 +9,18 @@ import arc.util.Log;
 import arc.util.Timer;
 import com.sun.tools.javac.util.*;
 import mindustry.content.*;
-import main.java.twp.bundle.Bundle;
-import main.java.twp.democracy.Hud;
-import main.java.twp.discord.Bot;
-import main.java.twp.game.*;
-import main.java.twp.security.Limiter;
+import twp.bundle.Bundle;
+import twp.democracy.Hud;
+import twp.discord.Bot;
+import twp.game.*;
+import twp.security.Limiter;
 import mindustry.Vars;
 import mindustry.gen.Call;
-import main.java.twp.commands.*;
-import main.java.twp.database.*;
+import twp.commands.*;
+import twp.database.*;
 import mindustry.game.EventType;
 import mindustry.mod.Plugin;
-import main.java.twp.tools.*;
+import twp.tools.*;
 
 
 import java.io.*;

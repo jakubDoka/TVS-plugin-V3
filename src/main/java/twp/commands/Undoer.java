@@ -1,10 +1,10 @@
-package main.java.twp.commands;
+package twp.commands;
 
-import main.java.twp.database.Account;
-import main.java.twp.security.Action;
+import twp.database.Account;
+import twp.security.Action;
 
-import static main.java.twp.Main.db;
-import static main.java.twp.Main.queue;
+import static twp.Main.db;
+import static twp.Main.queue;
 
 public class Undoer extends Command {
     public Undoer() {

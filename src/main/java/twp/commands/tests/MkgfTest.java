@@ -1,12 +1,12 @@
-package main.java.twp.commands.tests;
+package twp.commands.tests;
 
-import main.java.twp.database.DBPlayer;
-import main.java.twp.commands.Command;
-import main.java.twp.commands.VoteKick;
-import main.java.twp.commands.Voter;
+import twp.database.DBPlayer;
+import twp.commands.Command;
+import twp.commands.VoteKick;
+import twp.commands.Voter;
 
 import static org.junit.Assert.assertEquals;
-import static main.java.twp.Main.db;
+import static twp.Main.db;
 
 class MkgfTest extends Test {
     public static void main(String[] args) {

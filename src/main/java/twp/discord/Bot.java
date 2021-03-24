@@ -1,4 +1,4 @@
-package main.java.twp.discord;
+package twp.discord;
 
 import arc.util.Log;
 import org.javacord.api.DiscordApi;
@@ -8,9 +8,9 @@ import org.javacord.api.entity.channel.ServerChannel;
 import org.javacord.api.entity.channel.ServerTextChannel;
 import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.permission.Role;
-import main.java.twp.Global;
-import main.java.twp.tools.Json;
-import main.java.twp.tools.Logging;
+import twp.Global;
+import twp.tools.Json;
+import twp.tools.Logging;
 
 import java.util.HashMap;
 import java.util.Optional;

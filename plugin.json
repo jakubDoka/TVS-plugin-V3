@@ -1,7 +1,7 @@
 {
   "name": "<TWS>plugin",
   "author": "mlokis",
-  "main": "main.java.twp.Main",
+  "main": "twp.Main",
   "description": "THe worst plugin ewer made.",
   "version": 1.0
 }

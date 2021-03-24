@@ -1,4 +1,4 @@
-package main.java.twp.commands;
+package twp.commands;
 
 import arc.math.Mathf;
 import arc.util.Log;
@@ -6,15 +6,15 @@ import mindustry.game.Gamemode;
 import mindustry.gen.Call;
 import mindustry.maps.Map;
 import mindustry.net.WorldReloader;
-import main.java.twp.database.enums.Perm;
-import main.java.twp.database.maps.MapData;
-import main.java.twp.democracy.Voting;
-import main.java.twp.tools.Logging;
-import main.java.twp.tools.Text;
+import twp.database.enums.Perm;
+import twp.database.maps.MapData;
+import twp.democracy.Voting;
+import twp.tools.Logging;
+import twp.tools.Text;
 
 
 import static mindustry.Vars.*;
-import static main.java.twp.Main.*;
+import static twp.Main.*;
 
 public class MapChanger extends Command {
 

@@ -1,4 +1,4 @@
-package main.java.twp.tools;
+package twp.tools;
 
 import arc.*;
 import arc.func.*;
@@ -6,15 +6,15 @@ import arc.util.*;
 import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.Message;
 import org.junit.platform.commons.util.*;
-import main.java.twp.*;
-import main.java.twp.database.*;
+import twp.*;
+import twp.database.*;
 
 import java.io.*;
 import java.sql.*;
 import java.text.*;
 import java.util.concurrent.CompletableFuture;
 
-import static main.java.twp.Main.*;
+import static twp.Main.*;
 
 // Serializing errors and sending messages to cmd is performed from here
 public class Logging {
