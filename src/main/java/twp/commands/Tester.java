@@ -1,15 +1,15 @@
-package main.java.twp.commands;
+package twp.commands;
 
 import arc.util.*;
 
 
 
-import main.java.twp.*;
-import main.java.twp.database.*;
-import main.java.twp.tools.*;
+import twp.*;
+import twp.database.*;
+import twp.tools.*;
 import java.io.*;
 import java.util.*;
-import static main.java.twp.Main.*;
+import static twp.Main.*;
 
 public class Tester extends Command{
     static final String testFile = Global.config_dir + "test";

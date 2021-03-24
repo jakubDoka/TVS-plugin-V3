@@ -1,10 +1,10 @@
-package main.java.twp.database.core;
+package twp.database.core;
 
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
-import main.java.twp.database.enums.Stat;
+import twp.database.enums.Stat;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 

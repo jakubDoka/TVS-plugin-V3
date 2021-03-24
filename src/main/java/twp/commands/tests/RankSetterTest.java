@@ -1,11 +1,11 @@
-package main.java.twp.commands.tests;
+package twp.commands.tests;
 
-import main.java.twp.database.DBPlayer;
-import main.java.twp.database.PD;
-import main.java.twp.commands.Command;
-import main.java.twp.commands.RankSetter;
+import twp.database.DBPlayer;
+import twp.database.PD;
+import twp.commands.Command;
+import twp.commands.RankSetter;
 
-import static main.java.twp.Main.db;
+import static twp.Main.db;
 
 class RankSetterTest extends Test {
     public static void main(String[] args ) {

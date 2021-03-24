@@ -1,17 +1,17 @@
-package main.java.twp.database.maps;
+package twp.database.maps;
 
 import arc.Core;
 import arc.util.*;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Indexes;
-import main.java.twp.database.enums.Stat;
+import twp.database.enums.Stat;
 import mindustry.Vars;
 import mindustry.maps.Map;
 import org.bson.Document;
-import main.java.twp.Main;
-import main.java.twp.database.core.Handler;
-import main.java.twp.tools.Logging;
+import twp.Main;
+import twp.database.core.Handler;
+import twp.tools.Logging;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -21,7 +21,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static main.java.twp.Main.testMode;
+import static twp.Main.testMode;
 
 // MapHandler manages data about maps
 public class MapHandler extends Handler {

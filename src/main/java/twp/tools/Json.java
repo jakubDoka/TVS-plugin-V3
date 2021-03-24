@@ -1,4 +1,4 @@
-package main.java.twp.tools;
+package twp.tools;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;

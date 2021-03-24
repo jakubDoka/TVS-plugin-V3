@@ -1,10 +1,10 @@
-package main.java.twp.commands.tests;
+package twp.commands.tests;
 
-import main.java.twp.commands.Command;
-import main.java.twp.commands.Informer;
-import main.java.twp.database.DBPlayer;
+import twp.commands.Command;
+import twp.commands.Informer;
+import twp.database.DBPlayer;
 
-import static main.java.twp.Main.db;
+import static twp.Main.db;
 
 public class InformerTest extends Test {
     public static void main(String[] args) {

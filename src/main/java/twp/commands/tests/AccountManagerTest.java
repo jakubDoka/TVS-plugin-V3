@@ -1,15 +1,15 @@
-package main.java.twp.commands.tests;
+package twp.commands.tests;
 
 import arc.util.*;
-import main.java.twp.database.DBPlayer;
-import main.java.twp.database.PD;
-import main.java.twp.database.enums.RankType;
-import main.java.twp.*;
-import main.java.twp.commands.AccountManager;
-import main.java.twp.commands.Command;
+import twp.database.DBPlayer;
+import twp.database.PD;
+import twp.database.enums.RankType;
+import twp.*;
+import twp.commands.AccountManager;
+import twp.commands.Command;
 
-import static main.java.twp.Main.db;
-import static main.java.twp.Main.ranks;
+import static twp.Main.db;
+import static twp.Main.ranks;
 
 class AccountManagerTest extends Test {
     public static void main(String[] args) {

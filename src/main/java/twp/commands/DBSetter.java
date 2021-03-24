@@ -1,10 +1,10 @@
-package main.java.twp.commands;
+package twp.commands;
 
-import main.java.twp.database.Account;
-import main.java.twp.database.enums.RankType;
-import main.java.twp.tools.Enums;
+import twp.database.Account;
+import twp.database.enums.RankType;
+import twp.tools.Enums;
 
-import static main.java.twp.Main.db;
+import static twp.Main.db;
 
 // Command used for editing database
 public class DBSetter extends Command {

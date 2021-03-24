@@ -1,4 +1,4 @@
-package main.java.twp.database;
+package twp.database;
 
 import mindustry.gen.Player;
 

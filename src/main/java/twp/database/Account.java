@@ -1,13 +1,13 @@
-package main.java.twp.database;
+package twp.database;
 
 import arc.util.Time;
-import main.java.twp.database.core.Raw;
-import main.java.twp.database.enums.RankType;
-import main.java.twp.database.enums.Stat;
+import twp.database.core.Raw;
+import twp.database.enums.RankType;
+import twp.database.enums.Stat;
 import org.bson.Document;
-import main.java.twp.tools.Text;
+import twp.tools.Text;
 
-import static main.java.twp.Main.*;
+import static twp.Main.*;
 
 // Account is player account handle, its used more to withdraw data
 public class Account extends Raw {

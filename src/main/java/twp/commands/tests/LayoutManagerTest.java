@@ -1,13 +1,13 @@
-package main.java.twp.commands.tests;
+package twp.commands.tests;
 
 import mindustry.content.Items;
-import main.java.twp.database.DBPlayer;
-import main.java.twp.database.PD;
+import twp.database.DBPlayer;
+import twp.database.PD;
 
 import static org.junit.Assert.assertEquals;
-import static main.java.twp.Main.*;
-import static main.java.twp.commands.LoadoutManager.*;
-import static main.java.twp.commands.Command.Result.*;
+import static twp.Main.*;
+import static twp.commands.LoadoutManager.*;
+import static twp.commands.Command.Result.*;
 
 public class LayoutManagerTest extends Test {
     public static void main(String[] args) {

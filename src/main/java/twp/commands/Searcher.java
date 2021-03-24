@@ -1,4 +1,4 @@
-package main.java.twp.commands;
+package twp.commands;
 
 import arc.func.Cons;
 import arc.math.Mathf;
@@ -6,16 +6,16 @@ import arc.util.Strings;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Sorts;
-import main.java.twp.database.*;
-import main.java.twp.database.enums.RankType;
-import main.java.twp.database.enums.Stat;
+import twp.database.*;
+import twp.database.enums.RankType;
+import twp.database.enums.Stat;
 import org.bson.Document;
-import main.java.twp.tools.Enums;
+import twp.tools.Enums;
 
 import java.io.IOException;
 
-import static main.java.twp.Main.db;
-import static main.java.twp.Main.ranks;
+import static twp.Main.db;
+import static twp.Main.ranks;
 
 // Searcher interfaces with database and allows reading public data about players for players
 // though is mainly supports quick search for admins for fast actions

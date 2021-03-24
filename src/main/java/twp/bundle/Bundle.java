@@ -1,10 +1,10 @@
-package main.java.twp.bundle;
+package twp.bundle;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import main.java.twp.database.PD;
+import twp.database.PD;
 import org.jsoup.Jsoup;
-import main.java.twp.tools.*;
+import twp.tools.*;
 
 import java.io.IOException;
 import java.io.InputStream;

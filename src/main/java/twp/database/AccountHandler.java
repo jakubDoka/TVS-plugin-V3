@@ -1,4 +1,4 @@
-package main.java.twp.database;
+package twp.database;
 
 import arc.util.Time;
 import com.mongodb.client.FindIterable;
@@ -7,16 +7,16 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Indexes;
 import com.mongodb.client.model.Updates;
 
-import main.java.twp.database.core.Handler;
-import main.java.twp.database.enums.RankType;
-import main.java.twp.database.enums.Setting;
-import main.java.twp.database.enums.Stat;
+import twp.database.core.Handler;
+import twp.database.enums.RankType;
+import twp.database.enums.Setting;
+import twp.database.enums.Stat;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
 
 import static com.mongodb.client.model.Filters.and;
-import static main.java.twp.Main.*;
+import static twp.Main.*;
 
 // Manages data about players, mainly modifies the accounts
 public class AccountHandler extends Handler {
